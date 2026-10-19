@@ -7,7 +7,7 @@
   "minAndroidSdk": 24,
   "entryClass": "me.jxl.kiosk.plugins.hello.HelloWorldPlugin",
   "description": "A sample plugin that showcases the SDK capabilities. Use this plugin as a starting point for your own.",
-  "author": "Kiosk Satellite contributors",
+  "author": "jxlarrea",
   "license": "Apache-2.0",
   "capabilities": [
     "overlay",

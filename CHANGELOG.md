@@ -4,6 +4,8 @@
 
 ### Added
 
+- Hello World's author is now jxlarrea.
+
 - Add the Install in Kiosk Satellite badge and an Installation section plugin authors copy into their README, with a one-click install button and manual steps, the way HACS repositories show theirs.
 
 - Give Hello World an icon, the Kiosk Satellite mark, through the new `icon` manifest field. Community Plugins shows it.
