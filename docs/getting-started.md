@@ -26,7 +26,7 @@ All documented features use **SDK 1**, the first public plugin SDK. Plugins requ
 
 1. Create your own repository from this template and clone it locally. Each repository contains one plugin.
 2. Read the [creating plugins guide](creating-plugins.md) and the [KS interaction reference](ks-api.md) to choose the features and capabilities your plugin needs.
-3. Update `kiosk-satellite-plugin.json`, the Java class/package in `src/` and `README.md` for your plugin. KS shows your README before anyone installs the plugin. Keep the plugin ID stable after publication.
+3. Update `kiosk-satellite-plugin.json`, the Java class/package in `src/` and `README.md` for your plugin. KS shows your README before anyone installs the plugin. Once the plugin is listed, add the [Installation section](../README.md#add-an-install-button) with its one-click install button. Keep the plugin ID stable after publication.
 4. Build and test locally using the steps below, then [publish a GitHub release](#publish-your-plugin) when it is ready for users.
 
 ### Build and test locally

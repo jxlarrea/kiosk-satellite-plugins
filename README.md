@@ -43,13 +43,33 @@ Submit from the GitHub account that owns the repository. For a repository that b
 
 - **Updates:** publish releases the way you already do. The directory picks up your latest stable release twice a day.
 - **Problems:** if a new release fails the check or the repository goes private or archived, the plugin drops out of the directory until a good release fixes it.
-- **Install button:** add a one-click install button to your README:
-
-    ```markdown
-    [![Install in Kiosk Satellite](https://kiosksatellite.com/img/badges/install-plugin.svg)](https://kiosksatellite.com/redirect/plugin/?repository=owner/plugin)
-    ```
-
 - **Removal:** open a [Remove a plugin](https://github.com/jxlarrea/kiosk-satellite-plugins/issues/new?template=remove-plugin.yml) issue.
+
+### Add an install button
+
+Listed plugins get a one-click install button for their README. It opens the plugin in the reader's Kiosk Satellite, where they review it and choose **Trust and install**. Hello World's button looks like this:
+
+[![Open your Kiosk Satellite and install this plugin.](assets/badges/plugin-add.svg)](https://kiosksatellite.com/redirect/plugin/?repository=jxlarrea/kiosk-satellite-plugins)
+
+Copy this Installation section into your README. Replace `owner/plugin` with your repository and `My Plugin` with your plugin's name:
+
+```markdown
+## Installation
+
+### Community Plugins (Recommended)
+
+My Plugin is listed in [Community Plugins](https://kiosksatellite.com/plugins/). Use the button below to open it in your Kiosk Satellite and install it.
+
+[![Open your Kiosk Satellite and install this plugin.](https://kiosksatellite.com/img/badges/plugin-add.svg)](https://kiosksatellite.com/redirect/plugin/?repository=owner/plugin)
+
+Or search for `My Plugin` in **Settings > Plugin Manager > Browse plugins** in Kiosk Satellite.
+
+### Manual
+
+1. Open **Settings > Plugin Manager** in Kiosk Satellite and turn on **Enable Plugins**.
+2. Choose **Add plugin**, paste `https://github.com/owner/plugin` and choose **Preview**.
+3. Review the plugin and choose **Trust and install**.
+```
 
 ## Create a plugin
 

@@ -4,6 +4,8 @@
 
 ### Added
 
+- Add the Open plugin in Kiosk Satellite badge and an Installation section plugin authors copy into their README, with a one-click install button and manual steps, the way HACS repositories show theirs.
+
 - Give Hello World an icon, the Kiosk Satellite mark, through the new `icon` manifest field. Community Plugins shows it.
 
 - Add Community Plugins, the plugin directory on kiosksatellite.com and under **Plugin Manager > Browse plugins**. Authors submit a plugin through the new **Submit a plugin** issue form. A workflow checks it the way Kiosk Satellite checks an install and lists it in `community/plugins.json` once a maintainer approves it. `tools/community_plugins.py check` runs the same check from a clone. Add the optional `icon` manifest field, a 256 by 256 PNG under `assets/` that the directory shows. The README now covers submitting a plugin, and the guide it held moved to the new Getting started page.
