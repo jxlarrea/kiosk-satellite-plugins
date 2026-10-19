@@ -5,12 +5,14 @@ Plugins add optional features to Kiosk Satellite. SDK 1 supports floating window
 ## Install Hello World
 
 1. Open **Settings > Plugin Manager** on the kiosk or **Plugin Manager** in remote admin and turn on **Enable Plugins**.
-2. Choose **Add plugin**, paste its public GitHub repository URL and choose **Preview**.
+2. Choose **Browse plugins** and pick **Hello World**, or choose **Add plugin**, paste its public GitHub repository URL and choose **Preview**.
 3. Review the latest stable release's manifest, author, license, capabilities and README. Compatibility errors prevent installation.
 4. Choose **Trust and install**. Installation downloads and verifies the reviewed release without running its code.
 5. Enable **Hello World** using the switch on its entry row. Return to the dashboard to see its window.
 
 Tap an installed plugin's entry row to open its subpage. Its settings and action shortcut choices appear there. A list setting shows its rows on the subpage. Tap a row to edit it, drag its handle to move it or tap the add row to create one. Remote admin also moves rows with arrow buttons. A setting can show only when another setting holds a certain value. The enable switch sits on the left of the entry row. The check for updates button beside info checks the latest stable GitHub release and lets you review and install an available update. It reports when no update is available. Local ZIP installs use Install from ZIP instead. The info button before delete opens the saved repository README in a modal, including while offline. Local ZIP installs show a message explaining that no repository README is available. Remote admin uses the same layout and supports direct links to plugin subpages.
+
+**Browse plugins** lists Community Plugins, the plugins listed in this repository's `community/plugins.json`, with their icons, stars, downloads and active installs. Picking one opens the same review as **Add plugin**. The review says whether a repository is listed. See [Submit your plugin](../README.md#submit-your-plugin) to list yours. A plugin's page on [kiosksatellite.com](https://kiosksatellite.com/plugins/) also has an **Install** button that opens this review in your kiosk's remote admin.
 
 The master switch explains that plugins add community developed features. A warning about plugin access appears below **Add plugin**. Plugin status refreshes when you open the page.
 

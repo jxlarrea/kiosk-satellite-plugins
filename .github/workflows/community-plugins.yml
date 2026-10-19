@@ -1,0 +1,110 @@
+name: Community Plugins
+# Checks submit and remove requests and lists or unlists a plugin when a maintainer adds the approved label.
+# The bot writes community/plugins.json with the approving maintainer as the commit author, so submitters
+# never become repository contributors.
+on:
+  issues:
+    types: [opened, edited, reopened, labeled]
+permissions:
+  contents: write
+  issues: write
+jobs:
+  check:
+    if: >-
+      github.repository == 'jxlarrea/kiosk-satellite-plugins' &&
+      github.event.issue.state == 'open' &&
+      github.event.action != 'labeled' &&
+      (contains(github.event.issue.labels.*.name, 'submission') || contains(github.event.issue.labels.*.name, 'removal'))
+    runs-on: ubuntu-24.04
+    concurrency:
+      group: community-plugins-${{ github.event.issue.number }}
+      cancel-in-progress: true
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check the request
+        id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+          KIND: ${{ contains(github.event.issue.labels.*.name, 'removal') && 'removal' || 'submission' }}
+        run: python3 tools/community_plugins.py "$KIND" "$GITHUB_EVENT_PATH" "$RUNNER_TEMP/report.md"
+      - name: Post the results
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE: ${{ github.event.issue.number }}
+          PASSED: ${{ steps.check.outputs.passed }}
+        run: |
+          comment=$(gh api "repos/$GITHUB_REPOSITORY/issues/$ISSUE/comments" --paginate \
+            --jq '[.[] | select(.user.login == "github-actions[bot]" and (.body | startswith("<!-- community-plugins-check -->")))][0].id // empty')
+          if [ -n "$comment" ]; then
+            gh api -X PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$comment" -F "body=@$RUNNER_TEMP/report.md" > /dev/null
+          else
+            gh issue comment "$ISSUE" --body-file "$RUNNER_TEMP/report.md"
+          fi
+          if [ "$PASSED" = true ]; then
+            gh issue edit "$ISSUE" --add-label valid --remove-label invalid
+          else
+            gh issue edit "$ISSUE" --add-label invalid --remove-label valid
+          fi
+
+  approve:
+    if: >-
+      github.repository == 'jxlarrea/kiosk-satellite-plugins' &&
+      github.event.issue.state == 'open' &&
+      github.event.action == 'labeled' &&
+      github.event.label.name == 'approved' &&
+      (contains(github.event.issue.labels.*.name, 'submission') || contains(github.event.issue.labels.*.name, 'removal'))
+    runs-on: ubuntu-24.04
+    # One change to the list at a time, so two approvals never race on the push.
+    concurrency:
+      group: community-plugins-list
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - name: Require a maintainer
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SENDER: ${{ github.event.sender.login }}
+        run: |
+          permission=$(gh api "repos/$GITHUB_REPOSITORY/collaborators/$SENDER/permission" --jq .permission)
+          case "$permission" in
+            admin|maintain) ;;
+            *) echo "$SENDER cannot approve requests ($permission)"; exit 1 ;;
+          esac
+      - name: Check the request again
+        id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+          KIND: ${{ contains(github.event.issue.labels.*.name, 'removal') && 'removal' || 'submission' }}
+        run: python3 tools/community_plugins.py "$KIND" "$GITHUB_EVENT_PATH" "$RUNNER_TEMP/report.md"
+      - name: Turn down a request that no longer passes
+        if: steps.check.outputs.passed != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE: ${{ github.event.issue.number }}
+        run: |
+          gh issue edit "$ISSUE" --remove-label approved --add-label invalid --remove-label valid
+          gh issue comment "$ISSUE" --body-file "$RUNNER_TEMP/report.md"
+          exit 1
+      - name: Update the list
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE: ${{ github.event.issue.number }}
+          KIND: ${{ contains(github.event.issue.labels.*.name, 'removal') && 'removal' || 'submission' }}
+          REPOSITORY: ${{ steps.check.outputs.repository }}
+          PLUGIN_ID: ${{ steps.check.outputs.id }}
+          SENDER: ${{ github.event.sender.login }}
+          SENDER_ID: ${{ github.event.sender.id }}
+        run: |
+          git config user.name "$SENDER"
+          git config user.email "$SENDER_ID+$SENDER@users.noreply.github.com"
+          if [ "$KIND" = removal ]; then
+            python3 tools/community_plugins.py remove "$REPOSITORY"
+            git commit -am "Remove $REPOSITORY from Community Plugins (#$ISSUE)"
+            message="Removed $REPOSITORY from Community Plugins. It leaves kiosksatellite.com and Plugin Manager after the next refresh, within 12 hours."
+          else
+            python3 tools/community_plugins.py add "$REPOSITORY" "$PLUGIN_ID"
+            git commit -am "Add $REPOSITORY to Community Plugins (#$ISSUE)"
+            message="Added $REPOSITORY to Community Plugins. It shows on kiosksatellite.com and in Plugin Manager after the next refresh, within 12 hours."
+          fi
+          git push origin HEAD:main
+          gh issue close "$ISSUE" --reason completed --comment "$message"

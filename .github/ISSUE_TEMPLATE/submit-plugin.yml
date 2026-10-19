@@ -1,0 +1,31 @@
+name: Submit a plugin
+description: List your plugin in Community Plugins on kiosksatellite.com and in Plugin Manager.
+title: "Submit plugin: "
+labels: [submission]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A check runs as soon as you open this issue and posts the results below. Read [Submit your plugin](https://github.com/jxlarrea/kiosk-satellite-plugins#submit-your-plugin) first.
+  - type: input
+    id: repository
+    attributes:
+      label: Repository
+      description: The public GitHub repository of your plugin. Submit it from the account that owns it.
+      placeholder: https://github.com/owner/plugin
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Anything else
+      description: Optional notes for the reviewer.
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Before you submit
+      options:
+        - label: I wrote this plugin or maintain it, and the repository holds all of its source code.
+          required: true
+        - label: The plugin does nothing hidden or harmful and sends data only where its README says.
+          required: true

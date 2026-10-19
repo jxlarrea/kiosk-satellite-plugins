@@ -97,6 +97,7 @@ See [kiosk-satellite-plugin.json](../kiosk-satellite-plugin.json) for a complete
 | `settings` | Up to 50 settings. Kiosk Satellite versions without native overlays accept up to 20 |
 | `commands` | Up to 20 named commands |
 | `triggers` | Up to 20 named [gesture triggers](#gesture-triggers) |
+| `icon` | Optional. A 256 by 256 PNG under `assets/`, at most 256 KB, that stands for the plugin in Community Plugins and Browse plugins. Without one they show the generic plugin icon |
 | `voiceSkinThumbnail` | Optional. A PNG, JPEG or WebP under `assets/`, at most 256 KB, that shows the plugin's voice skin in the Skin picker. Requires `voice.skin`. See [Voice skins](voice-skins.md#thumbnail) |
 | `headless` | Optional. `true` when the plugin also runs on a device without a screen, such as an Echo Dot. See [Devices without a screen](#devices-without-a-screen) |
 
