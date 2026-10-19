@@ -70,6 +70,11 @@
     "added": "2026-10-19"
   },
   {
+    "repository": "mpjanofsky/nearby-flights-screensaver",
+    "id": "nearby-flights",
+    "added": "2026-10-19"
+  },
+  {
     "repository": "mpjanofsky/second-hand-plugin",
     "id": "echo-wall-clock-plugin",
     "added": "2026-10-19"
