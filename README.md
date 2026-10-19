@@ -12,7 +12,7 @@ If you installed Hello World, [Hello World starter template](docs/getting-starte
 
 ## Submit your plugin
 
-Listed plugins show up on kiosksatellite.com and in Plugin Manager with their stars, downloads and active installs. People install them there with one click.
+Listed plugins show up on kiosksatellite.com and in Plugin Manager with their icons, stars and downloads. People install them there with one click.
 
 ### Before you submit
 
@@ -50,8 +50,6 @@ Submit from the GitHub account that owns the repository. For a repository that b
     ```
 
 - **Removal:** open a [Remove a plugin](https://github.com/jxlarrea/kiosk-satellite-plugins/issues/new?template=remove-plugin.yml) issue.
-
-Active installs count kiosks that share usage analytics and only show once a plugin reaches 5.
 
 ## Create a plugin
 
