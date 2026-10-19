@@ -4,6 +4,8 @@
 
 ### Added
 
+- Add voice skins. A plugin that declares the new `voice.skin` capability appears in **Voice Satellite > Appearance > Skin**, and while it is picked KS draws none of its own overlay for a turn. Add the `voice.overlay`, `voice.level` and `voice.skin` events and the `skinSelected` and `overlay` fields of `getVoiceState`, which tell a skin when to draw and how loud the voice is. Add the `voice.text` capability with `getVoiceText` and the `voice.text` event, which give the command, the answer and the tool lines as the Conversation settings allow. Add `getVoiceAppearance` and the `voice.appearance` event, which give a skin the Theme, Background, Text size and Reactive activity bar settings, and keep `voice.level` at 0 while Reactive activity bar is off. Add the optional `voiceSkinThumbnail` manifest field, which names the skin's picture in the Skin picker. Hello World is now a voice skin with a full screen look and a docked bubble, both with a ring that follows the voice and the conversation and both following the Appearance settings, and a thumbnail. Document all of them in the new Voice skins guide. Hello World now needs a Kiosk Satellite version with voice skins.
+
 - Add the optional `headless` manifest field and `host.isHeadless()` for devices without a screen, such as an Echo Dot. A plugin that declares `overlay` or `screensaver` installs there only with `"headless": true`, and then checks `isHeadless()` to skip its display features. Document both under Devices without a screen.
 
 - Document the SDK 1 `setWakeWordMuted` control, which mutes or unmutes wake word detection like Voice Satellite's Mute switch, and the `muted` field `getWakeWordState` now returns.

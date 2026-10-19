@@ -12,12 +12,13 @@ import java.util.concurrent.TimeUnit;
 import me.jxl.kiosk.plugins.KioskPlugin;
 import me.jxl.kiosk.plugins.PluginHost;
 
-/** Settings controls including lists and pickers, a floating window, native overlays, actions, live readings, a read-only chart, an Overview status tile, hardware keys, Voice Satellite state and intercom state. */
+/** Settings controls including lists and pickers, a floating window, native overlays, actions, live readings, a read-only chart, an Overview status tile, hardware keys, Voice Satellite state, a voice skin and intercom state. */
 public final class HelloWorldPlugin implements KioskPlugin {
     private final HomeAssistantDemo homeAssistant = new HomeAssistantDemo();
     private final StatusTileDemo statusTile = new StatusTileDemo();
     private final KeyDemo keys = new KeyDemo();
     private final VoiceDemo voice = new VoiceDemo();
+    private final VoiceSkinDemo voiceSkin = new VoiceSkinDemo();
     private final IntercomDemo intercom = new IntercomDemo();
     private final ListDemo lists = new ListDemo();
     private final OverlayDemo overlays = new OverlayDemo();
@@ -44,6 +45,7 @@ public final class HelloWorldPlugin implements KioskPlugin {
     public synchronized void start(PluginHost host, Map<String, Object> settings) {
         this.host = host;
         overlays.start(host);
+        voiceSkin.start(host);
         configure(settings);
         shizuku.start(host, settings);
         host.log("Hello World started");
@@ -169,6 +171,7 @@ public final class HelloWorldPlugin implements KioskPlugin {
         homeAssistant.onEvent(event, payload);
         keys.onEvent(event, payload);
         voice.onEvent(event, payload);
+        voiceSkin.onEvent(event, payload);
         intercom.onEvent(event, payload);
         if ("shizuku.state".equals(event)) {
             shizuku.stateChanged();
@@ -206,6 +209,7 @@ public final class HelloWorldPlugin implements KioskPlugin {
         statusTile.stop();
         keys.stop();
         voice.stop();
+        voiceSkin.stop();
         intercom.stop();
         overlays.stop();
         if (sampler != null) { sampler.shutdownNow(); sampler = null; }

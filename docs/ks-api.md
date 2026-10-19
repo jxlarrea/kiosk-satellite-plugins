@@ -17,6 +17,8 @@ Every plugin declares `"apiVersion": 1`. All features below belong to that singl
 | `host.control` | Execute the transient controls listed below |
 | `noise` | Read the [room noise level](#room-noise-level). Requires `host.read` |
 | `ha` | Call Home Assistant services, run other commands and subscribe to triggers, events and templates. See the [Home Assistant guide](home-assistant.md#call-services-and-other-commands) |
+| `voice.skin` | Appear in Voice Satellite's Skin list and draw the turn in place of the KS overlay. Requires `overlay` and `host.read`. See [Voice skins](voice-skins.md) |
+| `voice.text` | Read what the user said and the assistant answered. Requires `host.read`. See [Conversation text](voice-skins.md#conversation-text) |
 
 Request only the capabilities the plugin uses. `getHostApi` is available with either host capability and lists the commands and events available to that session. Plugins execute inside the app and are not sandboxed from arbitrary Java or native code. These capabilities describe the public API contract. Users must trust installed code.
 
@@ -59,7 +61,9 @@ Except for `getBrightness`, `getVolume` and `getHaEntityState`, every read comma
 | `getCameraViews` | A list of `{id, name, cameraCount}`, one per camera view set up in KS, in their order. Pass `id` to `showCameraView`. No servers, stream URLs or credentials |
 | `getDashboards` | A list of `{urlPath, title, icon, custom, views}`, one per Home Assistant dashboard, with `views` a list of `{path, title, icon, subview}`. Pass a view's `path` to `haNavigate`. Icons are MDI names or null. `custom` marks KS's Custom Pages entry. Fails while Home Assistant is not set up or cannot be reached |
 | `getWakeWordState` | `{available, stopWordAvailable, enabled, active, listening, engine, engineLabel, status, statusLabel, muted}`. Engine names can be null. No audio, model files or internal configuration |
-| `getVoiceState` | `{enabled, state}`. `enabled` is true while the native Voice Satellite runtime is on. `state` is `idle`, `listening`, `processing` or `responding`. See [Voice Satellite state](#voice-satellite-state) |
+| `getVoiceState` | `{enabled, state, skinSelected, overlay}`. `enabled` is true while the native Voice Satellite runtime is on. `state` is `idle`, `listening`, `processing` or `responding`. `skinSelected` is true while the Skin setting picks this plugin. `overlay` is `hidden`, `full` or `docked`. See [Voice Satellite state](#voice-satellite-state) and [Voice skins](voice-skins.md) |
+| `getVoiceAppearance` | `{theme, background, textScale, reactive}`: Voice Satellite's Appearance settings a skin follows. See [Appearance settings](voice-skins.md#appearance-settings) |
+| `getVoiceText` | `{command, answer, tools, streaming, announcement}`. Requires `voice.text`. See [Conversation text](voice-skins.md#conversation-text) |
 | `getIntercomState` | `{enabled, state, kiosk, dnd}`. `enabled` is true while the intercom is on. See [Intercom state](#intercom-state) |
 | `getNoiseLevel` | `{available, dbfs, held, updated}`. Requires `noise`. See [Room noise level](#room-noise-level) |
 | `getHaEntityState` | `{entityId: string}` arguments. Returns `{entityId, status, state, attributes, lastChanged, lastUpdated}`. Read-only HA entity snapshot. See the [Home Assistant guide](home-assistant.md) |
@@ -184,6 +188,11 @@ Pass the subscription name from this table to `subscribe` or `unsubscribe`. Deli
 | `detection.presence` | `present`: boolean from the device person sensor |
 | `voice.interaction` | `active`: boolean, `source`: `page`, `sendspin` or `command`. No speech or conversation content |
 | `voice.state` | `state`: `idle`, `listening`, `processing` or `responding`. See [Voice Satellite state](#voice-satellite-state) |
+| `voice.overlay` | `overlay`: `hidden`, `full` or `docked`, as the voice overlay shows. See [Voice skins](voice-skins.md#when-to-draw) |
+| `voice.level` | `level`: 0 to 1, the level the reactive bar follows. 0 while Reactive activity bar is off. No audio. See [Voice level](voice-skins.md#voice-level) |
+| `voice.skin` | `selected`: true while the Skin setting picks this plugin. See [Voice skins](voice-skins.md) |
+| `voice.appearance` | `theme`, `background`, `textScale` and `reactive`. See [Appearance settings](voice-skins.md#appearance-settings) |
+| `voice.text` | `command`, `answer`, `tools`, `streaming` and `announcement`. Requires `voice.text`. See [Conversation text](voice-skins.md#conversation-text) |
 | `intercom.state` | `state`, `kiosk` and `dnd`. See [Intercom state](#intercom-state) |
 | `wakeword.state` | `active`, `listening` and `muted`: booleans |
 | `wakeword.detected` | `model` and `phrase`: wake-word identifiers. No captured audio |
@@ -194,7 +203,7 @@ Pass the subscription name from this table to `subscribe` or `unsubscribe`. Deli
 
 Events are passive observations. Motion, face, person, proximity and wake-word events only exist when the corresponding KS feature is already producing them. A subscription never starts a camera, opens a microphone or changes the screensaver policy. No general event-bus subscription is provided.
 
-Delivery is best effort. KS coalesces repeated events of the same type over a 100 ms window and keeps only the latest pending payload of each type while the plugin is busy. Do not use these events as an audit log or exact occurrence counter.
+Delivery is best effort. KS coalesces repeated events of the same type over a 100 ms window, about 33 ms for `voice.level`, and keeps only the latest pending payload of each type while the plugin is busy. Do not use these events as an audit log or exact occurrence counter.
 
 ### Hardware keys
 
@@ -242,7 +251,7 @@ if ("VOLUME_UP".equals(payload.get("key"))) {
 
 It covers realtime conversations too. A realtime conversation runs no Assist pipeline, so Home Assistant's `assist_satellite` entity stays at `idle` through it while `voice.state` moves through listening and responding as the conversation goes. Following `voice.state` also needs no Home Assistant connection and does not break when the device or its entities are renamed.
 
-The state comes from the native Voice Satellite runtime. While it is off, `getVoiceState` returns `enabled: false` with `state: "idle"` and no events arrive. The event only fires on changes, so read `getVoiceState` once after subscribing. A change can arrive before the read returns, so let an event win over an older read. No speech, transcript or answer text is included.
+The state comes from the native Voice Satellite runtime. While it is off, `getVoiceState` returns `enabled: false` with `state: "idle"` and no events arrive. The event only fires on changes, so read `getVoiceState` once after subscribing. A change can arrive before the read returns, so let an event win over an older read. No speech, transcript or answer text is included. A plugin that declares `voice.text` can read the words with [`getVoiceText`](voice-skins.md#conversation-text).
 
 ```java
 host.subscribe("voice.state");

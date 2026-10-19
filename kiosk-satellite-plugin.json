@@ -15,8 +15,11 @@
     "shizuku",
     "screensaver",
     "host.read",
-    "ha"
+    "ha",
+    "voice.skin",
+    "voice.text"
   ],
+  "voiceSkinThumbnail": "voice-skin.webp",
   "settings": [
     {
       "key": "message",

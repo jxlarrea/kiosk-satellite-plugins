@@ -21,6 +21,7 @@ All documented features use **SDK 1**, the first public plugin SDK. Plugins requ
 - [Charts](docs/charts.md): publish line and bar charts, inspect samples and update an existing plugin to use charts.
 - [Status tiles](docs/status-tiles.md): put a health verdict on the Remote Admin Overview Status panel.
 - [Native overlays](docs/overlays.md): draw Android views over the kiosk, from a small bar to a full screen panel, with the KS theme.
+- [Voice skins](docs/voice-skins.md): draw the Voice Satellite overlay in place of the built-in skins, with the voice level and the conversation text.
 - [Sensors, selects and switches](docs/entities.md): show live readings in KS, publish them to Home Assistant and handle writable controls.
 - [Dashboard URLs](docs/dashboard.md): discover the configured server and current view without duplicating URL settings.
 - [SDK source](sdk/src/me/jxl/kiosk/plugins): the `KioskPlugin` and `PluginHost` interfaces and the overlay classes supplied by Kiosk Satellite at runtime.
@@ -116,6 +117,10 @@ Enable Hello World, then select **DVD Logo (Hello World)** under **Screensaver >
 ### Try hardware keys
 
 The **Hardware keys demo** group subscribes to `device.key` while **Show hardware keys** is on. Press a volume, media or remote button with KS in the foreground. **Last hardware key** under Readings shows the key name, its scan code and a press count. Buttons without an Android key code can show as `UNKNOWN` with their scan code. Each press also fires the **Hardware key** gesture trigger, so a gesture set to **Plugin trigger > Hello World: Hardware key** under **Gestures** runs its action. See [hardware keys](docs/ks-api.md#hardware-keys), [gesture triggers](docs/creating-plugins.md#gesture-triggers) and [KeyDemo.java](src/me/jxl/kiosk/plugins/hello/KeyDemo.java).
+
+### Try the voice skin
+
+Hello World is also a voice skin. With the native Voice Satellite runtime enabled, pick **Hello World** under **Voice Satellite > Appearance > Skin** and press **Preview**, or say the wake word. KS draws none of its own overlay. Hello World dims the screen and draws a ring that swells with your voice and the answer, an arc that turns while the assistant thinks and the conversation under it. With **Overlay mode** set to Docked, the ring and the conversation sit in a card at the bottom of the screen instead. Both looks follow Theme, Background, Text size and Reactive activity bar. The conversation follows the **Show what you said** and **Show the answer** settings. Pick another skin to give the turn back to KS. See [Voice skins](docs/voice-skins.md) and [VoiceSkinDemo.java](src/me/jxl/kiosk/plugins/hello/VoiceSkinDemo.java).
 
 ### Try Voice Satellite state
 

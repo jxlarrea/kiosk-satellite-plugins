@@ -161,7 +161,7 @@ While Lockdown Mode is on, back never closes an overlay.
 
 Overlays sit above the dashboard and its web overlays and below the Sendspin player, the menu, the screensaver, notifications and Lockdown Mode. The menu slides them aside with the dashboard. Floating windows sit above them. Within those layers, a new or replaced overlay goes on top.
 
-An overlay with `onTop(true)` moves to the slot of the KS voice overlay, over the screensaver, the menu and camera views. Notifications, intercom call cards, announcements, the voice overlay itself, the screensaver's black cover and Lockdown Mode still cover it. Use it for visuals that must show whatever the kiosk is doing. It does not stop or dismiss the screensaver.
+An overlay with `onTop(true)` moves to the slot of the KS voice overlay, over the screensaver, the menu and camera views. Notifications, intercom call cards, announcements, the voice overlay itself, the screensaver's black cover and Lockdown Mode still cover it. During a voice turn it draws over the black cover too, so a [voice skin](voice-skins.md) shows on a blanked screen. Use it for visuals that must show whatever the kiosk is doing. It does not stop or dismiss the screensaver.
 
 ## Limits and lifetime
 

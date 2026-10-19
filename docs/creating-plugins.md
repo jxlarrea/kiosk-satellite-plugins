@@ -93,10 +93,11 @@ See [kiosk-satellite-plugin.json](../kiosk-satellite-plugin.json) for a complete
 | `description` | Plain text, at most 1000 characters |
 | `author` | Author name, at most 120 characters |
 | `license` | License identifier, at most 120 characters |
-| `capabilities` | Any required entries from `overlay`, `native`, `entities`, `host.read`, `host.control`, `ha`, `shizuku`, `screensaver` and `noise`. `noise` requires `host.read` |
+| `capabilities` | Any required entries from `overlay`, `native`, `entities`, `host.read`, `host.control`, `ha`, `shizuku`, `screensaver`, `noise`, `voice.skin` and `voice.text`. `noise` and `voice.text` require `host.read`. `voice.skin` requires `overlay` and `host.read` |
 | `settings` | Up to 50 settings. Kiosk Satellite versions without native overlays accept up to 20 |
 | `commands` | Up to 20 named commands |
 | `triggers` | Up to 20 named [gesture triggers](#gesture-triggers) |
+| `voiceSkinThumbnail` | Optional. A PNG, JPEG or WebP under `assets/`, at most 256 KB, that shows the plugin's voice skin in the Skin picker. Requires `voice.skin`. See [Voice skins](voice-skins.md#thumbnail) |
 | `headless` | Optional. `true` when the plugin also runs on a device without a screen, such as an Echo Dot. See [Devices without a screen](#devices-without-a-screen) |
 
 A setting declares `key`, `title`, `type` and `default`. Types are `string`, `secret`, `boolean`, `number`, `color`, `select`, `entity`, `icon`, `dashboard`, `cameraView` and `list`. Strings and secrets allow up to 512 characters. See [Pickers, lists and conditions](#pickers-lists-and-conditions) for the last four. Keys start with a letter and contain letters, digits or underscores. A command or trigger declares `id` and `title`. Their IDs start with a lowercase letter and contain letters or digits. IDs must be unique within their respective lists.
