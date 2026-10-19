@@ -65,7 +65,9 @@ Each overlay is its own Android view hosted inside KS's Flutter screen, and crea
 
 A `WRAP` side follows the view's measured size and updates when the view asks for a new layout. KS measures it against the kiosk area less the insets on that axis. A `FILL` side takes the whole area less the insets. A fixed size is capped at the available area.
 
-The offset applies after the anchor, and KS keeps the overlay inside the area its insets leave, so a large offset stops at the edge instead of pushing the overlay off screen. With `TOP_LEFT` and no insets, the offset is the overlay's position from the top left of the kiosk area. To open a menu next to a view in another overlay, read that view's position with `getLocationOnScreen`, divide by the display density and offset from the matching anchor. Hello World's **More** menu opens under its button this way.
+Overlays follow the kiosk's **Scale UI** setting like the rest of Kiosk Satellite. The context passed to `create` has a density that includes it, so dp and sp lengths in views, layouts and `KsTheme` grow with it. KS scales the sizes, insets and offsets in `OverlaySpec` and the space from `setContentInsets` by the same amount. Convert pixels to dp with the view's own density and everything lines up at every scale. A new scale builds the view again.
+
+The offset applies after the anchor, and KS keeps the overlay inside the area its insets leave, so a large offset stops at the edge instead of pushing the overlay off screen. With `TOP_LEFT` and no insets, the offset is the overlay's position from the top left of the kiosk area. To open a menu next to a view in another overlay, read that view's position with `getLocationOnScreen`, divide by the view's density and offset from the matching anchor. Hello World's **More** menu opens under its button this way.
 
 Transparent and translucent pixels show what is under the overlay, so a full screen view can dim the kiosk or draw effects over it.
 
