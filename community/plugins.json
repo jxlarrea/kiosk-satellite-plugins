@@ -1,5 +1,10 @@
 [
   {
+    "repository": "Coffmad/kiosk-satellite-google-photos",
+    "id": "google-photos-screensaver",
+    "added": "2026-10-19"
+  },
+  {
     "repository": "PrimusNZ/kiosk-satellite-cabal-skin",
     "id": "primusnz-cabal-skin",
     "added": "2026-10-19"
