@@ -30,6 +30,11 @@
     "added": "2026-10-19"
   },
   {
+    "repository": "davidcoulson/kiosk-satellite-package-management",
+    "id": "package-management",
+    "added": "2026-10-19"
+  },
+  {
     "repository": "jxlarrea/kiosk-satellite-plugins",
     "id": "hello-world",
     "added": "2026-10-19"
