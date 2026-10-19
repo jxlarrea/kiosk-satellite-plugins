@@ -60,6 +60,11 @@
     "added": "2026-10-19"
   },
   {
+    "repository": "mark-andrew/kiosk-satellite-unifi-doorbell",
+    "id": "protect-camera",
+    "added": "2026-10-19"
+  },
+  {
     "repository": "mpjanofsky/gameday-overlay",
     "id": "gameday",
     "added": "2026-10-19"
