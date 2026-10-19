@@ -15,6 +15,11 @@
     "added": "2026-10-19"
   },
   {
+    "repository": "davidcoulson/kiosk-satellite-network-adb",
+    "id": "network-adb",
+    "added": "2026-10-19"
+  },
+  {
     "repository": "jxlarrea/kiosk-satellite-plugins",
     "id": "hello-world",
     "added": "2026-10-19"
