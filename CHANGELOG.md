@@ -4,6 +4,8 @@
 
 ### Added
 
+- Give Hello World an icon, the Kiosk Satellite mark, through the new `icon` manifest field. Community Plugins shows it.
+
 - Add Community Plugins, the plugin directory on kiosksatellite.com and under **Plugin Manager > Browse plugins**. Authors submit a plugin through the new **Submit a plugin** issue form. A workflow checks it the way Kiosk Satellite checks an install and lists it in `community/plugins.json` once a maintainer approves it. `tools/community_plugins.py check` runs the same check from a clone. Add the optional `icon` manifest field, a 256 by 256 PNG under `assets/` that the directory shows. The README now covers submitting a plugin, and the guide it held moved to the new Getting started page.
 
 - Document that a list row shows an `entity` field the way the entity picker does: its friendly name and state, and as the row title its icon and entity ID too.

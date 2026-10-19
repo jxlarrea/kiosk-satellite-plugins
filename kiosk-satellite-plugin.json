@@ -19,6 +19,7 @@
     "voice.skin",
     "voice.text"
   ],
+  "icon": "icon.png",
   "voiceSkinThumbnail": "voice-skin.webp",
   "settings": [
     {
