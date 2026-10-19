@@ -22,6 +22,7 @@ All documented features use **SDK 1**, the first public plugin SDK. Plugins requ
 - [Status tiles](docs/status-tiles.md): put a health verdict on the Remote Admin Overview Status panel.
 - [Native overlays](docs/overlays.md): draw Android views over the kiosk, from a small bar to a full screen panel, with the KS theme.
 - [Voice skins](docs/voice-skins.md): draw the Voice Satellite overlay in place of the built-in skins, with the voice level and the conversation text.
+- [Settings buttons and plugin choices](docs/setup-controls.md): guided setup on the settings page, with buttons that report progress, choices the plugin finds and questions asked partway through.
 - [Sensors, selects and switches](docs/entities.md): show live readings in KS, publish them to Home Assistant and handle writable controls.
 - [Dashboard URLs](docs/dashboard.md): discover the configured server and current view without duplicating URL settings.
 - [SDK source](sdk/src/me/jxl/kiosk/plugins): the `KioskPlugin` and `PluginHost` interfaces and the overlay classes supplied by Kiosk Satellite at runtime.
@@ -133,6 +134,10 @@ The **Intercom demo** group subscribes to `intercom.state` while **Show intercom
 ### Try list settings
 
 The **List demo** group shows a list setting and the picker settings. **Shortcuts** lists its rows on the subpage. Tap one to edit it, drag its handle to move it or tap **Add shortcut**. **Opens** decides which field shows next: a **Page** from the dashboard picker, a **Camera view** or **Menu entries**, a nested list that opens inside the same editor. **Favorite page**, **Featured icon** and **Camera view** use the same pickers on their own, and **Camera view** only shows while **Use a camera view** is on. **Shortcuts received** and **Picker values** under List demo readings show what `configure` received. See [pickers, lists and conditions](docs/creating-plugins.md#pickers-lists-and-conditions) and [ListDemo.java](src/me/jxl/kiosk/plugins/hello/ListDemo.java).
+
+### Try the setup controls
+
+The **Setup demo** group talks to a pretend device. Press **Test** to check **Device address**. It reports progress, then the result under the row. Put `fail` in the address to see an error. **Pair** asks first, then asks you to trust the device's fingerprint partway through. Press **Refresh** beside **Device** and the plugin finds three devices one at a time. Pick one and **Device name** fills in by itself. See [Settings buttons and plugin choices](docs/setup-controls.md) and [SetupDemo.java](src/me/jxl/kiosk/plugins/hello/SetupDemo.java).
 
 ### Try Shizuku
 

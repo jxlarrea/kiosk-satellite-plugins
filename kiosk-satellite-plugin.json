@@ -345,6 +345,68 @@
         "key": "showCamera",
         "equals": true
       }
+    },
+    {
+      "key": "setupAddress",
+      "type": "string",
+      "title": "Device address",
+      "default": "demo.local",
+      "group": "Setup demo",
+      "description": "Text input: the pretend device's address. Include fail in it to see an error."
+    },
+    {
+      "key": "setupDevice",
+      "type": "string",
+      "choices": "plugin",
+      "title": "Device",
+      "default": "",
+      "group": "Setup demo",
+      "visibleWhen": {
+        "key": "setupAddress",
+        "notEmpty": true
+      },
+      "description": "Plugin choices: press Refresh and the plugin looks for devices."
+    },
+    {
+      "key": "setupDeviceName",
+      "type": "string",
+      "title": "Device name",
+      "default": "",
+      "group": "Setup demo",
+      "visibleWhen": {
+        "key": "setupAddress",
+        "notEmpty": true
+      },
+      "description": "Filled in by the plugin when you pick a device."
+    }
+  ],
+  "buttons": [
+    {
+      "id": "setupTest",
+      "title": "Test connection",
+      "label": "Test",
+      "group": "Setup demo",
+      "visibleWhen": {
+        "key": "setupAddress",
+        "notEmpty": true
+      },
+      "description": "Button: checks the address and reports the result here."
+    },
+    {
+      "id": "setupPair",
+      "title": "Pair",
+      "label": "Pair",
+      "group": "Setup demo",
+      "visibleWhen": {
+        "key": "setupAddress",
+        "notEmpty": true
+      },
+      "description": "Button: asks you to trust the device's fingerprint partway through.",
+      "confirm": {
+        "title": "Pair with the device?",
+        "message": "Pairing replaces any earlier pairing of this demo.",
+        "confirmLabel": "Pair"
+      }
     }
   ],
   "commands": [
@@ -458,6 +520,9 @@
         "text_sensor.list_summary",
         "text_sensor.picker_values"
       ]
+    },
+    {
+      "title": "Setup demo"
     }
   ]
 }

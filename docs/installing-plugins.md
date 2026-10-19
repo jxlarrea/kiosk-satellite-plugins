@@ -77,7 +77,11 @@ The existing authenticated command API exposes these commands:
 | `enablePlugin` | `id` |
 | `disablePlugin` | `id` |
 | `removePlugin` | `id` |
-| `configurePlugin` | `id`, `values`: complete settings object. A `secret` setting that is omitted or set to `__set__` keeps its saved value. An empty string clears it |
+| `configurePlugin` | `id`, `values`: complete settings object. With `patch`: true, `values` holds only the settings to change and the rest keep their saved values. A `secret` setting that is omitted or set to `__set__` keeps its saved value. An empty string clears it |
+| `getPluginSetup` | `id`. Returns the settings button and choices runs and the listed choices |
+| `runPluginSetup` | `id`, `target`: `button` or `choices`, `key`: button ID or setting key |
+| `cancelPluginSetup` | `id`, `run` |
+| `answerPluginSetup` | `id`, `run`, `accepted`: boolean |
 | `getPluginActions` | None. Returns declared actions and their availability |
 | `getPluginTriggers` | None. Returns declared gesture triggers and their availability |
 | `configurePluginAction` | `id`, `command`, `drawer`: boolean, `homeAssistant`: boolean |

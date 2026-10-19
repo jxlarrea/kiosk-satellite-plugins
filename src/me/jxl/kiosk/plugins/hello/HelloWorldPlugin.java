@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 import me.jxl.kiosk.plugins.KioskPlugin;
 import me.jxl.kiosk.plugins.PluginHost;
 
-/** Settings controls including lists and pickers, a floating window, native overlays, actions, live readings, a read-only chart, an Overview status tile, hardware keys, Voice Satellite state, a voice skin and intercom state. */
+/** Settings controls including lists, pickers, buttons and plugin choices, a floating window, native overlays, actions, live readings, a read-only chart, an Overview status tile, hardware keys, Voice Satellite state, a voice skin and intercom state. */
 public final class HelloWorldPlugin implements KioskPlugin {
     private final HomeAssistantDemo homeAssistant = new HomeAssistantDemo();
     private final StatusTileDemo statusTile = new StatusTileDemo();
@@ -22,6 +22,7 @@ public final class HelloWorldPlugin implements KioskPlugin {
     private final IntercomDemo intercom = new IntercomDemo();
     private final ListDemo lists = new ListDemo();
     private final OverlayDemo overlays = new OverlayDemo();
+    private final SetupDemo setup = new SetupDemo();
     private PluginHost host;
     private final ShizukuDemo shizuku = new ShizukuDemo();
     private Map<String, Object> savedSettings;
@@ -46,6 +47,7 @@ public final class HelloWorldPlugin implements KioskPlugin {
         this.host = host;
         overlays.start(host);
         voiceSkin.start(host);
+        setup.start(host);
         configure(settings);
         shizuku.start(host, settings);
         host.log("Hello World started");
@@ -83,6 +85,7 @@ public final class HelloWorldPlugin implements KioskPlugin {
         voice.configure(host, settings);
         intercom.configure(host, settings);
         lists.configure(host, settings);
+        setup.configure(settings);
         Map<String, Object> nextScreensaver = DvdScreensaver.options(settings);
         if (!nextScreensaver.equals(screensaverOptions)) {
             host.publishScreensaverAsset("dvd", "DVD Logo", "dvd/index.html", nextScreensaver);
@@ -173,6 +176,7 @@ public final class HelloWorldPlugin implements KioskPlugin {
         voice.onEvent(event, payload);
         voiceSkin.onEvent(event, payload);
         intercom.onEvent(event, payload);
+        setup.onEvent(event, payload);
         if ("shizuku.state".equals(event)) {
             shizuku.stateChanged();
         } else if ("window.action".equals(event)) {
@@ -212,6 +216,7 @@ public final class HelloWorldPlugin implements KioskPlugin {
         voiceSkin.stop();
         intercom.stop();
         overlays.stop();
+        setup.stop();
         if (sampler != null) { sampler.shutdownNow(); sampler = null; }
         times.clear(); wave.clear(); reference.clear(); phase = 0;
         visible = false;

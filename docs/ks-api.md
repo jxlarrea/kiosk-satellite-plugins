@@ -329,6 +329,10 @@ These methods operate on resources owned by the plugin and are part of SDK 1.
 | `publishSeries(key, chart)` | Publish a read-only chart in the plugin subpage. Up to four charts per session with four series and 240 samples each. See the [chart API](charts.md) |
 | `removeSeries(key)` | Remove a chart from the active plugin session |
 | `saveSettings(values)` | Saves values validated against the plugin's declared settings. Unknown keys are rejected and omitted values use defaults. Does not invoke `configure` again |
+| `updateSettings(values)` | Saves only the named settings. Omitted values, secrets included, keep what was saved. Does not invoke `configure` again |
+| `setupResult(run, state, message)` | Reports `running`, `success` or `error` for a settings button or choices run. Returns `false` once the run is over. See [settings buttons and plugin choices](setup-controls.md) |
+| `confirmSetup(run, title, message, confirmLabel)` | Asks the person who started the run to confirm a step. The answer arrives as `settings.confirm` |
+| `setSettingChoices(key, ids, labels)` | Lists the choices of a `string` setting declared with `"choices": "plugin"` |
 | `nativeLibraryPath(name)` | Verified per-session path to a packaged library matching the process ABI. Pass `rockchip_led` for `librockchip_led.so` |
 | `packagePath()` | Verified plugin DEX JAR path, for a plugin-owned helper |
 | `assetPath(name)` | Absolute path to a verified, read-only file under the package's `assets/` folder, such as `fonts/icons.ttf` for `Typeface.createFromFile`. Throws `IllegalArgumentException` for a missing file or a path that leaves `assets/`. No capability is required |
@@ -346,11 +350,15 @@ These methods operate on resources owned by the plugin and are part of SDK 1.
 | `onEvent("window.action", payload)` | The plugin window's button was pressed. Empty payload |
 | `onEvent("window.closed", payload)` | The user dismissed its window. Empty payload |
 | `onEvent("overlay.closed", payload)` | Back closed one of its overlays. `key` names it |
+| `onEvent("settings.button", payload)` | A settings button was pressed. `id` names it and `run` names the run to report on |
+| `onEvent("settings.choices", payload)` | Refresh was pressed on a choices setting. `key` names it and `run` names the run |
+| `onEvent("settings.cancel", payload)` | A run ended before the plugin finished it. `run`, `reason`: `canceled`, `replaced` or `timeout` |
+| `onEvent("settings.confirm", payload)` | The answer to `confirmSetup`. `run`, `accepted` |
 | `onEvent("light.KEY", payload)` | A command for its RGB light, containing the supplied fields from `on`, `brightness`, `red`, `green`, `blue` and `effect` |
 | `onEvent("ks.NAME", payload)` | A subscribed SDK 1 event from the table above |
 | `stop()` | Ends the session. Release timers, threads and hardware handles |
 
-Settings controls support strings, booleans, numbers, colors, selections, groups and descriptions. Actions and RGB lights are namespaced by plugin ID. Users opt actions into the drawer and Home Assistant through Plugin Manager. Neither mechanism lets a plugin replace a core KS command.
+Settings controls support strings, booleans, numbers, colors, selections, groups, descriptions, buttons and plugin choices. Actions and RGB lights are namespaced by plugin ID. Users opt actions into the drawer and Home Assistant through Plugin Manager. Neither mechanism lets a plugin replace a core KS command.
 
 ## Not exposed
 

@@ -78,6 +78,28 @@ public interface PluginHost {
     default void status(String message, boolean error) { throw new UnsupportedOperationException("SDK 1 required"); }
     /** SDK 1. Persist settings changed by plugin actions or Home Assistant. */
     default void saveSettings(Map<String, Object> values) { throw new UnsupportedOperationException("SDK 1 required"); }
+    /**
+     * SDK 1. Save only the named settings. Every other saved value stays, secrets included. Use it to fill in
+     * settings that depend on a choice. Like saveSettings, it does not call configure.
+     */
+    default void updateSettings(Map<String, Object> values) { throw new UnsupportedOperationException("Setup controls are unavailable"); }
+    /**
+     * SDK 1. Report on a run that a settings button or a choices refresh started: "running" with progress text,
+     * then "success" or "error" with the outcome. Returns false once the run was canceled, replaced or timed out,
+     * so stop its work. A run with nothing reported for 60 seconds fails.
+     */
+    default boolean setupResult(String run, String state, String message) { throw new UnsupportedOperationException("Setup controls are unavailable"); }
+    /**
+     * SDK 1. Ask the person who started a run to confirm a step, such as trusting a certificate fingerprint. The
+     * answer arrives as onEvent("settings.confirm", {run, accepted}). One question per run at a time. Returns
+     * false once the run is over.
+     */
+    default boolean confirmSetup(String run, String title, String message, String confirmLabel) { throw new UnsupportedOperationException("Setup controls are unavailable"); }
+    /**
+     * SDK 1. List the choices of a string setting declared with "choices": "plugin". The setting stores the ID.
+     * labels may be null, and a null label shows its ID. At most 200. The list lasts for this session.
+     */
+    default void setSettingChoices(String key, String[] ids, String[] labels) { throw new UnsupportedOperationException("Setup controls are unavailable"); }
     /** SDK 1. Register or update an RGB light. Commands arrive as light.<key>. */
     default void publishLight(String key, String name, String[] effects, Map<String, Object> state) { throw new UnsupportedOperationException("SDK 1 required"); }
     default void removeLight(String key) { throw new UnsupportedOperationException("SDK 1 required"); }
