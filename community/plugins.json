@@ -45,6 +45,11 @@
     "added": "2026-10-19"
   },
   {
+    "repository": "dimatx/kiosk-satellite-action-bar",
+    "id": "ks-action-bar",
+    "added": "2026-10-19"
+  },
+  {
     "repository": "dimatx/kiosk-satellite-navbar",
     "id": "ks-navbar",
     "added": "2026-10-19"
