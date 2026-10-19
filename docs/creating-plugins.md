@@ -277,7 +277,7 @@ A `list` setting holds rows that users add, edit, reorder and delete. Each row i
 | `maxItems` | Up to 32 rows, which is also the default |
 | `minItems` | Rows the list needs while it is shown. 0 unless set |
 | `addTitle` | The add row's label and the new row editor's title, such as `Add item`. Defaults to Add |
-| `row` | What a row shows: `title` is a field key and defaults to the first `string` field. `subtitle` is a key or up to four keys, and the first one that is shown and not empty wins. `icon` names an `icon` field |
+| `row` | What a row shows: `title` is a field key and defaults to the first `string` field. `subtitle` is a key or up to four keys, and the first one that is shown and not empty wins. `icon` names an `icon` field. An `entity` field shows the entity's friendly name and state. As the title it also brings the entity's icon unless the row has its own, with its state and entity ID below unless `subtitle` has something to show |
 
 A list can hold one nested list, which opens inside the same editor. Lists cannot go deeper. The editor's Save stays off until every shown `required` field is filled in and every shown list has `minItems` rows. A list counts as one of the 50 settings, and its saved value is at most 32 KB.
 

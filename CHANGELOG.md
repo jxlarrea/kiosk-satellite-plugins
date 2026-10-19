@@ -4,6 +4,8 @@
 
 ### Added
 
+- Document that a list row shows an `entity` field the way the entity picker does: its friendly name and state, and as the row title its icon and entity ID too.
+
 - Document that overlays follow the kiosk's **Scale UI** setting. The context passed to `OverlayFactory.create` has a density that includes it, so `KsTheme.px`, dp and sp grow with it, and KS scales `OverlaySpec` sizes, insets and offsets and `setContentInsets` to match. A new scale builds the view again.
 
 - Add settings buttons and plugin choices. A top-level `buttons` array puts buttons on the plugin's settings page, each closing its settings group, with an optional `confirm` dialog and `visibleWhen`. A press arrives as `settings.button` with a run the plugin reports on through `host.setupResult(run, state, message)`. `settings.cancel` ends a canceled, replaced or timed out run. `host.confirmSetup` asks the person a question partway through a run, answered through `settings.confirm`. A `string` setting with `"choices": "plugin"` lists what `host.setSettingChoices` publishes. Refresh arrives as `settings.choices`. Add `host.updateSettings(values)`, which saves only the named settings. The new **Setup demo** group tests a pretend address, pairs with a fingerprint question and finds devices that fill in a dependent setting. Document all of them in the new Settings buttons and plugin choices guide.
