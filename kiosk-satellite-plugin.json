@@ -17,7 +17,9 @@
     "host.read",
     "ha",
     "voice.skin",
-    "voice.text"
+    "voice.text",
+    "camera",
+    "barcode"
   ],
   "icon": "icon.png",
   "voiceSkinThumbnail": "voice-skin.webp",
@@ -442,6 +444,18 @@
     {
       "id": "toggleEntity",
       "title": "Toggle Home Assistant entity"
+    },
+    {
+      "id": "showCameraPreview",
+      "title": "Show camera preview"
+    },
+    {
+      "id": "hideCameraPreview",
+      "title": "Hide camera preview"
+    },
+    {
+      "id": "scanCode",
+      "title": "Scan a code"
     }
   ],
   "triggers": [

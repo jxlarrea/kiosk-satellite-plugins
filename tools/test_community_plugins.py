@@ -122,11 +122,12 @@ class RepositoryTest(unittest.TestCase):
 class ManifestTest(unittest.TestCase):
     def test_valid_manifest(self):
         cp.validate_manifest(manifest())
+        cp.validate_manifest(manifest(capabilities=['camera', 'barcode']))
 
     def test_rules_from_the_app(self):
         for change in [
             {'schemaVersion': True}, {'apiVersion': 2}, {'id': 'Weather'}, {'version': '1.2'}, {'entryClass': 'Plugin'},
-            {'minAndroidSdk': 23}, {'capabilities': ['camera']}, {'capabilities': ['noise']},
+            {'minAndroidSdk': 23}, {'capabilities': ['microphone']}, {'capabilities': ['noise']},
             {'capabilities': ['voice.skin', 'overlay']}, {'author': ' '}, {'headless': 'yes'},
             {'voiceSkinThumbnail': 'thumb.png'}, {'settings': [{'key': 'a', 'title': 'A', 'type': 'secret', 'default': 'x'}]},
             {'settings': [{'key': 'a', 'title': 'A', 'type': 'string'}, {'key': 'a', 'title': 'B', 'type': 'string'}]},

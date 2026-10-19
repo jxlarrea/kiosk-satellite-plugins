@@ -19,6 +19,8 @@ Every plugin declares `"apiVersion": 1`. All features below belong to that singl
 | `ha` | Call Home Assistant services, run other commands and subscribe to triggers, events and templates. See the [Home Assistant guide](home-assistant.md#call-services-and-other-commands) |
 | `voice.skin` | Appear in Voice Satellite's Skin list and draw the turn in place of the KS overlay. Requires `overlay` and `host.read`. See [Voice skins](voice-skins.md) |
 | `voice.text` | Read what the user said and the assistant answered. Requires `host.read`. See [Conversation text](voice-skins.md#conversation-text) |
+| `camera` | Receive frames from the device camera. See [Camera frames](camera.md#camera-frames) |
+| `barcode` | Open the KS scanner and read a barcode or a QR code. See [Scan a code](camera.md#scan-a-code) |
 
 Request only the capabilities the plugin uses. `getHostApi` is available with either host capability and lists the commands and events available to that session. Plugins execute inside the app and are not sandboxed from arbitrary Java or native code. These capabilities describe the public API contract. Users must trust installed code.
 

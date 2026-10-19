@@ -93,7 +93,7 @@ See [kiosk-satellite-plugin.json](../kiosk-satellite-plugin.json) for a complete
 | `description` | Plain text, at most 1000 characters |
 | `author` | Author name, at most 120 characters |
 | `license` | License identifier, at most 120 characters |
-| `capabilities` | Any required entries from `overlay`, `native`, `entities`, `host.read`, `host.control`, `ha`, `shizuku`, `screensaver`, `noise`, `voice.skin` and `voice.text`. `noise` and `voice.text` require `host.read`. `voice.skin` requires `overlay` and `host.read` |
+| `capabilities` | Any required entries from `overlay`, `native`, `entities`, `host.read`, `host.control`, `ha`, `shizuku`, `screensaver`, `noise`, `voice.skin`, `voice.text`, `camera` and `barcode`. `noise` and `voice.text` require `host.read`. `voice.skin` requires `overlay` and `host.read` |
 | `settings` | Up to 50 settings. Kiosk Satellite versions without native overlays accept up to 20 |
 | `commands` | Up to 20 named commands |
 | `triggers` | Up to 20 named [gesture triggers](#gesture-triggers) |
@@ -232,6 +232,10 @@ Put a verdict on the Remote Admin Overview Status panel with `host.publishStatus
 ## KS state and transient controls
 
 Declare `host.read` to inspect supported KS state and subscribe to passive events. Declare `host.control` for transient controls such as dismissing the screensaver or showing and hiding camera views and Now Playing. The [complete KS interaction reference](ks-api.md) lists every command, event, payload, capability and limit and includes a buildable example.
+
+## Camera and barcodes
+
+Declare `barcode` to open the KS scanner and get back the code it reads, or `camera` to receive frames from the device camera. Both share the camera with motion detection and the other camera features. The [camera and barcode guide](camera.md) covers the options, results, limits and the Hello World demos.
 
 ## Shizuku
 

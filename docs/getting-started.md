@@ -17,6 +17,7 @@ All documented features use **SDK 1**, the first public plugin SDK. Plugins requ
 - [Native overlays](overlays.md): draw Android views over the kiosk, from a small bar to a full screen panel, with the KS theme.
 - [Voice skins](voice-skins.md): draw the Voice Satellite overlay in place of the built-in skins, with the voice level and the conversation text.
 - [Settings buttons and plugin choices](setup-controls.md): guided setup on the settings page, with buttons that report progress, choices the plugin finds and questions asked partway through.
+- [Camera and barcodes](camera.md): scan a barcode or a QR code with the KS scanner, or receive frames from the device camera.
 - [Sensors, selects and switches](entities.md): show live readings in KS, publish them to Home Assistant and handle writable controls.
 - [Dashboard URLs](dashboard.md): discover the configured server and current view without duplicating URL settings.
 - [SDK source](../sdk/src/me/jxl/kiosk/plugins): the `KioskPlugin` and `PluginHost` interfaces and the overlay classes supplied by Kiosk Satellite at runtime.
@@ -132,6 +133,10 @@ The **List demo** group shows a list setting and the picker settings. **Shortcut
 ### Try the setup controls
 
 The **Setup demo** group talks to a pretend device. Press **Test** to check **Device address**. It reports progress, then the result under the row. Put `fail` in the address to see an error. **Pair** asks first, then asks you to trust the device's fingerprint partway through. Press **Refresh** beside **Device** and the plugin finds three devices one at a time. Pick one and **Device name** fills in by itself. See [Settings buttons and plugin choices](setup-controls.md) and [SetupDemo.java](../src/me/jxl/kiosk/plugins/hello/SetupDemo.java).
+
+### Try the camera and the scanner
+
+Run the **Scan a code** action from Hello World's subpage, a gesture or a drawer shortcut, or expose it as a Home Assistant button and press it there. The scanner reads every kind of barcode and QR code, and the code and its format show under **Last code** and **Last code format** in the readings. Home Assistant hears it as a `hello_world_barcode` event. **Show camera preview** draws the camera's frames in a small card for 30 seconds, with **Camera brightness** in the readings. Both need the camera turned on in **Settings > Camera**. See [Camera and barcodes](camera.md).
 
 ### Try Shizuku
 

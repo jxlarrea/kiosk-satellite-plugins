@@ -10,6 +10,17 @@ public interface PluginHost {
         void onResult(boolean ok, Object data, String error);
     }
 
+    /** SDK 1, camera. Frames from openCamera, delivered one at a time on a camera thread of the plugin's own. */
+    interface CameraListener {
+        /** A new frame. Frames that arrive while this call still runs are skipped. */
+        void onFrame(CameraFrame frame);
+        /**
+         * The camera closed and no frames follow. reason is "closed", "timeout", "busy", "disabled", "permission",
+         * "no_camera" or "camera_failed".
+         */
+        default void onClosed(String reason) {}
+    }
+
     /** SDK 1, host.read or host.control. Asynchronous documented KS commands. */
     default void executeCommand(String command, Map<String, Object> arguments, CommandCallback callback) { throw new UnsupportedOperationException("SDK 1 required"); }
     /** SDK 1, host.read. Events arrive through onEvent("ks." + event, payload). */
@@ -30,6 +41,25 @@ public interface PluginHost {
     default void haSubscribe(String key, Map<String, Object> message, CommandCallback callback) { throw new UnsupportedOperationException("Home Assistant access is unavailable"); }
     /** SDK 1, ha. End a subscription. Unknown keys are ignored. */
     default void haUnsubscribe(String key) { throw new UnsupportedOperationException("Home Assistant access is unavailable"); }
+    /**
+     * SDK 1, camera. Receive frames from the device camera, through the same session motion detection uses. Options:
+     * size "320x240", "640x480" (default) or "1280x720", fps 1 to 15 (default 5), facing "default", "front" or
+     * "back", format "luminance" (default) or "nv21" and timeoutSeconds 5 to 600 (default 60). The camera closes when
+     * the time is up. Call it again to change the options or restart the time. One plugin holds the camera at a time.
+     */
+    default void openCamera(Map<String, Object> options, CameraListener listener) { throw new UnsupportedOperationException("Camera access is unavailable"); }
+    /** SDK 1, camera. Stop the frames. The listener hears onClosed("closed"). */
+    default void closeCamera() { throw new UnsupportedOperationException("Camera access is unavailable"); }
+    /**
+     * SDK 1, barcode. Show the KS scanner and answer with the first code it reads as {value, format}. Options: formats,
+     * a list from "qr_code", "aztec", "data_matrix", "pdf417", "ean_13", "ean_8", "upc_a", "upc_e", "code_128",
+     * "code_39", "code_93", "codabar" and "itf" (default all), facing "default", "front" or "back", timeoutSeconds
+     * 5 to 120 (default 30), title up to 80 characters and message up to 200. On failure error and data.code are
+     * "canceled", "timeout", "busy", "disabled", "permission", "no_camera", "camera_failed" or "unavailable".
+     */
+    default void scanBarcode(Map<String, Object> options, CommandCallback callback) { throw new UnsupportedOperationException("Barcode scanning is unavailable"); }
+    /** SDK 1, barcode. Close this plugin's scanner. Its callback reports "canceled". */
+    default void cancelBarcodeScan() { throw new UnsupportedOperationException("Barcode scanning is unavailable"); }
     /** SDK 1, shizuku. Current availability, permission, backend UID and version. Does not prompt. */
     default Map<String, Object> shizukuState() { throw new UnsupportedOperationException("Shizuku is unavailable"); }
     /** SDK 1, shizuku. Run an absolute executable with separate arguments after the user grants KS access. */

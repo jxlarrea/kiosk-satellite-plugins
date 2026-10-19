@@ -45,7 +45,7 @@ ALLOWED_HOSTS = {
 }
 CAPABILITIES = {
     'overlay', 'native', 'entities', 'host.read', 'host.control', 'shizuku',
-    'screensaver', 'noise', 'ha', 'voice.skin', 'voice.text',
+    'screensaver', 'noise', 'ha', 'voice.skin', 'voice.text', 'camera', 'barcode',
 }
 SETTING_TYPES = {
     'string', 'secret', 'entity', 'icon', 'dashboard', 'cameraView', 'boolean',

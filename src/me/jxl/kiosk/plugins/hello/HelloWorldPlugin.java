@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 import me.jxl.kiosk.plugins.KioskPlugin;
 import me.jxl.kiosk.plugins.PluginHost;
 
-/** Settings controls including lists, pickers, buttons and plugin choices, a floating window, native overlays, actions, live readings, a read-only chart, an Overview status tile, hardware keys, Voice Satellite state, a voice skin and intercom state. */
+/** Settings controls including lists, pickers, buttons and plugin choices, a floating window, native overlays, actions, live readings, a read-only chart, an Overview status tile, hardware keys, Voice Satellite state, a voice skin, intercom state, camera frames and barcode scans. */
 public final class HelloWorldPlugin implements KioskPlugin {
     private final HomeAssistantDemo homeAssistant = new HomeAssistantDemo();
     private final StatusTileDemo statusTile = new StatusTileDemo();
@@ -23,6 +23,8 @@ public final class HelloWorldPlugin implements KioskPlugin {
     private final ListDemo lists = new ListDemo();
     private final OverlayDemo overlays = new OverlayDemo();
     private final SetupDemo setup = new SetupDemo();
+    private final CameraDemo camera = new CameraDemo();
+    private final BarcodeDemo barcode = new BarcodeDemo();
     private PluginHost host;
     private final ShizukuDemo shizuku = new ShizukuDemo();
     private Map<String, Object> savedSettings;
@@ -48,6 +50,8 @@ public final class HelloWorldPlugin implements KioskPlugin {
         overlays.start(host);
         voiceSkin.start(host);
         setup.start(host);
+        camera.start(host);
+        barcode.start(host);
         configure(settings);
         shizuku.start(host, settings);
         host.log("Hello World started");
@@ -163,6 +167,9 @@ public final class HelloWorldPlugin implements KioskPlugin {
         else if ("showGlow".equals(command)) overlays.showGlow();
         else if ("hideGlow".equals(command)) overlays.hideGlow();
         else if ("toggleEntity".equals(command)) homeAssistant.toggle();
+        else if ("showCameraPreview".equals(command)) camera.show();
+        else if ("hideCameraPreview".equals(command)) camera.hide();
+        else if ("scanCode".equals(command)) barcode.scan();
         else if ("hide".equals(command)) {
             visible = false;
             host.hideWindow();
@@ -177,6 +184,7 @@ public final class HelloWorldPlugin implements KioskPlugin {
         voiceSkin.onEvent(event, payload);
         intercom.onEvent(event, payload);
         setup.onEvent(event, payload);
+        camera.onEvent(event, payload);
         if ("shizuku.state".equals(event)) {
             shizuku.stateChanged();
         } else if ("window.action".equals(event)) {
@@ -217,6 +225,8 @@ public final class HelloWorldPlugin implements KioskPlugin {
         intercom.stop();
         overlays.stop();
         setup.stop();
+        camera.stop();
+        barcode.stop();
         if (sampler != null) { sampler.shutdownNow(); sampler = null; }
         times.clear(); wave.clear(); reference.clear(); phase = 0;
         visible = false;

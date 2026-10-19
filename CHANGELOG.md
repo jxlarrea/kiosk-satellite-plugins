@@ -4,6 +4,8 @@
 
 ### Added
 
+- Add the `barcode` and `camera` capabilities. `scanBarcode` opens the Kiosk Satellite scanner and answers with the code it reads and its format, and `cancelBarcodeScan` closes it. `openCamera` delivers frames from the device camera as the new `CameraFrame`, in luminance or NV21, until `closeCamera` or the time limit. Hello World gets a **Scan a code** action that publishes the code as readings and fires a `hello_world_barcode` event in Home Assistant, and a **Show camera preview** action that draws the frames in color in a small overlay with a brightness reading. Document both in the new Camera and barcodes guide. Community Plugins accepts both capabilities. Hello World now needs a Kiosk Satellite version with them.
+
 - Hello World's author is now jxlarrea.
 
 - Add the Install in Kiosk Satellite badge and an Installation section plugin authors copy into their README, with a one-click install button and manual steps, the way HACS repositories show theirs.
