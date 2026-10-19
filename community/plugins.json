@@ -35,6 +35,11 @@
     "added": "2026-10-19"
   },
   {
+    "repository": "davidcoulson/kiosk-satellite-rockchip-led-control",
+    "id": "rockchip-led-control",
+    "added": "2026-10-19"
+  },
+  {
     "repository": "jxlarrea/kiosk-satellite-plugins",
     "id": "hello-world",
     "added": "2026-10-19"
