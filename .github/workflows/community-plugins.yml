@@ -13,9 +13,10 @@ jobs:
     if: >-
       github.repository == 'jxlarrea/kiosk-satellite-plugins' &&
       github.event.issue.state == 'open' &&
-      github.event.action != 'labeled' &&
+      (github.event.action != 'labeled' || github.event.label.name == 'submission' || github.event.label.name == 'removal') &&
       (contains(github.event.issue.labels.*.name, 'submission') || contains(github.event.issue.labels.*.name, 'removal'))
     runs-on: ubuntu-24.04
+    # A maintainer adding the submission or removal label by hand runs the check too.
     concurrency:
       group: community-plugins-${{ github.event.issue.number }}
       cancel-in-progress: true
