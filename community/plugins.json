@@ -48,5 +48,10 @@
     "repository": "jxlarrea/kiosk-satellite-plugins",
     "id": "hello-world",
     "added": "2026-10-19"
+  },
+  {
+    "repository": "syphernl/ks-barcode-scanner",
+    "id": "barcode-scanner",
+    "added": "2026-10-19"
   }
 ]
