@@ -13,20 +13,37 @@ jobs:
     if: >-
       github.repository == 'jxlarrea/kiosk-satellite-plugins' &&
       github.event.issue.state == 'open' &&
-      (github.event.action != 'labeled' || github.event.label.name == 'submission' || github.event.label.name == 'removal') &&
-      (contains(github.event.issue.labels.*.name, 'submission') || contains(github.event.issue.labels.*.name, 'removal'))
+      (
+        (github.event.action == 'labeled' && (github.event.label.name == 'submission' || github.event.label.name == 'removal')) ||
+        (github.event.action != 'labeled' && (
+          contains(github.event.issue.labels.*.name, 'submission') || contains(github.event.issue.labels.*.name, 'removal') ||
+          startsWith(github.event.issue.title, 'Submit plugin:') || startsWith(github.event.issue.title, 'Remove plugin:')))
+      )
     runs-on: ubuntu-24.04
-    # A maintainer adding the submission or removal label by hand runs the check too.
+    # A maintainer adding the submission or removal label by hand runs the check too. Issues opened through
+    # the API or the gh CLI never get the form's label, so the title marks them and the check adds the label.
     concurrency:
       group: community-plugins-${{ github.event.issue.number }}
       cancel-in-progress: true
+    env:
+      KIND: >-
+        ${{ (contains(github.event.issue.labels.*.name, 'removal') ||
+        (!contains(github.event.issue.labels.*.name, 'submission') && startsWith(github.event.issue.title, 'Remove plugin:')))
+        && 'removal' || 'submission' }}
     steps:
       - uses: actions/checkout@v4
+      - name: Label the request
+        if: >-
+          !contains(github.event.issue.labels.*.name, 'submission') &&
+          !contains(github.event.issue.labels.*.name, 'removal')
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE: ${{ github.event.issue.number }}
+        run: gh issue edit "$ISSUE" --repo "$GITHUB_REPOSITORY" --add-label "$KIND"
       - name: Check the request
         id: check
         env:
           GH_TOKEN: ${{ github.token }}
-          KIND: ${{ contains(github.event.issue.labels.*.name, 'removal') && 'removal' || 'submission' }}
         run: python3 tools/community_plugins.py "$KIND" "$GITHUB_EVENT_PATH" "$RUNNER_TEMP/report.md"
       - name: Post the results
         env:

@@ -4,6 +4,8 @@
 
 ### Added
 
+- Check submit and remove requests opened through the GitHub API or the gh CLI. GitHub applies the issue form's label only on the website, so the check now also recognizes a request by its "Submit plugin:" or "Remove plugin:" title and adds the missing label.
+
 - Run the Community Plugins check when a maintainer adds the submission or removal label to an issue by hand, as well as when the issue is opened or edited.
 
 - Add the `barcode` and `camera` capabilities. `scanBarcode` opens the Kiosk Satellite scanner and answers with the code it reads and its format, and `cancelBarcodeScan` closes it. `openCamera` delivers frames from the device camera as the new `CameraFrame`, in luminance or NV21, until `closeCamera` or the time limit. Hello World gets a **Scan a code** action that publishes the code as readings and fires a `hello_world_barcode` event in Home Assistant, and a **Show camera preview** action that draws the frames in color in a small overlay with a brightness reading. Document both in the new Camera and barcodes guide. Community Plugins accepts both capabilities. Hello World now needs a Kiosk Satellite version with them.
