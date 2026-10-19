@@ -45,6 +45,11 @@
     "added": "2026-10-19"
   },
   {
+    "repository": "dimatx/kiosk-satellite-navbar",
+    "id": "ks-navbar",
+    "added": "2026-10-19"
+  },
+  {
     "repository": "jxlarrea/kiosk-satellite-plugins",
     "id": "hello-world",
     "added": "2026-10-19"
