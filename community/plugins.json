@@ -70,6 +70,11 @@
     "added": "2026-10-19"
   },
   {
+    "repository": "mpjanofsky/second-hand-plugin",
+    "id": "echo-wall-clock-plugin",
+    "added": "2026-10-19"
+  },
+  {
     "repository": "syphernl/ks-barcode-scanner",
     "id": "barcode-scanner",
     "added": "2026-10-19"
