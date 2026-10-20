@@ -33,6 +33,7 @@ public final class HelloWorldTest {
         volatile String lastKey;
         final java.util.Set<String> subscriptions = new java.util.HashSet<>();
         public void subscribe(String event) { subscriptions.add(event); }
+        public void executeCommand(String command, Map<String, Object> arguments, PluginHost.CommandCallback callback) {}
         public void unsubscribe(String event) { subscriptions.remove(event); }
         public void removeTextSensor(String key) { if ("last_key".equals(key)) lastKey = null; }
         final List<String> triggers = new java.util.ArrayList<>();

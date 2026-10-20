@@ -42,6 +42,21 @@ public interface PluginHost {
     /** SDK 1, ha. End a subscription. Unknown keys are ignored. */
     default void haUnsubscribe(String key) { throw new UnsupportedOperationException("Home Assistant access is unavailable"); }
     /**
+     * SDK 1, ma. Run one Music Assistant API command, such as "player_queues/play_media" with {queue_id, media}, through
+     * the kiosk's own Music Assistant connection and token. data is Music Assistant's result. On failure, error reads
+     * "code: message" and data holds {code, message}. Players, queues, the library and metadata are open. Server
+     * configuration, sign-in, users and tokens are refused.
+     */
+    default void maCall(String command, Map<String, Object> args, CommandCallback callback) { throw new UnsupportedOperationException("Music Assistant access is unavailable"); }
+    /**
+     * SDK 1, ma. Hear Music Assistant events under a key of the plugin's choosing. The filter is {events: [names],
+     * objectId}, such as {events: ["queue_updated"], objectId: queueId}, with objectId optional. Events arrive through
+     * onEvent("ks.ma.subscription." + key, payload) until maUnsubscribe or the end of the session. At most 16.
+     */
+    default void maSubscribe(String key, Map<String, Object> filter, CommandCallback callback) { throw new UnsupportedOperationException("Music Assistant access is unavailable"); }
+    /** SDK 1, ma. End a subscription. Unknown keys are ignored. */
+    default void maUnsubscribe(String key) { throw new UnsupportedOperationException("Music Assistant access is unavailable"); }
+    /**
      * SDK 1, camera. Receive frames from the device camera, through the same session motion detection uses. Options:
      * size "320x240", "640x480" (default) or "1280x720", fps 1 to 15 (default 5), facing "default", "front" or
      * "back", format "luminance" (default) or "nv21" and timeoutSeconds 5 to 600 (default 60). The camera closes when

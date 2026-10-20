@@ -122,7 +122,7 @@ class RepositoryTest(unittest.TestCase):
 class ManifestTest(unittest.TestCase):
     def test_valid_manifest(self):
         cp.validate_manifest(manifest())
-        cp.validate_manifest(manifest(capabilities=['camera', 'barcode']))
+        cp.validate_manifest(manifest(capabilities=['camera', 'barcode', 'ma']))
 
     def test_rules_from_the_app(self):
         for change in [

@@ -25,6 +25,7 @@ public final class HelloWorldPlugin implements KioskPlugin {
     private final SetupDemo setup = new SetupDemo();
     private final CameraDemo camera = new CameraDemo();
     private final BarcodeDemo barcode = new BarcodeDemo();
+    private final MusicAssistantDemo musicAssistant = new MusicAssistantDemo();
     private PluginHost host;
     private final ShizukuDemo shizuku = new ShizukuDemo();
     private Map<String, Object> savedSettings;
@@ -52,6 +53,7 @@ public final class HelloWorldPlugin implements KioskPlugin {
         setup.start(host);
         camera.start(host);
         barcode.start(host);
+        musicAssistant.start(host);
         configure(settings);
         shizuku.start(host, settings);
         host.log("Hello World started");
@@ -170,6 +172,7 @@ public final class HelloWorldPlugin implements KioskPlugin {
         else if ("showCameraPreview".equals(command)) camera.show();
         else if ("hideCameraPreview".equals(command)) camera.hide();
         else if ("scanCode".equals(command)) barcode.scan();
+        else if ("playPauseMusicAssistant".equals(command)) musicAssistant.playPause();
         else if ("hide".equals(command)) {
             visible = false;
             host.hideWindow();
@@ -185,6 +188,7 @@ public final class HelloWorldPlugin implements KioskPlugin {
         intercom.onEvent(event, payload);
         setup.onEvent(event, payload);
         camera.onEvent(event, payload);
+        musicAssistant.onEvent(event, payload);
         if ("shizuku.state".equals(event)) {
             shizuku.stateChanged();
         } else if ("window.action".equals(event)) {
@@ -227,6 +231,7 @@ public final class HelloWorldPlugin implements KioskPlugin {
         setup.stop();
         camera.stop();
         barcode.stop();
+        musicAssistant.stop();
         if (sampler != null) { sampler.shutdownNow(); sampler = null; }
         times.clear(); wave.clear(); reference.clear(); phase = 0;
         visible = false;

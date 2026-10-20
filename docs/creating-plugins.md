@@ -93,7 +93,7 @@ See [kiosk-satellite-plugin.json](../kiosk-satellite-plugin.json) for a complete
 | `description` | Plain text, at most 1000 characters |
 | `author` | Author name, at most 120 characters |
 | `license` | License identifier, at most 120 characters |
-| `capabilities` | Any required entries from `overlay`, `native`, `entities`, `host.read`, `host.control`, `ha`, `shizuku`, `screensaver`, `noise`, `voice.skin`, `voice.text`, `camera` and `barcode`. `noise` and `voice.text` require `host.read`. `voice.skin` requires `overlay` and `host.read` |
+| `capabilities` | Any required entries from `overlay`, `native`, `entities`, `host.read`, `host.control`, `ha`, `shizuku`, `screensaver`, `noise`, `voice.skin`, `voice.text`, `camera`, `barcode` and `ma`. `noise` and `voice.text` require `host.read`. `voice.skin` requires `overlay` and `host.read` |
 | `settings` | Up to 50 settings. Kiosk Satellite versions without native overlays accept up to 20 |
 | `commands` | Up to 20 named commands |
 | `triggers` | Up to 20 named [gesture triggers](#gesture-triggers) |
@@ -303,6 +303,10 @@ Older Kiosk Satellite versions reject a manifest that uses these types, `visible
 ## Home Assistant
 
 Use the `entity` setting type for KS's searchable Home Assistant entity picker in both interfaces. The value is an entity ID or an empty string. Declare `host.read` to read its state or subscribe to changes. Declare `ha` to call services, run other WebSocket API commands and subscribe to triggers, events and templates with `host.haCall` and `host.haSubscribe`. See the [Home Assistant guide](home-assistant.md) and the Hello World demo.
+
+## Music Assistant
+
+Declare `host.read` to read the kiosk's own Sendspin player with `getSendspinPlayer` and the ID of the Music Assistant player that stands for it. Declare `ma` to run Music Assistant commands for players, queues and the library with `host.maCall` and follow its events with `host.maSubscribe`, through the kiosk's own connection and token. See the [Music Assistant guide](music-assistant.md) and the Hello World demo.
 
 ## Group settings, charts and readings
 

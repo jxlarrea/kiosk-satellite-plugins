@@ -19,7 +19,8 @@
     "voice.skin",
     "voice.text",
     "camera",
-    "barcode"
+    "barcode",
+    "ma"
   ],
   "icon": "icon.png",
   "voiceSkinThumbnail": "voice-skin.webp",
@@ -456,6 +457,10 @@
     {
       "id": "scanCode",
       "title": "Scan a code"
+    },
+    {
+      "id": "playPauseMusicAssistant",
+      "title": "Play or pause Music Assistant"
     }
   ],
   "triggers": [

@@ -18,6 +18,7 @@ All documented features use **SDK 1**, the first public plugin SDK. Plugins requ
 - [Voice skins](voice-skins.md): draw the Voice Satellite overlay in place of the built-in skins, with the voice level and the conversation text.
 - [Settings buttons and plugin choices](setup-controls.md): guided setup on the settings page, with buttons that report progress, choices the plugin finds and questions asked partway through.
 - [Camera and barcodes](camera.md): scan a barcode or a QR code with the KS scanner, or receive frames from the device camera.
+- [Music Assistant](music-assistant.md): find the kiosk's own player, control players, queues and the library and follow Music Assistant events through the kiosk's connection.
 - [Sensors, selects and switches](entities.md): show live readings in KS, publish them to Home Assistant and handle writable controls.
 - [Dashboard URLs](dashboard.md): discover the configured server and current view without duplicating URL settings.
 - [SDK source](../sdk/src/me/jxl/kiosk/plugins): the `KioskPlugin` and `PluginHost` interfaces and the overlay classes supplied by Kiosk Satellite at runtime.
@@ -137,6 +138,10 @@ The **Setup demo** group talks to a pretend device. Press **Test** to check **De
 ### Try the camera and the scanner
 
 Run the **Scan a code** action from Hello World's subpage, a gesture or a drawer shortcut, or expose it as a Home Assistant button and press it there. The scanner reads every kind of barcode and QR code, and the code and its format show under **Last code** and **Last code format** in the readings. Home Assistant hears it as a `hello_world_barcode` event. **Show camera preview** draws the camera's frames in a small card for 30 seconds, with **Camera brightness** in the readings. Both need the camera turned on in **Settings > Camera**. See [Camera and barcodes](camera.md).
+
+### Try Music Assistant
+
+With Music Assistant set up in **Settings > Media Player** and the Sendspin player connected, **Music Assistant player** in the readings shows the kiosk's player in Music Assistant and whether it plays, and **Music Assistant volume** its volume. Both follow changes made anywhere, such as the Music Assistant app. Run **Play or pause Music Assistant** from Hello World's subpage, a gesture or a drawer shortcut. See [Music Assistant](music-assistant.md).
 
 ### Try Shizuku
 
