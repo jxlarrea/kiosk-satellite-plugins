@@ -4,6 +4,8 @@
 
 ### Added
 
+- Add the `openCalendar` and `hideCalendar` controls to `host.control`, so a plugin can open the Kiosk Satellite calendar on a view and day and close it again (kiosk-satellite#1062).
+
 - Add the `ma` capability with `host.maCall(command, args, callback)`, which runs one Music Assistant API command such as `player_queues/play_media`, and `host.maSubscribe(key, filter, callback)` and `host.maUnsubscribe(key)`, which follow the Music Assistant events a filter names through `ks.ma.subscription.KEY` events. KS signs in with its own Music Assistant token and refuses sign-in, user, token and server configuration commands. Add the `getSendspinPlayer` read and the `sendspin.player` event, which give the kiosk's own Sendspin player and the Music Assistant player and server that stand for it. Hello World shows the kiosk's Music Assistant player and its volume under **Music Assistant player** and **Music Assistant volume** and adds a **Play or pause Music Assistant** action. Document all of them in the new Music Assistant guide. Community Plugins accepts the capability. Hello World now needs a Kiosk Satellite version with it.
 
 - Check submit and remove requests opened through the GitHub API or the gh CLI. GitHub applies the issue form's label only on the website, so the check now also recognizes a request by its "Submit plugin:" or "Remove plugin:" title and adds the missing label.

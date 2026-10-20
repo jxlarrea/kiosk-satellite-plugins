@@ -145,6 +145,8 @@ host.executeCommand("showCameraView", Collections.singletonMap("viewId", "front-
 | `showLinkPage` | `{url: string}`. Open an HTTP or HTTPS page with a close button |
 | `hideOverlayPage` | `{}`. Close the web overlay, including Music Assistant |
 | `showMusicAssistant` | `{}`. Open the configured Music Assistant interface |
+| `openCalendar` | `{view?: "day" \| "week" \| "month" \| "schedule", date?: string}`. Open the full screen calendar, waking the display and dismissing the screensaver. `date` is the day to open on, as `yyyy-MM-dd`. Without them it opens on the default view from **Settings > Calendar** and today. If the calendar is already open, it moves to the view and day asked for |
+| `hideCalendar` | `{}`. Close the calendar |
 | `loadUrl` | `{url: string}`. Navigate the main WebView to HTTP or HTTPS. Does not change the saved Start URL |
 | `loadDashboard` | `{dashboard: string}`. Navigate to a dashboard path on the configured HA server |
 | `loadStartUrl` | `{}`. Navigate to the saved Start URL |
