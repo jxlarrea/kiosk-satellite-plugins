@@ -75,6 +75,11 @@
     "added": "2026-10-19"
   },
   {
+    "repository": "kminhtri/kiosk-satellite-nextcloud",
+    "id": "nextcloud-photos",
+    "added": "2026-10-20"
+  },
+  {
     "repository": "mark-andrew/kiosk-satellite-music-assistant",
     "id": "musicassistantplugin",
     "added": "2026-10-19"
