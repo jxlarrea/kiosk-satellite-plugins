@@ -363,6 +363,7 @@ These methods operate on resources owned by the plugin and are part of SDK 1.
 | `onEvent("settings.choices", payload)` | Refresh was pressed on a choices setting. `key` names it and `run` names the run |
 | `onEvent("settings.cancel", payload)` | A run ended before the plugin finished it. `run`, `reason`: `canceled`, `replaced` or `timeout` |
 | `onEvent("settings.confirm", payload)` | The answer to `confirmSetup`. `run`, `accepted` |
+| `onEvent("settings.page", payload)` | Its settings page opened on the kiosk or in any Remote Admin browser, or closed everywhere. `open`. Only changes arrive. See [Know when the settings page is open](setup-controls.md#know-when-the-settings-page-is-open) |
 | `onEvent("light.KEY", payload)` | A command for its RGB light, containing the supplied fields from `on`, `brightness`, `red`, `green`, `blue` and `effect` |
 | `onEvent("ks.NAME", payload)` | A subscribed SDK 1 event from the table above |
 | `stop()` | Ends the session. Release timers, threads and hardware handles |

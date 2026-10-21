@@ -96,6 +96,24 @@ host.setSettingChoices("panels.tiles.sensor", choices);
 - The picker searches labels, details and groups. A plain choice with only an `id` and a `label` shows its ID under the label, the way the array form does.
 - Kiosk Satellite versions without grouped choices throw `UnsupportedOperationException`, and versions without row field choices refuse the manifest.
 
+### Know when the settings page is open
+
+A choice's `value` goes stale. To keep it fresh without polling all the time, refresh the list only while someone looks at the plugin's settings page. Kiosk Satellite tells the plugin when that page opens and closes:
+
+| Event | Payload |
+| --- | --- |
+| `settings.page` | `open`: `true` once the page is open on the kiosk or in any Remote Admin browser, `false` once it is closed everywhere |
+
+- Only changes arrive. A second viewer does not send another `open: true`, and `open: false` waits for the last one to leave.
+- A row editor or picker opened from the page keeps it open.
+- A Remote Admin page checks in every few seconds. It counts as closed about 5 seconds after its last check in, so a closed browser tab closes it too.
+- A session that starts while the page is open, such as after the plugin is enabled or updated, hears `open: true` right after `start`. A new session otherwise starts closed.
+- Older Kiosk Satellite versions never send it, so a plugin that needs fresh values there keeps its own schedule.
+
+```java
+if ("settings.page".equals(event)) pageOpen = Boolean.TRUE.equals(payload.get("open")); // list fresh values every few seconds only while pageOpen
+```
+
 ## Runs
 
 Every press and every refresh starts a run. Kiosk Satellite owns the run and names it in the event's `run` field. Report on it with `setupResult`:
@@ -161,6 +179,7 @@ A display group in `groups` may name a group that holds only buttons. Older vers
 | `runPluginSetup` | `id`, `target`: `button` or `choices`, `key`: the button ID or setting key. Returns `run` |
 | `cancelPluginSetup` | `id`, `run` |
 | `answerPluginSetup` | `id`, `run`, `accepted`: boolean |
+| `setPluginPageOpen` | `id`, `viewer`: an ID for the calling page, the same on every call, and an optional `open`, `false` when the page closes. Call it every few seconds while the page is open. The page counts as closed 5 seconds after the last call |
 
 A button's `confirm` dialog is drawn by the settings page, so `runPluginSetup` does not ask.
 

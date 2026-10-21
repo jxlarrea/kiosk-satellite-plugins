@@ -4,6 +4,8 @@
 
 ### Added
 
+- Add the `settings.page` event. Kiosk Satellite sends `{"open": true}` when the plugin's settings page opens on the kiosk or in any Remote Admin browser and `{"open": false}` once it is closed everywhere, so a plugin can refresh its choice values only while someone looks. Document it under Know when the settings page is open in the Settings buttons and plugin choices guide.
+
 - Add `"input": "field"` for `number` settings and list row fields. It shows a number field instead of a slider, for a wide range or an exact value, and lifts the 10000 step limit. Document it under Rich settings and hardware.
 
 - Let a display group claim readings and charts with wildcards. `"*"` takes every one no other group names and `"sensor.*"` every reading of one type, for plugins that make their keys at runtime. Document them under Group settings, charts and readings.
