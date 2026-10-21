@@ -120,6 +120,11 @@
     "added": "2026-10-19"
   },
   {
+    "repository": "shin-01/Voice-satellite-QR-code-plugin",
+    "id": "voice-satellite-qrcode",
+    "added": "2026-10-21"
+  },
+  {
     "repository": "syphernl/ks-barcode-scanner",
     "id": "barcode-scanner",
     "added": "2026-10-19"
