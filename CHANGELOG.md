@@ -4,7 +4,7 @@
 
 ### Added
 
-- Add three submission rules to Submit your plugin: the plugin name can't be just a trademark or another product's name, the icon must be the author's own artwork rather than a trademarked logo and the README must include the Installation section with the Install in Kiosk Satellite button.
+- Add three submission rules to Submit your plugin. The plugin name can't be just a trademark or another product's name. The icon must be the author's own artwork or the unmodified logo of the service the plugin connects to, with a note in the README that the plugin isn't affiliated with that company. The README must include the Installation section with the Install in Kiosk Satellite button.
 
 - Add the `openCalendar` and `hideCalendar` controls to `host.control`, so a plugin can open the Kiosk Satellite calendar on a view and day and close it again (kiosk-satellite#1062).
 

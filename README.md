@@ -23,7 +23,7 @@ Your plugin needs:
 - **A README** that says what the plugin does, which settings it has and where it sends data, if anywhere. Kiosk Satellite shows it before anyone installs the plugin. It must include the Installation section with the **Install in Kiosk Satellite** button from [Add an install button](#add-an-install-button).
 - **A name of your own.** The plugin's name can't be just a trademark or another product's name, such as "Music Assistant". Name what the plugin does with it instead, such as "Music Assistant Control".
 - **A unique plugin ID** in `kiosk-satellite-plugin.json`. Keep it once you are listed. A new ID needs a new submission.
-- **An icon**, if you want one: a 256 by 256 PNG in `assets/` named by the `icon` field of the manifest. It must be your own artwork, not a company's or product's trademarked logo. Without it the directory shows the generic plugin icon.
+- **An icon**, if you want one: a 256 by 256 PNG in `assets/` named by the `icon` field of the manifest. Without one the directory shows the generic plugin icon. Use your own artwork or the official, unmodified logo of the service the plugin connects to, the way Home Assistant shows integration logos. Don't use the logo of a product the plugin has nothing to do with or the Kiosk Satellite logo. With a service's logo, say in the README that the plugin isn't affiliated with that company. If the logo's owner objects, the plugin switches to a generic icon.
 
 Submit from the GitHub account that owns the repository. For a repository that belongs to an organization, make your membership of it public first.
 
