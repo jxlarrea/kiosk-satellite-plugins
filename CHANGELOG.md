@@ -4,6 +4,8 @@
 
 ### Added
 
+- Add three submission rules to Submit your plugin: the plugin name can't be just a trademark or another product's name, the icon must be the author's own artwork rather than a trademarked logo and the README must include the Installation section with the Install in Kiosk Satellite button.
+
 - Add the `openCalendar` and `hideCalendar` controls to `host.control`, so a plugin can open the Kiosk Satellite calendar on a view and day and close it again (kiosk-satellite#1062).
 
 - Add the `ma` capability with `host.maCall(command, args, callback)`, which runs one Music Assistant API command such as `player_queues/play_media`, and `host.maSubscribe(key, filter, callback)` and `host.maUnsubscribe(key)`, which follow the Music Assistant events a filter names through `ks.ma.subscription.KEY` events. KS signs in with its own Music Assistant token and refuses sign-in, user, token and server configuration commands. Add the `getSendspinPlayer` read and the `sendspin.player` event, which give the kiosk's own Sendspin player and the Music Assistant player and server that stand for it. Hello World shows the kiosk's Music Assistant player and its volume under **Music Assistant player** and **Music Assistant volume** and adds a **Play or pause Music Assistant** action. Document all of them in the new Music Assistant guide. Community Plugins accepts the capability. Hello World now needs a Kiosk Satellite version with it.

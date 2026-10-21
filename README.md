@@ -20,9 +20,10 @@ Your plugin needs:
 
 - **A public GitHub repository** that holds one plugin and all of its source code, with a license file GitHub recognizes.
 - **A stable release built by GitHub Actions.** The Release workflow in this template attaches the manifest, the ZIP and its checksum for you. Kiosk Satellite refuses files you attach by hand, and so does the check.
-- **A README** that says what the plugin does, which settings it has and where it sends data, if anywhere. Kiosk Satellite shows it before anyone installs the plugin.
+- **A README** that says what the plugin does, which settings it has and where it sends data, if anywhere. Kiosk Satellite shows it before anyone installs the plugin. It must include the Installation section with the **Install in Kiosk Satellite** button from [Add an install button](#add-an-install-button).
+- **A name of your own.** The plugin's name can't be just a trademark or another product's name, such as "Music Assistant". Name what the plugin does with it instead, such as "Music Assistant Control".
 - **A unique plugin ID** in `kiosk-satellite-plugin.json`. Keep it once you are listed. A new ID needs a new submission.
-- **An icon**, if you want one: a 256 by 256 PNG in `assets/` named by the `icon` field of the manifest. Without it the directory shows the generic plugin icon.
+- **An icon**, if you want one: a 256 by 256 PNG in `assets/` named by the `icon` field of the manifest. It must be your own artwork, not a company's or product's trademarked logo. Without it the directory shows the generic plugin icon.
 
 Submit from the GitHub account that owns the repository. For a repository that belongs to an organization, make your membership of it public first.
 
@@ -47,7 +48,7 @@ Submit from the GitHub account that owns the repository. For a repository that b
 
 ### Add an install button
 
-Listed plugins get a one-click install button for their README. It opens the plugin in the reader's Kiosk Satellite, where they review it and choose **Trust and install**. Hello World's button looks like this:
+Every listed plugin's README needs a one-click install button. It opens the plugin in the reader's Kiosk Satellite, where they review it and choose **Trust and install**. Hello World's button looks like this:
 
 [![Install in Kiosk Satellite](assets/badges/plugin-add.svg)](https://kiosksatellite.com/redirect/plugin/?repository=jxlarrea/kiosk-satellite-plugins)
 
