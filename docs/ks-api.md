@@ -10,6 +10,7 @@ Every plugin declares `"apiVersion": 1`. All features below belong to that singl
 | --- | --- |
 | `overlay` | Show or update the plugin's floating window and [native overlays](overlays.md) |
 | `screensaver` | Register rendering content inside the stock screensaver system |
+| `screensaver.mode` | Choose which screensaver shows while the plugin runs. See [Switch screensavers](screensavers.md#switch-screensavers) |
 | None | Hide its window, log, publish runtime status and charts, save its own settings and receive declared actions |
 | `native` | Locate its verified packaged JNI library and DEX container |
 | `entities` | Publish and remove its own RGB lights, sensors, selects and switches |
@@ -332,6 +333,7 @@ These methods operate on resources owned by the plugin and are part of SDK 1.
 | `log(message)` | Plugin-prefixed diagnostic log, truncated to 1000 characters |
 | `status(message, error)` | Runtime status in the plugin subpage, at most 1000 characters. Not persisted |
 | `publishScreensaverAsset(key, title, entry, data)` | With `screensaver`, register an HTML asset and scalar rendering options. Bundled resources load on demand from the verified package. See [screensavers](screensavers.md). |
+| `publishScreensaverView(key, title, factory)` | With `screensaver`, register a screensaver drawn by a native Android view. See [Draw it natively](screensavers.md#draw-it-natively) |
 | `publishScreensaver(key, title, html)` / `removeScreensaver(key)` | With `screensaver`, register or withdraw rendering content inside the stock screensaver system. See [screensavers](screensavers.md). |
 | `publishSeries(key, chart)` | Publish a read-only chart in the plugin subpage. Up to four charts per session with four series and 240 samples each. See the [chart API](charts.md) |
 | `removeSeries(key)` | Remove a chart from the active plugin session |
@@ -339,7 +341,7 @@ These methods operate on resources owned by the plugin and are part of SDK 1.
 | `updateSettings(values)` | Saves only the named settings. Omitted values, secrets included, keep what was saved. Does not invoke `configure` again |
 | `setupResult(run, state, message)` | Reports `running`, `success` or `error` for a settings button or choices run. Returns `false` once the run is over. See [settings buttons and plugin choices](setup-controls.md) |
 | `confirmSetup(run, title, message, confirmLabel)` | Asks the person who started the run to confirm a step. The answer arrives as `settings.confirm` |
-| `setSettingChoices(key, ids, labels)` | Lists the choices of a `string` setting declared with `"choices": "plugin"` |
+| `setSettingChoices(key, ids, labels)` / `setSettingChoices(key, choices)` | Lists the choices of a `string` setting or list row field declared with `"choices": "plugin"`. The second form takes up to 2000 grouped choices with details and icons. See [settings buttons and plugin choices](setup-controls.md#plugin-choices) |
 | `nativeLibraryPath(name)` | Verified per-session path to a packaged library matching the process ABI. Pass `rockchip_led` for `librockchip_led.so` |
 | `packagePath()` | Verified plugin DEX JAR path, for a plugin-owned helper |
 | `assetPath(name)` | Absolute path to a verified, read-only file under the package's `assets/` folder, such as `fonts/icons.ttf` for `Typeface.createFromFile`. Throws `IllegalArgumentException` for a missing file or a path that leaves `assets/`. No capability is required |

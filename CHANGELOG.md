@@ -4,6 +4,16 @@
 
 ### Added
 
+- Add `"input": "field"` for `number` settings and list row fields. It shows a number field instead of a slider, for a wide range or an exact value, and lifts the 10000 step limit. Document it under Rich settings and hardware.
+
+- Let a display group claim readings and charts with wildcards. `"*"` takes every one no other group names and `"sensor.*"` every reading of one type, for plugins that make their keys at runtime. Document them under Group settings, charts and readings.
+
+- Add native screensavers. `host.publishScreensaverView(key, title, factory)` registers a screensaver drawn by an Android view, with the KS theme, fonts, icons and UI scale. Document it under Draw it natively in the screensaver guide.
+
+- Add the `screensaver.mode` capability with the `getScreensaverMode`, `setScreensaverMode` and `clearScreensaverMode` commands, which let a plugin choose which screensaver shows while it runs. Document them under Switch screensavers in the screensaver guide. Community Plugins accepts the capability.
+
+- Add plugin choices in list rows and grouped choices. A `string` field inside a list or nested list takes `"choices": "plugin"` under its dotted path, such as `panels.tiles.sensor`. A new `setSettingChoices(key, choices)` overload takes up to 2000 maps with a label, group, detail, value, category and icon, and the picker shows them the way the entity pickers do. Kiosk Satellite keeps the latest list across restarts. `getPluginSetup` takes and returns `choiceRevisions`. Document them in the Settings buttons and plugin choices guide.
+
 - Add three submission rules to Submit your plugin. The plugin name can't be just a trademark or another product's name. The icon must be the author's own artwork or the unmodified logo of the service the plugin connects to, with a note in the README that the plugin isn't affiliated with that company. The README must include the Installation section with the Install in Kiosk Satellite button.
 
 - Add the `openCalendar` and `hideCalendar` controls to `host.control`, so a plugin can open the Kiosk Satellite calendar on a view and day and close it again (kiosk-satellite#1062).

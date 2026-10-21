@@ -44,7 +44,7 @@ The fragment stays outside asset request paths. It is configuration for this ren
 
 The existing `publishScreensaver(String key, String title, String html)` method remains available for small inline documents. Its 512 KiB limit applies only to that inline HTML argument. Packaged HTML and asset files do not have that per-document limit.
 
-Neither method selects or starts a screensaver. Publish during `start` and again when rendering settings or content change. KS lists the renderer as **Title (Plugin Name)** in both the mode picker and schedule editor. Multiple plugins can use the same key.
+None of the publish methods selects or starts a screensaver. To select one, see [Switch screensavers](#switch-screensavers). Publish during `start` and again when rendering settings or content change. KS lists the renderer as **Title (Plugin Name)** in both the mode picker and schedule editor. Multiple plugins can use the same key.
 
 `removeScreensaver(String key)` withdraws that renderer. Every renderer is automatically removed when its plugin session ends, including disable, uninstall, failed startup and replacement during an update. Calls through a revoked host fail.
 
@@ -60,6 +60,51 @@ The stored mode is `plugin:PLUGIN_ID:KEY`. Keep IDs and keys stable across relea
 | Package file count | Up to 512 files |
 | Renderers | Up to four per plugin session |
 | Changes | Up to four publish or remove calls per second per session |
+
+## Draw it natively
+
+A plugin can draw its screensaver with an Android view instead of HTML. Pass an `OverlayFactory`, the same one [native overlays](overlays.md) use:
+
+```java
+host.publishScreensaverView("board", "PC sensors", new OverlayFactory() {
+    @Override public View create(Context context, KsTheme theme) {
+        BoardView view = new BoardView(context, theme);
+        views.add(view);
+        return view;
+    }
+    @Override public void onDestroy(View view) {
+        views.remove(view);
+    }
+});
+```
+
+`publishScreensaverView(String key, String title, OverlayFactory factory)` shares the keys, titles and limits of the HTML renderers. Publishing a view under a key replaces an HTML renderer under it, and the other way around. The renderer shows in the mode picker the same way, as **Title (Plugin Name)**.
+
+KS builds the view on the main thread each time the screensaver shows it and fills the screensaver area with it, on black. The context and `KsTheme` carry the kiosk's UI scale, colors, Rubik and the Material Design Icons `KsTheme.icon` and `KsTheme.iconPath` draw, so the view can use the same `mdi:` names as the `icon` setting. Stock widgets, At a Glance and pixel shift work the same as for HTML renderers. Touches stay with KS.
+
+`onDestroy` means the screensaver is gone: dismissed, switched to another mode or covered by full-screen Now Playing. Stop updating the view then. KS calls `create` again the next time, and also after its Activity restarts or the UI scale changes, so keep the state outside the view. KS does not pause the view while the screen is off. A view that animates should stop when it is not shown, for example in `onWindowVisibilityChanged`. An exception from `create` or the view's code disables the plugin.
+
+Update a native view from any thread with `view.post`. Unlike an HTML renderer, the plugin changes what the view shows without publishing again, so live readings cost nothing beyond drawing them. Kiosk Satellite versions without native screensavers throw `UnsupportedOperationException`. Catch it, along with `LinkageError`, if the plugin should still install there.
+
+## Switch screensavers
+
+Declare `screensaver.mode` to change which screensaver shows, for example to show the plugin's own while a game runs. The capability works on its own. It does not need `host.read` or `host.control`.
+
+```java
+host.executeCommand("setScreensaverMode", Collections.singletonMap("mode", "plugin:my-plugin:board"), (ok, data, error) -> {
+    if (!ok) host.status(error, true);
+});
+// Later, to give the choice back:
+host.executeCommand("clearScreensaverMode", Collections.emptyMap(), (ok, data, error) -> {});
+```
+
+| Command | Arguments and result |
+| --- | --- |
+| `getScreensaverMode` | `{}`. Returns `{mode, saved, schedule, override, active, modes}`. `mode` is the mode that shows now. `saved` is the **Screensaver mode** setting, `schedule` the mode of the active schedule entry or null and `override` the mode a plugin set or null. `active` is true while the screensaver shows. `modes` lists `{id, label}` for every stock mode the device offers, labeled in its language, and every published plugin screensaver |
+| `setScreensaverMode` | `{mode: string}`. Shows `mode` in place of the schedule and the saved setting until the plugin clears it. `mode` must be an `id` from `modes`. An active screensaver switches right away |
+| `clearScreensaverMode` | `{}`. Removes this plugin's override. The schedule or the saved setting applies again |
+
+The override lives only while the plugin runs. KS does not save it, sync it through Fleet Management or show it in the ESPHome **Screensaver mode** select, and it removes it when the plugin stops. When several plugins set one, the latest wins until it clears its own. The override decides only which screensaver shows. KS still owns when it starts, so add `host.control` and call `startScreensaver` to start it right away.
 
 ## Rendering contract
 

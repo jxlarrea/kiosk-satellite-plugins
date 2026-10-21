@@ -41,16 +41,60 @@ A `string` setting with `"choices": "plugin"` shows a picker of choices the plug
   "group": "Connection", "visibleWhen": { "key": "host", "notEmpty": true } }
 ```
 
-Only top-level `string` settings take plugin choices. List them with `setSettingChoices`:
+List them with `setSettingChoices`:
 
 ```java
 host.setSettingChoices("light", new String[] {"lamp-1", "lamp-2"}, new String[] {"Kitchen", "Hallway"});
 ```
 
 - At most 200 choices. IDs are unique and 1 to 512 characters. Labels are up to 80 characters. Pass `null` as the labels array or as one label to show the ID.
-- Each call replaces the list. The list lasts for the plugin session, so list known choices again in `start` if the plugin keeps them.
+- Each call replaces the list. Kiosk Satellite keeps the latest list for each setting across restarts and updates, so the settings pages still show each saved choice by its label before the plugin lists it again. The list is deleted with the plugin.
 - A saved ID the list lacks stays saved. The picker shows it with a warning and the line "This choice is no longer listed."
 - Refresh reaches the plugin as `onEvent("settings.choices", {"key": ..., "run": ...})`. Look again, list what you find and report the outcome.
+
+### Choices in list rows
+
+A `string` field inside a [list setting](creating-plugins.md#pickers-lists-and-conditions), or inside its nested list, takes `"choices": "plugin"` too. The row editor shows the same picker, Refresh button and warning, and the row shows the picked choice by its label. Its key is the dotted path of field keys from the top-level setting, such as `panels.tiles.sensor`. Every row of that list shares one choice list.
+
+```json
+{ "key": "panels", "type": "list", "title": "Panels", "default": [], "fields": [
+  { "key": "title", "type": "string", "title": "Title" },
+  { "key": "tiles", "type": "list", "title": "Readings", "fields": [
+    { "key": "sensor", "type": "string", "title": "Reading", "choices": "plugin", "required": true } ] } ] }
+```
+
+`settings.choices` names the path as its `key`. A refresh is allowed while the top-level list is shown.
+
+### Grouped choices
+
+For a long list, pass maps instead of arrays. Each map holds `id` and an optional `label`, `group`, `detail`, `value`, `category` and `icon`. The picker then looks like the Home Assistant entity pickers: a heading per group, the value on the right and chips that filter by category:
+
+```java
+List<Map<String, Object>> choices = new ArrayList<>();
+Map<String, Object> choice = new LinkedHashMap<>();
+choice.put("id", "CAPRICA/f0000501.0.1000000");
+choice.put("label", "CPU (Tctl/Tdie)");
+choice.put("group", "Caprica · CPU [#0]");
+choice.put("value", "47°C");
+choice.put("category", "Temperature");
+choice.put("icon", "mdi:thermometer");
+choices.add(choice);
+host.setSettingChoices("panels.tiles.sensor", choices);
+```
+
+| Field | Contract |
+| --- | --- |
+| `id` | Required. Unique, 1 to 512 characters |
+| `label` | Up to 120 characters. Defaults to the ID |
+| `group` | Up to 120 characters. Choices with the same group show under one heading, in the order the groups first appear |
+| `detail` | Up to 120 characters. A second line under the label |
+| `value` | Up to 40 characters. Shown on the right, the way an entity shows its state, such as a current reading |
+| `category` | Up to 40 characters. Chips above the list filter by it once the choices hold two categories, the way the entity pickers filter by domain |
+| `icon` | A Material Design Icons name such as `mdi:thermometer`, the same names the `icon` setting stores |
+
+- At most 2000 choices. A map with any other key is refused.
+- The picker searches labels, details and groups. A plain choice with only an `id` and a `label` shows its ID under the label, the way the array form does.
+- Kiosk Satellite versions without grouped choices throw `UnsupportedOperationException`, and versions without row field choices refuse the manifest.
 
 ## Runs
 
@@ -113,7 +157,7 @@ A display group in `groups` may name a group that holds only buttons. Older vers
 
 | Command | Parameters |
 | --- | --- |
-| `getPluginSetup` | `id`. Returns `runs` by target (`button:ID` or `choices:KEY`) and `choices` by setting key |
+| `getPluginSetup` | `id` and an optional `choiceRevisions` map. Returns `runs` by target (`button:ID` or `choices:KEY`), `choiceRevisions` by key and `choices` by key. Pass the revisions you hold to get back only the lists that changed. A choice with an icon also carries its SVG path data as `iconPath` |
 | `runPluginSetup` | `id`, `target`: `button` or `choices`, `key`: the button ID or setting key. Returns `run` |
 | `cancelPluginSetup` | `id`, `run` |
 | `answerPluginSetup` | `id`, `run`, `accepted`: boolean |
