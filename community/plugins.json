@@ -75,6 +75,11 @@
     "added": "2026-10-20"
   },
   {
+    "repository": "hmmbob/kiosk-satellite-bing-wallpapers",
+    "id": "kiosk-satellite-bing-wallpapers",
+    "added": "2026-10-21"
+  },
+  {
     "repository": "jxlarrea/kiosk-satellite-plugins",
     "id": "hello-world",
     "added": "2026-10-19"
