@@ -51,6 +51,7 @@ host.setSettingChoices("light", new String[] {"lamp-1", "lamp-2"}, new String[] 
 - Each call replaces the list. Kiosk Satellite keeps the latest list for each setting across restarts and updates, so the settings pages still show each saved choice by its label before the plugin lists it again. The list is deleted with the plugin.
 - A saved ID the list lacks stays saved. The picker shows it with a warning and the line "This choice is no longer listed."
 - Refresh reaches the plugin as `onEvent("settings.choices", {"key": ..., "run": ...})`. Look again, list what you find and report the outcome.
+- Until the plugin lists any, the field and its picker say "No choices yet. Refresh to look for them." Give the setting an `emptyText` of up to 200 characters to say what to do instead, such as `"emptyText": "Add a computer under Computers to pick its sensors."`. List row fields take it too.
 
 ### Choices in list rows
 
