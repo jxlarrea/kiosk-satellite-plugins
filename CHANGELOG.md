@@ -8,6 +8,8 @@
 
 ### Added
 
+- Add `cpuClock` to `getStats`, the average clock of the active CPU cores in MHz. `cpu` is now null on a device that does not let an app measure CPU load, where it used to report the clock position. Document both under Read commands in the KS API reference.
+
 - Add `batteryTemp` to `getStats`, the battery temperature in Celsius. It is null on a device without a battery or one whose battery has no temperature sensor. Document it under Read commands in the KS API reference.
 
 - Add `host.setSettingChoicesEnabled(key, enabled)`, which turns a choices setting or list row field off while it cannot work and back on. Off, its picker and Refresh do not open. Document it under Plugin choices.
