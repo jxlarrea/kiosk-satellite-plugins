@@ -143,5 +143,10 @@
     "repository": "syphernl/ks-barcode-scanner",
     "id": "barcode-scanner",
     "added": "2026-10-19"
+  },
+  {
+    "repository": "taclab/nightstand-clock",
+    "id": "nightstand-clock",
+    "added": "2026-10-22"
   }
 ]
