@@ -90,6 +90,11 @@
     "added": "2026-10-22"
   },
   {
+    "repository": "jxlarrea/hwinfo64-kiosk-satellite-plugin",
+    "id": "hwinfo-pc-monitor",
+    "added": "2026-10-22"
+  },
+  {
     "repository": "jxlarrea/kiosk-satellite-plugins",
     "id": "hello-world",
     "added": "2026-10-19"
