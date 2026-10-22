@@ -13,7 +13,7 @@ import me.jxl.kiosk.plugins.PluginHost;
 /**
  * Settings buttons and plugin choices against a pretend device service. Test checks the address, Pair asks
  * the person to trust a fingerprint partway through, and Refresh on the Device setting looks for devices.
- * Picking a device fills in Device name. Callbacks must return promptly, so the work runs on its own
+ * Picking a device fills in Device name. An address with "fail" in it turns Device off. Callbacks must return promptly, so the work runs on its own
  * thread and reports back through setupResult.
  */
 final class SetupDemo {
@@ -33,6 +33,8 @@ final class SetupDemo {
     private String address = "";
     private String device = "";
     private String deviceName = "";
+    // Whether Device is on. Null until this session sets it.
+    private Boolean choicesOn;
     // Runs the host canceled, replaced or timed out. Their remaining steps do nothing.
     private final Set<String> ended = new HashSet<>();
     // The pairing run waiting for the person to answer.
@@ -42,7 +44,11 @@ final class SetupDemo {
 
     SetupDemo(Scheduler scheduler) { this.scheduler = scheduler; }
 
-    synchronized void start(PluginHost host) { this.host = host; }
+    synchronized void start(PluginHost host) {
+        this.host = host;
+        // Every choice starts on in a new session, so configure sets it again.
+        choicesOn = null;
+    }
 
     synchronized void configure(Map<String, Object> settings) {
         address = text(settings.get("setupAddress"));
@@ -51,6 +57,18 @@ final class SetupDemo {
         boolean picked = !next.equals(device);
         device = next;
         if (picked) fillName();
+        enableChoices(!address.contains("fail"));
+    }
+
+    /** Device's picker and Refresh stay closed while the address cannot work. Its saved choice still shows. */
+    private void enableChoices(boolean on) {
+        if (Boolean.valueOf(on).equals(choicesOn)) return;
+        choicesOn = on;
+        try {
+            host.setSettingChoicesEnabled("setupDevice", on);
+        } catch (UnsupportedOperationException | LinkageError olderApp) {
+            // Older Kiosk Satellite versions keep Device on.
+        }
     }
 
     /** Settings events arrive without a subscription, and only for this plugin's own buttons and choices. */

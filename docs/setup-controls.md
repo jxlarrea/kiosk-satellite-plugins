@@ -187,4 +187,6 @@ A button's `confirm` dialog is drawn by the settings page, so `runPluginSetup` d
 
 ## Hello World demo
 
-The **Setup demo** group talks to a pretend device. **Test** reports progress, then the result. Put `fail` in **Device address** to see an error. **Pair** asks first, then asks you to trust a fingerprint partway through. **Refresh** beside **Device** finds three devices one at a time. Picking one fills in **Device name** with `updateSettings`. See [SetupDemo.java](../src/me/jxl/kiosk/plugins/hello/SetupDemo.java).
+The **Setup demo** group talks to a pretend device. **Test** reports progress, then the result. Put `fail` in **Device address** to see an error. `setSettingChoicesEnabled` then turns off **Device** until the address changes. **Pair** asks first, then asks you to trust a fingerprint partway through. Until the plugin lists any devices, **Device** shows its `emptyText`. **Refresh** beside **Device** finds three devices one at a time. Picking one fills in **Device name** with `updateSettings`. See [SetupDemo.java](../src/me/jxl/kiosk/plugins/hello/SetupDemo.java).
+
+The **Device stats demo** group has a **Tiles** list whose **Reading** field takes plugin choices under `statsTiles.reading`. The plugin lists the kiosk's `getStats` readings as grouped choices with a group, a detail, an icon, a category and the current value. It refreshes the values only between `settings.page` events that open and close the page. See [StatsDemo.java](../src/me/jxl/kiosk/plugins/hello/StatsDemo.java).

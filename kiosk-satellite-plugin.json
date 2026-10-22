@@ -14,6 +14,7 @@
     "entities",
     "shizuku",
     "screensaver",
+    "screensaver.mode",
     "host.read",
     "ha",
     "voice.skin",
@@ -209,6 +210,52 @@
       "description": "Background behind the bouncing logo. Uses all stock screensaver settings."
     },
     {
+      "key": "statsTiles",
+      "type": "list",
+      "title": "Tiles",
+      "group": "Device stats demo",
+      "addTitle": "Add tile",
+      "maxItems": 3,
+      "description": "Plugin choices in list rows: each tile picks one of this kiosk's readings, grouped by part with its current value.",
+      "row": {
+        "title": "reading"
+      },
+      "default": [
+        {
+          "reading": "cpu"
+        },
+        {
+          "reading": "cpuClock"
+        },
+        {
+          "reading": "temp"
+        }
+      ],
+      "fields": [
+        {
+          "key": "reading",
+          "type": "string",
+          "title": "Reading",
+          "choices": "plugin",
+          "emptyText": "Enable Hello World to list this kiosk's readings.",
+          "required": true
+        }
+      ]
+    },
+    {
+      "key": "statsWarnTemp",
+      "type": "number",
+      "input": "field",
+      "title": "Temperature warning",
+      "default": 70,
+      "min": 20,
+      "max": 120,
+      "step": 0.5,
+      "unit": "°C",
+      "group": "Device stats demo",
+      "description": "Number field: temperatures above this change color. Select Device stats (Hello World) in Screensaver mode to see the tiles."
+    },
+    {
       "key": "haEntity",
       "type": "entity",
       "title": "Home Assistant entity",
@@ -356,12 +403,13 @@
       "title": "Device address",
       "default": "demo.local",
       "group": "Setup demo",
-      "description": "Text input: the pretend device's address. Include fail in it to see an error."
+      "description": "Text input: the pretend device's address. Include fail in it to see an error and turn off Device."
     },
     {
       "key": "setupDevice",
       "type": "string",
       "choices": "plugin",
+      "emptyText": "Press Refresh to look for devices at this address.",
       "title": "Device",
       "default": "",
       "group": "Setup demo",
@@ -461,6 +509,14 @@
     {
       "id": "playPauseMusicAssistant",
       "title": "Play or pause Music Assistant"
+    },
+    {
+      "id": "useStatsScreensaver",
+      "title": "Use device stats screensaver"
+    },
+    {
+      "id": "restoreScreensaver",
+      "title": "Restore screensaver mode"
     }
   ],
   "triggers": [
@@ -532,6 +588,16 @@
     },
     {
       "title": "Screensaver demo"
+    },
+    {
+      "title": "Device stats demo",
+      "charts": [
+        "*"
+      ],
+      "readingsTitle": "Device stats readings",
+      "readings": [
+        "text_sensor.screensaver_mode"
+      ]
     },
     {
       "title": "List demo",

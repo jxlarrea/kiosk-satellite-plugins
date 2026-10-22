@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 import me.jxl.kiosk.plugins.KioskPlugin;
 import me.jxl.kiosk.plugins.PluginHost;
 
-/** Settings controls including lists, pickers, buttons and plugin choices, a floating window, native overlays, actions, live readings, a read-only chart, an Overview status tile, hardware keys, Voice Satellite state, a voice skin, intercom state, camera frames and barcode scans. */
+/** Settings controls including lists, pickers, buttons and plugin choices, a floating window, native overlays, actions, live readings, a read-only chart, an Overview status tile, hardware keys, Voice Satellite state, a voice skin, intercom state, camera frames, barcode scans and a native screensaver of the kiosk's own stats. */
 public final class HelloWorldPlugin implements KioskPlugin {
     private final HomeAssistantDemo homeAssistant = new HomeAssistantDemo();
     private final StatusTileDemo statusTile = new StatusTileDemo();
@@ -26,6 +26,7 @@ public final class HelloWorldPlugin implements KioskPlugin {
     private final CameraDemo camera = new CameraDemo();
     private final BarcodeDemo barcode = new BarcodeDemo();
     private final MusicAssistantDemo musicAssistant = new MusicAssistantDemo();
+    private final StatsDemo stats = new StatsDemo();
     private PluginHost host;
     private final ShizukuDemo shizuku = new ShizukuDemo();
     private Map<String, Object> savedSettings;
@@ -54,6 +55,7 @@ public final class HelloWorldPlugin implements KioskPlugin {
         camera.start(host);
         barcode.start(host);
         musicAssistant.start(host);
+        stats.start(host);
         configure(settings);
         shizuku.start(host, settings);
         host.log("Hello World started");
@@ -92,6 +94,7 @@ public final class HelloWorldPlugin implements KioskPlugin {
         intercom.configure(host, settings);
         lists.configure(host, settings);
         setup.configure(settings);
+        stats.configure(settings);
         Map<String, Object> nextScreensaver = DvdScreensaver.options(settings);
         if (!nextScreensaver.equals(screensaverOptions)) {
             host.publishScreensaverAsset("dvd", "DVD Logo", "dvd/index.html", nextScreensaver);
@@ -173,6 +176,8 @@ public final class HelloWorldPlugin implements KioskPlugin {
         else if ("hideCameraPreview".equals(command)) camera.hide();
         else if ("scanCode".equals(command)) barcode.scan();
         else if ("playPauseMusicAssistant".equals(command)) musicAssistant.playPause();
+        else if ("useStatsScreensaver".equals(command)) stats.useScreensaver();
+        else if ("restoreScreensaver".equals(command)) stats.restoreScreensaver();
         else if ("hide".equals(command)) {
             visible = false;
             host.hideWindow();
@@ -189,6 +194,7 @@ public final class HelloWorldPlugin implements KioskPlugin {
         setup.onEvent(event, payload);
         camera.onEvent(event, payload);
         musicAssistant.onEvent(event, payload);
+        stats.onEvent(event, payload);
         if ("shizuku.state".equals(event)) {
             shizuku.stateChanged();
         } else if ("window.action".equals(event)) {
@@ -232,6 +238,7 @@ public final class HelloWorldPlugin implements KioskPlugin {
         camera.stop();
         barcode.stop();
         musicAssistant.stop();
+        stats.stop();
         if (sampler != null) { sampler.shutdownNow(); sampler = null; }
         times.clear(); wave.clear(); reference.clear(); phase = 0;
         visible = false;

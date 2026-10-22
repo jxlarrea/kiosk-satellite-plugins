@@ -328,7 +328,7 @@ An optional top-level `groups` array orders settings groups and places their cha
 ]
 ```
 
-Charts appear after the group's settings, followed by a separate readings section. `readingsTitle` defaults to `Readings`. Chart references use the key passed to `publishSeries`. Reading references use `type.key`, where type is `sensor`, `text_sensor`, `binary_sensor`, `select` or `switch`. Each reference can belong to only one group. A plugin that makes its keys at runtime claims them with a wildcard instead: `"*"` takes every reading or chart no other group names, and `"sensor.*"` takes every reading of one type. A group naming a key wins over a type wildcard, which wins over `"*"`. Older Kiosk Satellite versions reject a manifest with wildcards.
+Charts appear after the group's settings, followed by a separate readings section. `readingsTitle` defaults to `Readings`. Chart references use the key passed to `publishSeries`. Reading references use `type.key`, where type is `sensor`, `text_sensor`, `binary_sensor`, `select` or `switch`. Each reference can belong to only one group. A plugin that makes its keys at runtime claims them with a wildcard instead: `"*"` takes every reading or chart no other group names, and `"sensor.*"` takes every reading of one type. A group naming a key wins over a type wildcard, which wins over `"*"`. Older Kiosk Satellite versions reject a manifest with wildcards. Hello World's **Device stats demo** group claims the chart of each tile with `"charts": ["*"]`.
 
 ```json
 { "title": "Home Assistant", "readingsTitle": "Sent to Home Assistant", "readings": ["*"] }

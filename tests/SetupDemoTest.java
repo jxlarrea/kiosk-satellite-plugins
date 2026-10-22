@@ -19,6 +19,7 @@ public final class SetupDemoTest {
         String[] choices;
         Map<String, Object> updated;
         boolean olderApp;
+        final List<Boolean> enabled = new ArrayList<>();
         public boolean setupResult(String run, String state, String message) {
             if (over.contains(run)) return false;
             runs.put(run, state + ": " + message);
@@ -33,6 +34,11 @@ public final class SetupDemoTest {
         public void setSettingChoices(String key, String[] ids, String[] labels) {
             assert "setupDevice".equals(key) && ids.length == labels.length;
             choices = ids;
+        }
+        public void setSettingChoicesEnabled(String key, boolean on) {
+            assert "setupDevice".equals(key);
+            if (olderApp) throw new UnsupportedOperationException("Turning choices off is unavailable");
+            enabled.add(on);
         }
         public void updateSettings(Map<String, Object> values) {
             if (olderApp) throw new UnsupportedOperationException("Setup controls are unavailable");
@@ -64,6 +70,10 @@ public final class SetupDemoTest {
         demo.start(host);
         demo.configure(settings("demo.local", ""));
         assert host.updated == null;
+        // Device starts on in every session, and the demo says so once.
+        assert Arrays.asList(true).equals(host.enabled) : host.enabled;
+        demo.configure(settings("demo.local", ""));
+        assert host.enabled.size() == 1;
 
         // Test reports progress at once and the outcome later.
         demo.onEvent("settings.button", event("id", "setupTest", "run", "t1"));
@@ -71,6 +81,8 @@ public final class SetupDemoTest {
         steps.runAll();
         assert "success: Reached demo.local in 42 ms.".equals(host.runs.get("t1")) : host.runs.get("t1");
         demo.configure(settings("fail.local", ""));
+        // An address that cannot work turns Device off until it changes.
+        assert Arrays.asList(true, false).equals(host.enabled) : host.enabled;
         demo.onEvent("settings.button", event("id", "setupTest", "run", "t2"));
         steps.runAll();
         assert host.runs.get("t2").startsWith("error: Could not reach fail.local");
@@ -83,6 +95,7 @@ public final class SetupDemoTest {
 
         // Pair asks partway through and goes on with the answer.
         demo.configure(settings("demo.local", ""));
+        assert Arrays.asList(true, false, true).equals(host.enabled) : host.enabled;
         demo.onEvent("settings.button", event("id", "setupPair", "run", "p1"));
         steps.runAll();
         assert "Trust this device?".equals(host.question);
@@ -119,6 +132,12 @@ public final class SetupDemoTest {
         // An older app has no updateSettings. The demo keeps working.
         host.olderApp = true;
         demo.configure(settings("demo.local", "strip-desk"));
+        demo.configure(settings("fail.local", "strip-desk"));
+        // A new session sets Device again.
+        host.olderApp = false;
+        demo.start(host);
+        demo.configure(settings("fail.local", "strip-desk"));
+        assert host.enabled.get(host.enabled.size() - 1) == Boolean.FALSE;
         demo.stop();
         // A stopped demo reports nothing.
         demo.onEvent("settings.button", event("id", "setupTest", "run", "t9"));

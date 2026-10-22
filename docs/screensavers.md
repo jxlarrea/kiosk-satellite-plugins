@@ -84,6 +84,8 @@ KS builds the view on the main thread each time the screensaver shows it and fil
 
 `onDestroy` means the screensaver is gone: dismissed, switched to another mode or covered by full-screen Now Playing. Stop updating the view then. KS calls `create` again the next time, and also after its Activity restarts or the UI scale changes, so keep the state outside the view. KS does not pause the view while the screen is off. A view that animates should stop when it is not shown, for example in `onWindowVisibilityChanged`. An exception from `create` or the view's code disables the plugin.
 
+Hello World's **Device stats (Hello World)** screensaver draws a card for each of the kiosk's readings that its **Tiles** setting picks, with KS icons and colors. See [StatsDemo.java](../src/me/jxl/kiosk/plugins/hello/StatsDemo.java).
+
 Update a native view from any thread with `view.post`. Unlike an HTML renderer, the plugin changes what the view shows without publishing again, so live readings cost nothing beyond drawing them. Kiosk Satellite versions without native screensavers throw `UnsupportedOperationException`. Catch it, along with `LinkageError`, if the plugin should still install there.
 
 ## Switch screensavers
@@ -103,6 +105,8 @@ host.executeCommand("clearScreensaverMode", Collections.emptyMap(), (ok, data, e
 | `getScreensaverMode` | `{}`. Returns `{mode, saved, schedule, override, active, modes}`. `mode` is the mode that shows now. `saved` is the **Screensaver mode** setting, `schedule` the mode of the active schedule entry or null and `override` the mode a plugin set or null. `active` is true while the screensaver shows. `modes` lists `{id, label}` for every stock mode the device offers, labeled in its language, and every published plugin screensaver |
 | `setScreensaverMode` | `{mode: string}`. Shows `mode` in place of the schedule and the saved setting until the plugin clears it. `mode` must be an `id` from `modes`. An active screensaver switches right away |
 | `clearScreensaverMode` | `{}`. Removes this plugin's override. The schedule or the saved setting applies again |
+
+Hello World's **Use device stats screensaver** and **Restore screensaver mode** actions set and clear an override, and its **Screensaver mode** reading shows what `getScreensaverMode` returns.
 
 The override lives only while the plugin runs. KS does not save it, sync it through Fleet Management or show it in the ESPHome **Screensaver mode** select, and it removes it when the plugin stops. When several plugins set one, the latest wins until it clears its own. The override decides only which screensaver shows. KS still owns when it starts, so add `host.control` and call `startScreensaver` to start it right away.
 

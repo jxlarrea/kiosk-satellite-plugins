@@ -71,13 +71,14 @@ The plugin runs trusted code inside Kiosk Satellite. It can access app data and 
 
 Tap the Hello World entry to open its subpage. **Greeting** changes the message. **Show window when enabled** controls whether it opens automatically. Settings save automatically. On the kiosk, tap **Greeting** to edit it in a dialog.
 
-The settings are grouped into **Greeting window**, **Chart demo**, **Home Assistant demo**, **Shizuku demo**, **Status tile demo**, **Screensaver demo** and **List demo**. The chart uses simulated values, not device measurements. Its 120-sample history covers about four minutes and updates every two seconds while **Show demo chart** is on.
+The settings are grouped into **Greeting window**, **Chart demo**, **Home Assistant demo**, **Shizuku demo**, **Status tile demo**, **Screensaver demo**, **Device stats demo**, **List demo** and **Setup demo**. The chart uses simulated values, not device measurements. Its 120-sample history covers about four minutes and updates every two seconds while **Show demo chart** is on.
 
 | Control | Example |
 | --- | --- |
 | Text input | **Greeting** changes the floating window message |
 | Toggle | **Show window when enabled** opens the window on startup. **Show demo chart** shows or removes the chart |
 | Number slider | **Amplitude** changes the height of new simulated samples |
+| Number field | **Temperature warning** takes an exact temperature for the device stats screensaver |
 | Selection | **Pattern** chooses a sine or triangle wave for new samples. **Chart type** switches between Line and Bar. **Chart size** switches between Regular and Mini |
 | Color picker | **Series color** changes the Wave series color |
 | Live readings | Numeric values with units, confirmed boolean and select states and a multiline sample summary |
@@ -111,6 +112,10 @@ Open the Remote Admin Overview. Its Status panel shows a **Hello World demo** ti
 
 Enable Hello World, then select **DVD Logo (Hello World)** under **Screensaver > Screensaver mode** or in a schedule entry. KS uses its stock screensaver settings and renders the bouncing DVD logo as the content. In Hello World's **Screensaver demo** group, **Logo size**, **Logo color** and **Background color** save automatically and refresh the active screensaver. The demo loads separate HTML, CSS, JavaScript and SVG files from [assets/dvd](../assets/dvd). See the [screensaver guide](screensavers.md) for the rendering API and lifecycle.
 
+### Try the device stats screensaver
+
+Hello World also draws a native screensaver of the kiosk's own readings from `getStats`, in the KS theme. Run the **Use device stats screensaver** action from Hello World's subpage, a gesture or a drawer shortcut, then start the screensaver. It shows **Device stats (Hello World)** in place of your **Screensaver mode** until you run **Restore screensaver mode**. **Screensaver mode** under Device stats readings shows the mode that shows and what chose it. In the **Device stats demo** group, each row of **Tiles** picks a reading such as **CPU clock** or **Battery temperature** from a picker grouped by CPU and battery, with each reading's current value and chips that filter by category. Each tile also gets a chart on the subpage. **Temperature warning** is a number field: a temperature above it changes color. Hello World reads the stats only while its subpage is open or the screensaver shows. See [Draw it natively](screensavers.md#draw-it-natively), [Switch screensavers](screensavers.md#switch-screensavers), [grouped choices](setup-controls.md#grouped-choices) and [StatsDemo.java](../src/me/jxl/kiosk/plugins/hello/StatsDemo.java).
+
 ### Try hardware keys
 
 The **Hardware keys demo** group subscribes to `device.key` while **Show hardware keys** is on. Press a volume, media or remote button with KS in the foreground. **Last hardware key** under Readings shows the key name, its scan code and a press count. Buttons without an Android key code can show as `UNKNOWN` with their scan code. Each press also fires the **Hardware key** gesture trigger, so a gesture set to **Plugin trigger > Hello World: Hardware key** under **Gestures** runs its action. See [hardware keys](ks-api.md#hardware-keys), [gesture triggers](creating-plugins.md#gesture-triggers) and [KeyDemo.java](../src/me/jxl/kiosk/plugins/hello/KeyDemo.java).
@@ -133,7 +138,7 @@ The **List demo** group shows a list setting and the picker settings. **Shortcut
 
 ### Try the setup controls
 
-The **Setup demo** group talks to a pretend device. Press **Test** to check **Device address**. It reports progress, then the result under the row. Put `fail` in the address to see an error. **Pair** asks first, then asks you to trust the device's fingerprint partway through. Press **Refresh** beside **Device** and the plugin finds three devices one at a time. Pick one and **Device name** fills in by itself. See [Settings buttons and plugin choices](setup-controls.md) and [SetupDemo.java](../src/me/jxl/kiosk/plugins/hello/SetupDemo.java).
+The **Setup demo** group talks to a pretend device. Press **Test** to check **Device address**. It reports progress, then the result under the row. Put `fail` in the address to see an error and turn off **Device**. **Pair** asks first, then asks you to trust the device's fingerprint partway through. Press **Refresh** beside **Device** and the plugin finds three devices one at a time. Until then **Device** says to press Refresh. Pick one and **Device name** fills in by itself. See [Settings buttons and plugin choices](setup-controls.md) and [SetupDemo.java](../src/me/jxl/kiosk/plugins/hello/SetupDemo.java).
 
 ### Try the camera and the scanner
 
