@@ -4,6 +4,8 @@
 
 ### Fixed
 
+- Keep Community Plugins download counts steady. GitHub sometimes answers a release list with an empty page, which showed a plugin with 0 downloads. The refresh now asks again and never lowers a count from one refresh to the next.
+
 - Updating a plugin that removes a field from a list setting's rows no longer fails with "Unknown plugin setting" when rows were saved. Kiosk Satellite drops the field from the saved rows, the way it drops a removed setting. Document it under Settings.
 
 ### Added

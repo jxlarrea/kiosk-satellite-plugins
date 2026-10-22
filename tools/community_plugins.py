@@ -20,6 +20,7 @@ import json
 import os
 import re
 import sys
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -451,12 +452,29 @@ def check_plugin(github, repository, previous=None):
     }
 
 
+# GitHub sometimes answers a release list with an empty page for a repository that has releases.
+RELEASE_LIST_ATTEMPTS = 4
+RELEASE_LIST_RETRY_SECONDS = 2.0
+
+
 def downloads(github, repository, plugin_id):
-    """Package downloads across every release. Updates count, fleet followers do not download."""
+    """Package downloads across every release. Updates count, fleet followers do not download.
+
+    None when GitHub keeps listing no releases: the caller has just read the latest release, so an
+    empty first page is a bad answer, not a plugin without downloads.
+    """
     total, page = 0, 1
     pattern = re.compile(re.escape(plugin_id) + r'-.+\.zip')
     while page <= 10:
-        releases = github.api(f'/repos/{repository}/releases?per_page=100&page={page}', 4 * 1024 * 1024)
+        path = f'/repos/{repository}/releases?per_page=100&page={page}'
+        releases = github.api(path, 4 * 1024 * 1024)
+        attempt = 1
+        while page == 1 and not releases and attempt < RELEASE_LIST_ATTEMPTS:
+            time.sleep(RELEASE_LIST_RETRY_SECONDS)
+            releases = github.api(path, 4 * 1024 * 1024)
+            attempt += 1
+        if page == 1 and not releases:
+            return None
         for release in releases:
             for item in release.get('assets', []):
                 if pattern.fullmatch(item.get('name', '')):
@@ -586,7 +604,10 @@ def build_index(github, entries, previous=None, installs=None, now=None, icons=N
                 item['icon'] = icon_base + name
             elif unchanged and before and before.get('icon') and icons and (icons / before['icon'].rsplit('/', 1)[-1]).exists():
                 item['icon'] = before['icon']
-            item['downloads'] = downloads(github, entry['repository'], entry['id'])
+            # Downloads only grow, so a lower or missing count from GitHub keeps the last one.
+            counts = [c for c in (downloads(github, entry['repository'], entry['id']), (before or {}).get('downloads'))
+                      if isinstance(c, int)]
+            item['downloads'] = max(counts, default=0)
         except (CheckError, ValueError, RuntimeError, OSError) as error:
             # Keep what the last good run knew, so the listing still names the plugin.
             if before:

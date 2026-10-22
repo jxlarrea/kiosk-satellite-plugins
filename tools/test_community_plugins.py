@@ -10,6 +10,8 @@ import zipfile
 
 import community_plugins as cp
 
+cp.RELEASE_LIST_RETRY_SECONDS = 0
+
 REPO = 'alice/kiosk-weather'
 TAG = 'v1.2.0'
 SHA = 'a' * 40
@@ -62,6 +64,8 @@ class FakeGitHub:
         self.zip = zip_bytes or package(self.manifest)
         self.members = set(members)
         self.downloaded = []
+        # How many release list requests answer with an empty page first, as GitHub sometimes does.
+        self.empty_release_lists = 0
         digest = hashlib.sha256(self.zip).hexdigest()
         name = f'{self.manifest["id"]}-{self.manifest["version"]}.zip'
         self.repo = {
@@ -90,6 +94,9 @@ class FakeGitHub:
         if path == f'/repos/{REPO}/releases/latest':
             return self.release
         if path.startswith(f'/repos/{REPO}/releases?'):
+            if self.empty_release_lists:
+                self.empty_release_lists -= 1
+                return []
             older = {'assets': [{'name': 'weather-1.1.0.zip', 'download_count': 12}, {'name': 'weather-1.1.0.zip.sha256', 'download_count': 99}]}
             return [self.release, older]
         if path == f'/repos/{REPO}/commits/refs/tags/{TAG}':
@@ -264,6 +271,20 @@ class IndexTest(unittest.TestCase):
         github = FakeGitHub()
         cp.build_index(github, self.entries, previous=first)
         self.assertFalse(any(url.endswith('.zip') for url in github.downloaded))
+
+    def test_an_empty_release_list_is_asked_again(self):
+        github = FakeGitHub()
+        github.empty_release_lists = 2
+        self.assertEqual(cp.build_index(github, self.entries)['plugins'][0]['downloads'], 42)
+
+    def test_downloads_never_drop_below_the_last_refresh(self):
+        first = cp.build_index(FakeGitHub(), self.entries)
+        first['plugins'][0]['downloads'] = 50
+        github = FakeGitHub()
+        github.empty_release_lists = cp.RELEASE_LIST_ATTEMPTS
+        self.assertEqual(cp.build_index(github, self.entries, previous=first)['plugins'][0]['downloads'], 50)
+        # A lower count from GitHub keeps the higher one too.
+        self.assertEqual(cp.build_index(FakeGitHub(), self.entries, previous=first)['plugins'][0]['downloads'], 50)
 
     def test_a_broken_plugin_keeps_its_last_listing(self):
         first = cp.build_index(FakeGitHub(), self.entries)
