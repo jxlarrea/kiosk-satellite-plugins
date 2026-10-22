@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Fixed
+
+- Updating a plugin that removes a field from a list setting's rows no longer fails with "Unknown plugin setting" when rows were saved. Kiosk Satellite drops the field from the saved rows, the way it drops a removed setting. Document it under Settings.
+
 ### Added
 
 - Add `host.setSettingChoicesEnabled(key, enabled)`, which turns a choices setting or list row field off while it cannot work and back on. Off, its picker and Refresh do not open. Document it under Plugin choices.

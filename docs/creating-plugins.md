@@ -148,7 +148,7 @@ Callbacks run serially on a worker dedicated to the plugin. They must finish wit
 
 The host rejects settings with unknown keys or incorrect types. Defaults fill missing keys. First-time installation does not run plugin code and leaves the plugin disabled. Updates automatically stop the old session and restart the replacement if the plugin was enabled and the master switch is on. Disabled plugins stay disabled. Updates while the master switch is off retain the enabled choice without running code. The host calls `start` after explicit enable or at app startup for an enabled plugin while the master **Enable Plugins** switch is on. Turning the master switch off calls `stop` and revokes host callbacks without changing the plugin's saved enabled choice or settings. Turning it on starts the selected plugins again. An off master switch prevents startup and execution across app restarts.
 
-To replace a loaded plugin, preview the same repository again and install its replacement release. KS stops the old session and restores its enabled state automatically. A normal update does not require an app restart. Compatible settings are retained. Removing a plugin deletes its saved settings.
+To replace a loaded plugin, preview the same repository again and install its replacement release. KS stops the old session and restores its enabled state automatically. A normal update does not require an app restart. Compatible settings are retained. Settings and list row fields that the new version no longer declares are dropped. Removing a plugin deletes its saved settings.
 
 ## Floating window
 
