@@ -8,6 +8,8 @@
 
 ### Added
 
+- Add `batteryTemp` to `getStats`, the battery temperature in Celsius. It is null on a device without a battery or one whose battery has no temperature sensor. Document it under Read commands in the KS API reference.
+
 - Add `host.setSettingChoicesEnabled(key, enabled)`, which turns a choices setting or list row field off while it cannot work and back on. Off, its picker and Refresh do not open. Document it under Plugin choices.
 
 - Add `emptyText` for settings and list row fields with plugin choices. Their field and picker show it until the plugin lists any choices, in place of "No choices yet. Refresh to look for them." Document it under Plugin choices.
