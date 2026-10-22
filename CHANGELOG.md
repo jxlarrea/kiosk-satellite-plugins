@@ -4,6 +4,8 @@
 
 ### Added
 
+- Add `host.setSettingChoicesEnabled(key, enabled)`, which turns a choices setting or list row field off while it cannot work and back on. Off, its picker and Refresh do not open. Document it under Plugin choices.
+
 - Add `emptyText` for settings and list row fields with plugin choices. Their field and picker show it until the plugin lists any choices, in place of "No choices yet. Refresh to look for them." Document it under Plugin choices.
 
 - Add the `settings.page` event. Kiosk Satellite sends `{"open": true}` when the plugin's settings page opens on the kiosk or in any Remote Admin browser and `{"open": false}` once it is closed everywhere, so a plugin can refresh its choice values only while someone looks. Document it under Know when the settings page is open in the Settings buttons and plugin choices guide.

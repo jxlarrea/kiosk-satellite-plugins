@@ -52,6 +52,7 @@ host.setSettingChoices("light", new String[] {"lamp-1", "lamp-2"}, new String[] 
 - A saved ID the list lacks stays saved. The picker shows it with a warning and the line "This choice is no longer listed."
 - Refresh reaches the plugin as `onEvent("settings.choices", {"key": ..., "run": ...})`. Look again, list what you find and report the outcome.
 - Until the plugin lists any, the field and its picker say "No choices yet. Refresh to look for them." Give the setting an `emptyText` of up to 200 characters to say what to do instead, such as `"emptyText": "Add a computer under Computers to pick its sensors."`. List row fields take it too.
+- Turn a choice off while it cannot work, such as while the device its choices come from is unreachable, with `host.setSettingChoicesEnabled(key, false)`, and back on with `true`. Off, its picker and its Refresh button do not open and the saved choice still shows. Every choice starts on in a new session, so turn it off again in `start` if it still applies. Kiosk Satellite versions without it throw `UnsupportedOperationException`.
 
 ### Choices in list rows
 

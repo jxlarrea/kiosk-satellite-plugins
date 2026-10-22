@@ -164,6 +164,14 @@ public interface PluginHost {
      * path of a list row field, such as "panels.tiles.sensor".
      */
     default void setSettingChoices(String key, java.util.List<java.util.Map<String, Object>> choices) { throw new UnsupportedOperationException("Rich setting choices are unavailable"); }
+
+    /**
+     * SDK 1, setup controls. Turns a choices setting or list row field off or back on, such as while the device its
+     * choices come from cannot be reached. Off, its picker and its Refresh button do not open and the saved choice
+     * still shows. Every choice starts on in a new session. key is the setting key or the dotted path of a list row
+     * field, as for setSettingChoices.
+     */
+    default void setSettingChoicesEnabled(String key, boolean enabled) { throw new UnsupportedOperationException("Turning choices off is unavailable"); }
     /** SDK 1. Register or update an RGB light. Commands arrive as light.<key>. */
     default void publishLight(String key, String name, String[] effects, Map<String, Object> state) { throw new UnsupportedOperationException("SDK 1 required"); }
     default void removeLight(String key) { throw new UnsupportedOperationException("SDK 1 required"); }
