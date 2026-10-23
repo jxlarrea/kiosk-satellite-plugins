@@ -140,6 +140,11 @@
     "added": "2026-10-21"
   },
   {
+    "repository": "stuartp44/kiosk-satellite-plugin-smt101",
+    "id": "smt101-sensors",
+    "added": "2026-10-23"
+  },
+  {
     "repository": "syphernl/ks-barcode-scanner",
     "id": "barcode-scanner",
     "added": "2026-10-19"
