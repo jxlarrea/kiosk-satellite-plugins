@@ -85,6 +85,11 @@
     "added": "2026-10-21"
   },
   {
+    "repository": "joshmd/ks-plex-photos",
+    "id": "plex-photos",
+    "added": "2026-10-23"
+  },
+  {
     "repository": "jtscott/ks-screensaver-agenda",
     "id": "screensaver-agenda",
     "added": "2026-10-22"
