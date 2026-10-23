@@ -18,7 +18,7 @@ Every plugin declares `"apiVersion": 1`. All features below belong to that singl
 | `host.control` | Execute the transient controls listed below |
 | `noise` | Read the [room noise level](#room-noise-level). Requires `host.read` |
 | `ha` | Call Home Assistant services, run other commands and subscribe to triggers, events and templates. See the [Home Assistant guide](home-assistant.md#call-services-and-other-commands) |
-| `voice.skin` | Appear in Voice Satellite's Skin list and draw the turn in place of the KS overlay. Requires `overlay` and `host.read`. See [Voice skins](voice-skins.md) |
+| `voice.skin` | Appear in Voice Satellite's skin lists and draw the turn in place of the KS overlay. Requires `overlay` and `host.read`. See [Voice skins](voice-skins.md) |
 | `voice.text` | Read what the user said and the assistant answered. Requires `host.read`. See [Conversation text](voice-skins.md#conversation-text) |
 | `camera` | Receive frames from the device camera. See [Camera frames](camera.md#camera-frames) |
 | `barcode` | Open the KS scanner and read a barcode or a QR code. See [Scan a code](camera.md#scan-a-code) |
@@ -65,7 +65,7 @@ Except for `getBrightness`, `getVolume` and `getHaEntityState`, every read comma
 | `getCameraViews` | A list of `{id, name, cameraCount}`, one per camera view set up in KS, in their order. Pass `id` to `showCameraView`. No servers, stream URLs or credentials |
 | `getDashboards` | A list of `{urlPath, title, icon, custom, views}`, one per Home Assistant dashboard, with `views` a list of `{path, title, icon, subview}`. Pass a view's `path` to `haNavigate`. Icons are MDI names or null. `custom` marks KS's Custom Pages entry. Fails while Home Assistant is not set up or cannot be reached |
 | `getWakeWordState` | `{available, stopWordAvailable, enabled, active, listening, engine, engineLabel, status, statusLabel, muted}`. Engine names can be null. No audio, model files or internal configuration |
-| `getVoiceState` | `{enabled, state, skinSelected, overlay}`. `enabled` is true while the native Voice Satellite runtime is on. `state` is `idle`, `listening`, `processing` or `responding`. `skinSelected` is true while the Skin setting picks this plugin. `overlay` is `hidden`, `full` or `docked`. See [Voice Satellite state](#voice-satellite-state) and [Voice skins](voice-skins.md) |
+| `getVoiceState` | `{enabled, state, skinSelected, overlay}`. `enabled` is true while the native Voice Satellite runtime is on. `state` is `idle`, `listening`, `processing` or `responding`. `skinSelected` is true while the skin setting of the assistant on screen picks this plugin, or while nothing shows, either skin setting does. `overlay` is `hidden`, `full` or `docked`. See [Voice Satellite state](#voice-satellite-state) and [Voice skins](voice-skins.md) |
 | `getVoiceAppearance` | `{theme, background, textScale, reactive}`: Voice Satellite's Appearance settings a skin follows. See [Appearance settings](voice-skins.md#appearance-settings) |
 | `getVoiceText` | `{command, answer, tools, streaming, announcement}`. Requires `voice.text`. See [Conversation text](voice-skins.md#conversation-text) |
 | `getIntercomState` | `{enabled, state, kiosk, dnd}`. `enabled` is true while the intercom is on. See [Intercom state](#intercom-state) |
@@ -213,7 +213,7 @@ Pass the subscription name from this table to `subscribe` or `unsubscribe`. Deli
 | `voice.state` | `state`: `idle`, `listening`, `processing` or `responding`. See [Voice Satellite state](#voice-satellite-state) |
 | `voice.overlay` | `overlay`: `hidden`, `full` or `docked`, as the voice overlay shows. See [Voice skins](voice-skins.md#when-to-draw) |
 | `voice.level` | `level`: 0 to 1, the level the reactive bar follows. 0 while Reactive activity bar is off. No audio. See [Voice level](voice-skins.md#voice-level) |
-| `voice.skin` | `selected`: true while the Skin setting picks this plugin. See [Voice skins](voice-skins.md) |
+| `voice.skin` | `selected`: true while the skin setting of the assistant on screen picks this plugin. See [Voice skins](voice-skins.md) |
 | `voice.appearance` | `theme`, `background`, `textScale` and `reactive`. See [Appearance settings](voice-skins.md#appearance-settings) |
 | `voice.text` | `command`, `answer`, `tools`, `streaming` and `announcement`. Requires `voice.text`. See [Conversation text](voice-skins.md#conversation-text) |
 | `intercom.state` | `state`, `kiosk` and `dnd`. See [Intercom state](#intercom-state) |

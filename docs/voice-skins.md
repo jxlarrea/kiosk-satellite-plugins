@@ -1,6 +1,6 @@
 # Voice skins
 
-A plugin can draw the Voice Satellite overlay itself. Declare `voice.skin` and the plugin appears under its own name in **Voice Satellite > Appearance > Skin**, after the built-in skins. While the user has it picked and the plugin runs, KS draws none of its own overlay for a turn: no backdrop, art, activity bar or text. The plugin draws the turn in its own [native overlays](overlays.md) instead.
+A plugin can draw the Voice Satellite overlay itself. Declare `voice.skin` and the plugin appears under its own name in **Voice Satellite > Appearance > Assistant 1 skin** and **Assistant 2 skin**, after the built-in skins. While the user has it picked for the assistant answering and the plugin runs, KS draws none of its own overlay for a turn: no backdrop, art, activity bar or text. The plugin draws the turn in its own [native overlays](overlays.md) instead.
 
 A skin draws two looks, one for each **Overlay mode** the user can pick: full screen and docked. Both follow the other [Appearance settings](#appearance-settings): Theme, Background, Text size and Reactive activity bar. KS draws neither under a plugin skin, so a skin that leaves one out shows nothing in that mode.
 
@@ -10,7 +10,7 @@ KS still shows rich results such as images, weather and videos over the plugin's
 
 | Capability | What it gives the plugin |
 | --- | --- |
-| `voice.skin` | The plugin's entry in the Skin list. Requires `overlay` and `host.read` |
+| `voice.skin` | The plugin's entry in the skin lists. Requires `overlay` and `host.read` |
 | `voice.text` | What the user said and the assistant answered, through `getVoiceText` and `voice.text`. Requires `host.read`. Optional for a skin |
 
 A skin without `voice.text` can still draw the turn from its state and the voice level. `voice.text` also works without `voice.skin`, for a plugin that logs or shows the conversation somewhere else.
@@ -21,7 +21,7 @@ A skin without `voice.text` can still draw the turn from its state and the voice
 
 ## When to draw
 
-Draw only while `getVoiceState` returns `skinSelected: true`, or the latest `voice.skin` event says `selected: true`. Otherwise the user picked another skin and KS draws the turn. Then draw the look `overlay` names, from `getVoiceState` or the latest `voice.overlay` event:
+Draw only while `getVoiceState` returns `skinSelected: true`, or the latest `voice.skin` event says `selected: true`. Otherwise the user picked another skin and KS draws the turn. While a turn shows, `selected` follows the assistant answering: **Assistant 2 skin** for a turn wake word 2 starts and **Assistant 1 skin** for every other turn. While nothing shows, it is true if either setting picks the plugin. KS sends `voice.skin` before the `voice.overlay` event of the same turn, so check it before you draw. Then draw the look `overlay` names, from `getVoiceState` or the latest `voice.overlay` event:
 
 | `overlay` | What the skin draws |
 | --- | --- |
@@ -33,7 +33,7 @@ Draw only while `getVoiceState` returns `skinSelected: true`, or the latest `voi
 
 | Event | Payload |
 | --- | --- |
-| `voice.skin` | `selected`: true while the Skin setting picks this plugin |
+| `voice.skin` | `selected`: true while the skin setting of the assistant on screen picks this plugin |
 | `voice.appearance` | `theme`, `background`, `textScale` and `reactive`. See [Appearance settings](#appearance-settings) |
 | `voice.overlay` | `overlay`: `hidden`, `full` or `docked` |
 | `voice.level` | `level`: 0 to 1 |
@@ -83,7 +83,7 @@ if (event.equals("ks.voice.appearance")) apply(payload);
 
 ## Thumbnail
 
-Name a picture of the skin with `voiceSkinThumbnail` in the manifest. KS shows it in the Skin picker on the kiosk and in the remote admin, where the built-in skins show theirs. Without one, the plugin shows a generic plugin icon.
+Name a picture of the skin with `voiceSkinThumbnail` in the manifest. KS shows it in the skin picker on the kiosk and in the remote admin, where the built-in skins show theirs. Without one, the plugin shows a generic plugin icon.
 
 ```json
 "voiceSkinThumbnail": "voice-skin.webp"
@@ -124,6 +124,6 @@ if (event.equals("ks.voice.text")) {
 
 ## Example
 
-Hello World declares `voice.skin` and `voice.text` and ships a thumbnail. Pick **Hello World** in **Voice Satellite > Appearance > Skin** and press **Preview**, or say the wake word. A ring swells with the voice, an arc turns while the assistant thinks and the conversation shows under it. With **Overlay mode** set to Docked, the same ring and conversation sit in a card at the bottom of the screen. Change Theme, Background, Text size or Reactive activity bar to see both looks follow them. See [VoiceSkinDemo.java](../src/me/jxl/kiosk/plugins/hello/VoiceSkinDemo.java).
+Hello World declares `voice.skin` and `voice.text` and ships a thumbnail. Pick **Hello World** in **Voice Satellite > Appearance > Assistant 1 skin** and press **Preview**, or say the wake word. A ring swells with the voice, an arc turns while the assistant thinks and the conversation shows under it. With **Overlay mode** set to Docked, the same ring and conversation sit in a card at the bottom of the screen. Change Theme, Background, Text size or Reactive activity bar to see both looks follow them. See [VoiceSkinDemo.java](../src/me/jxl/kiosk/plugins/hello/VoiceSkinDemo.java).
 
 KS versions without voice skins refuse to install a plugin that declares `voice.skin` or `voice.text`.
