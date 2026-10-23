@@ -120,6 +120,11 @@
     "added": "2026-10-19"
   },
   {
+    "repository": "missing-foss/literal-clock",
+    "id": "literal-clock",
+    "added": "2026-10-23"
+  },
+  {
     "repository": "mpjanofsky/gameday-overlay",
     "id": "gameday",
     "added": "2026-10-19"
