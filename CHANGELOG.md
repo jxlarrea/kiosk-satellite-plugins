@@ -10,6 +10,8 @@
 
 ### Added
 
+- Add `launchApp` for `host.control` and `getLauncherApps` for `host.read`. A plugin can open only the apps added to the App Launcher. Kiosk Mode's Allowed Apps and Lockdown Mode apply. Document them under Open an app in the KS API reference.
+
 - Show the newest SDK features in Hello World. The new **Device stats demo** group draws a native **Device stats** screensaver with `publishScreensaverView`, with a card for each of the kiosk's `getStats` readings that its **Tiles** list picks, `cpuClock` and `batteryTemp` among them. **Reading** in each row takes grouped plugin choices with their current values, which the plugin refreshes only while `settings.page` says the page is open. Each tile gets a chart, which the group claims with `"charts": ["*"]`. **Temperature warning** is a number field with `"input": "field"`. The **Use device stats screensaver** and **Restore screensaver mode** actions set and clear a `screensaver.mode` override, and the **Screensaver mode** reading shows `getScreensaverMode`. In the **Setup demo** group, **Device** shows an `emptyText` and `setSettingChoicesEnabled` turns it off while the address contains `fail`. Hello World now needs Kiosk Satellite 2026.10.36 or newer, which the README now says.
 
 - Add `cpuClock` to `getStats`, the average clock of the active CPU cores in MHz. `cpu` is now null on a device that does not let an app measure CPU load, where it used to report the clock position. Document both under Read commands in the KS API reference.

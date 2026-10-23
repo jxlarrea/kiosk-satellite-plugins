@@ -73,6 +73,7 @@ Except for `getBrightness`, `getVolume` and `getHaEntityState`, every read comma
 | `getHaEntityState` | `{entityId: string}` arguments. Returns `{entityId, status, state, attributes, lastChanged, lastUpdated}`. Read-only HA entity snapshot. See the [Home Assistant guide](home-assistant.md) |
 | `haStatus` | `{configured, connected}` booleans reflecting KS's existing Home Assistant connection check. This does not initiate a new connection check |
 | `getSendspinPlayer` | `{enabled, running, connected, clientId, playerName, serverName, maConfigured, maPlayerId, maServerId, maServerName, maServerVersion}`: the kiosk's own Sendspin player and the Music Assistant player that stands for it. See [The kiosk's player](music-assistant.md#the-kiosks-player) |
+| `getLauncherApps` | A list of `{package, label}`, one per app the plugin can open with `launchApp`, in the App Launcher's order. See [Open an app](#open-an-app) |
 
 Object responses expose only the fields listed above. A field absent from the underlying feature is returned as null. KS failure details are reduced to a generic SDK error rather than exposing internal responses. Reads use the existing feature state and queries. They do not request Android permissions or enable disabled features.
 
@@ -142,6 +143,7 @@ host.executeCommand("showCameraView", Collections.singletonMap("viewId", "front-
 | `setWakeWordMuted` | `{muted: boolean}`. Mute or unmute wake word detection, the same mute as Voice Satellite's Mute switch in Home Assistant. Returns the muted state it set. With Voice Satellite running in the app, KS sets it without Home Assistant. With Voice Satellite running in the dashboard, KS turns the integration's Mute switch through Home Assistant, so `wakeword.state` follows once it applies. Fails while Voice Satellite is off |
 | `showAppLauncher` | `{}`. Open the configured launcher when enabled and apps exist |
 | `hideAppLauncher` | `{}`. Close the launcher overlay |
+| `launchApp` | `{package: string}`. Open an app from the App Launcher over the kiosk. Fails for any other app. See [Open an app](#open-an-app) |
 | `showOverlayPage` | `{url: string}`. Open an HTTP or HTTPS page over the dashboard without a close button |
 | `showLinkPage` | `{url: string}`. Open an HTTP or HTTPS page with a close button |
 | `hideOverlayPage` | `{}`. Close the web overlay, including Music Assistant |
@@ -157,6 +159,20 @@ host.executeCommand("showCameraView", Collections.singletonMap("viewId", "front-
 Controls return null on success unless the table documents a boolean result. Missing configuration, unsupported media commands and normal KS feature gates can cause failure. URLs must not contain credentials or use executable schemes such as `javascript:`. Dashboard paths accept slash-separated letters, digits, underscores and hyphens. `haNavigate` paths also accept dots, a query string and a fragment, but no `.` or `..` segments. Unknown arguments are rejected.
 
 These commands change live presentation or playback without editing saved configuration or content. Navigation can leave an unfinished form and screen-off can interrupt someone using the device. Authors should make these behaviors intentional. The usual screensaver session bookkeeping and idle behavior still apply. Plugins cannot take ownership of shared internal voice suppression or screen wake-lock flags.
+
+### Open an app
+
+`launchApp` opens only the apps added in **Settings > App Launcher > Apps**, never any other app on the device. `getLauncherApps` lists them, so a plugin can offer them with [plugin choices](setup-controls.md#plugin-choices) instead of asking for a package name. Kiosk Mode restrictions apply:
+
+- While the App Launcher is off or Lockdown Mode is on, the list is empty and `launchApp` fails.
+- While Kiosk Mode is on, the list holds only the apps under **Settings > Kiosk Mode > Allowed Actions > Allowed Apps**. It is empty when the **Apps** action is not allowed.
+
+The app opens with the kiosk running behind it, the same as from the App Launcher. The App Launcher's **Return automatically** setting brings the kiosk back. Read the list again before showing it, since the user can change these settings at any time.
+
+```java
+host.executeCommand("launchApp", Collections.singletonMap("package", "com.spotify.music"),
+    (ok, data, error) -> { if (!ok) host.status(error, true); });
+```
 
 ## Events
 
