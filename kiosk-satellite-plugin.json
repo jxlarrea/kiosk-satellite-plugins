@@ -5,6 +5,7 @@
   "version": "1.0.1",
   "apiVersion": 1,
   "minAndroidSdk": 24,
+  "minAppVersion": "2026.10.36",
   "entryClass": "me.jxl.kiosk.plugins.hello.HelloWorldPlugin",
   "description": "A sample plugin that showcases the SDK capabilities. Use this plugin as a starting point for your own.",
   "author": "jxlarrea",

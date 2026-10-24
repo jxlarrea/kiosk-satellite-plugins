@@ -89,6 +89,7 @@ See [kiosk-satellite-plugin.json](../kiosk-satellite-plugin.json) for a complete
 | `name` | Display name, at most 80 characters |
 | `version` | Default local build version, formatted as `major.minor.patch` with optional prerelease suffix. Release builds override it from the tag |
 | `minAndroidSdk` | Android API level, at least `24` |
+| `minAppVersion` | The oldest Kiosk Satellite release the plugin works on, such as `2026.10.40`. Required to submit to Community Plugins. See [Minimum Kiosk Satellite version](#minimum-kiosk-satellite-version) |
 | `entryClass` | Public class implementing `KioskPlugin` with a public no-argument constructor |
 | `description` | Plain text, at most 1000 characters |
 | `author` | Author name, at most 120 characters |
@@ -108,6 +109,14 @@ Settings and commands are scoped to the plugin ID. Do not change that ID after p
 Declared commands are reusable actions. Users can select them in **Gestures > Run a plugin action**. The plugin subpage lets users opt each command into the kiosk drawer or expose it as an ESPHome button in Home Assistant. Settings configures those placements and does not run the command. These connections work with all supported SDK versions without additional plugin capabilities.
 
 Keep command IDs stable across releases. The host retains shortcut choices for commands that survive an update and removes choices for deleted commands. New commands start without drawer or Home Assistant exposure. Commands run through `execute` only while the plugin is running. A saved gesture targeting a disabled or missing plugin reports a failure. Plugins should use hardware entities such as RGB lights for ongoing stateful control and commands for individual operations.
+
+### Minimum Kiosk Satellite version
+
+Set `minAppVersion` to the oldest Kiosk Satellite release that has every host method and manifest field the plugin uses. Raise it when a release of the plugin starts using something newer.
+
+Kiosk Satellite releases after 2026.10.39 check it at preview, install, update and fleet sync. If the kiosk runs an older release than `minAppVersion`, Kiosk Satellite refuses the plugin with a message that names both versions. The plugin already installed keeps running, and **Browse plugins** says which release it needs instead of offering the update.
+
+Kiosk Satellite 2026.10.39 and older ignore `minAppVersion`. If the plugin still supports them, keep the `LinkageError` guards from [Older versions](setup-controls.md#older-versions).
 
 ## Gesture triggers
 

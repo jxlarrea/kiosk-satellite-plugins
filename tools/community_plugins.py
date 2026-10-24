@@ -55,12 +55,16 @@ SETTING_TYPES = {
 }
 ID_PATTERN = re.compile(r'[a-z][a-z0-9]*(?:-[a-z0-9]+)*')
 VERSION_PATTERN = re.compile(r'[0-9]+\.[0-9]+\.[0-9]+(?:-[a-zA-Z0-9.-]+)?')
+# A Kiosk Satellite release: year, month and the release within the month, without padding.
+APP_VERSION_PATTERN = re.compile(r'[0-9]{4}\.(?:[1-9]|1[0-2])\.(?:0|[1-9][0-9]{0,3})')
+APP_REPOSITORY = 'jxlarrea/kiosk-satellite'
 TAG_PATTERN = re.compile(r'[A-Za-z0-9][A-Za-z0-9._-]{0,150}')
 REPOSITORY_PATTERN = re.compile(r'[A-Za-z0-9][A-Za-z0-9-]*/[A-Za-z0-9_.-]+')
 STEPS = [
     ('repository', 'Public repository with a license'),
     ('release', 'Stable release with assets published by GitHub Actions'),
     ('manifest', 'Manifest passes the SDK 1 checks'),
+    ('appVersion', 'Manifest names the oldest Kiosk Satellite release it works on'),
     ('package', 'Package matches its checksum and contains only plugin files'),
     ('readme', 'README.md at the release tag'),
     ('owner', 'Submitted by the repository owner'),
@@ -186,6 +190,9 @@ def validate_manifest(manifest):
     headless = manifest.get('headless')
     if headless is not None and not isinstance(headless, bool):
         raise ValueError('Invalid headless')
+    app_version = manifest.get('minAppVersion')
+    if app_version is not None and (not isinstance(app_version, str) or not APP_VERSION_PATTERN.fullmatch(app_version)):
+        raise ValueError('Invalid minAppVersion. Name a Kiosk Satellite release such as 2026.10.40')
     icon = manifest.get('icon')
     if icon is not None and (not isinstance(icon, str) or not valid_asset_path(icon) or not icon.lower().endswith('.png')):
         raise ValueError('Invalid icon. Name a PNG under assets/')
@@ -436,6 +443,7 @@ def check_plugin(github, repository, previous=None):
         'tag': tag,
         'released': release.get('published_at'),
         'minAndroidSdk': manifest['minAndroidSdk'],
+        'minAppVersion': manifest.get('minAppVersion'),
         'headless': manifest.get('headless') is True,
         'capabilities': sorted(manifest['capabilities']),
         'repository': f'https://github.com/{full_name}',
@@ -497,6 +505,22 @@ def save_list(entries, path=LIST_PATH):
     Path(path).write_text(json.dumps(entries, indent=2) + '\n')
 
 
+def app_version_problem(github, version):
+    """Why a submission's minAppVersion does not pass, or None. Listed plugins may go without one."""
+    if version is None:
+        return ('Add minAppVersion to kiosk-satellite-plugin.json with the oldest Kiosk Satellite release '
+                'the plugin works on, such as "2026.10.40"')
+    try:
+        release = github.api(f'/repos/{APP_REPOSITORY}/releases/tags/{version}')
+    except LookupError:
+        return f'Kiosk Satellite {version} is not a published release'
+    except (RuntimeError, OSError) as error:
+        return str(error)
+    if release.get('draft') is not False:
+        return f'Kiosk Satellite {version} is not a published release'
+    return None
+
+
 def check_submission(github, repository, author, maintainer, entries):
     """The checklist for one submission: (results, facts). Results map each step to None or its error."""
     results = {name: None for name, _ in STEPS}
@@ -510,6 +534,7 @@ def check_submission(github, repository, author, maintainer, entries):
         for name, _ in STEPS[index + 1:]:
             results[name] = 'Not checked'
         return results, None
+    results['appVersion'] = app_version_problem(github, facts['minAppVersion'])
     owner = facts['owner'] or ''
     if author.lower() not in (owner.lower(), maintainer.lower()) and not (
             facts['ownerType'] == 'Organization' and github.is_public_member(owner, author)):

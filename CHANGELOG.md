@@ -10,6 +10,8 @@
 
 ### Added
 
+- Add `minAppVersion` to the manifest, the oldest Kiosk Satellite release a plugin works on. Kiosk Satellite releases after 2026.10.39 refuse a plugin that needs a newer release at preview, install, update and fleet sync, with a message that names both versions, and Browse plugins shows the release it needs instead of Install or Update. Community Plugins now requires it on new submissions and checks that it names a published Kiosk Satellite release. Listed plugins keep passing without it. Hello World sets it to 2026.10.36. Document it under Minimum Kiosk Satellite version in Creating plugins.
+
 - Document the Assistant 1 skin and Assistant 2 skin settings that replace Skin, so a voice skin can be picked for one assistant alone. `voice.skin` and `skinSelected` now follow the assistant answering the turn on screen, and while nothing shows they are true if either setting picks the plugin. Document it under When to draw in Voice skins and in the KS API reference.
 
 - Add `launchApp` for `host.control` and `getLauncherApps` for `host.read`. A plugin can open only the apps added to the App Launcher. Kiosk Mode's Allowed Apps and Lockdown Mode apply. Document them under Open an app in the KS API reference.
