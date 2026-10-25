@@ -10,6 +10,8 @@
 
 ### Added
 
+- Add `includeHidden` to `entity` settings and `entity` fields in `list` settings. With it, the entity picker also lists the entities Home Assistant hides, marked with the hidden icon. Older Kiosk Satellite releases ignore it. Document it under Choose an entity in Settings in Home Assistant.
+
 - Document the barcode scanner's screen light button, which turns the screen white around a smaller preview at full brightness to light the code for a front camera, and which the kiosk remembers for the next scan. Document it under Scan a code in Camera.
 
 - Add `minAppVersion` to the manifest, the oldest Kiosk Satellite release a plugin works on. Kiosk Satellite releases after 2026.10.39 refuse a plugin that needs a newer release at preview, install, update and fleet sync, with a message that names both versions, and Browse plugins shows the release it needs instead of Install or Update. Community Plugins now requires it on new submissions and checks that it names a published Kiosk Satellite release. Listed plugins keep passing without it. Hello World sets it to 2026.10.36. Document it under Minimum Kiosk Satellite version in Creating plugins.
