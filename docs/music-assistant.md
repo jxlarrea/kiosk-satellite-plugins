@@ -25,6 +25,7 @@ host.executeCommand("getSendspinPlayer", Collections.emptyMap(), (ok, data, erro
 | `enabled` | The Sendspin player is turned on in Settings |
 | `running` | The player is running. It stops while the kiosk follows another player |
 | `connected` | The player is connected to a Sendspin server |
+| `playing` | Music is playing on the player `sendspinControl` controls: the followed player when the kiosk follows one, otherwise this one. It stays true for a moment between tracks. Needs Kiosk Satellite 2026.10.41 or newer |
 | `clientId` | The player's Sendspin client ID. It stays the same across restarts and updates |
 | `playerName` | The name the player registers with, the device name |
 | `serverName` | The Sendspin server's name while connected, otherwise empty |
@@ -36,7 +37,7 @@ host.executeCommand("getSendspinPlayer", Collections.emptyMap(), (ok, data, erro
 
 KS asks Music Assistant for the player each time the Sendspin player connects. The Music Assistant fields stay empty while the player has never connected, Music Assistant is not set up, or the server does not list the player yet. KS asks again a few seconds later in that case.
 
-Subscribe to `sendspin.player` to hear changes. The payload is the same snapshot plus `time`. It arrives when the player turns on or off, connects or disconnects, or Music Assistant names its player.
+Subscribe to `sendspin.player` to hear changes. The payload is the same snapshot plus `time`. It arrives when the player turns on or off, connects or disconnects, starts or stops playing, or Music Assistant names its player.
 
 ```java
 host.subscribe("sendspin.player");
@@ -44,6 +45,26 @@ host.subscribe("sendspin.player");
 // Inside onEvent:
 if (event.equals("ks.sendspin.player")) {
     String maPlayerId = (String) payload.get("maPlayerId");
+}
+```
+
+To pause the music for a while, such as during a doorbell call, declare `host.control` too. Remember whether music was playing and only resume it if it was:
+
+```java
+private boolean resumeMusic;
+
+void pauseMusic() {
+    host.executeCommand("getSendspinPlayer", Collections.emptyMap(), (ok, data, error) -> {
+        if (!ok || !Boolean.TRUE.equals(((Map<?, ?>) data).get("playing"))) return;
+        resumeMusic = true;
+        host.executeCommand("sendspinControl", Collections.singletonMap("command", "pause"), (done, result, failure) -> {});
+    });
+}
+
+void resumeMusic() {
+    if (!resumeMusic) return;
+    resumeMusic = false;
+    host.executeCommand("sendspinControl", Collections.singletonMap("command", "play"), (done, result, failure) -> {});
 }
 ```
 

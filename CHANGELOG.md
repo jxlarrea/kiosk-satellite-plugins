@@ -10,6 +10,8 @@
 
 ### Added
 
+- Add `playing` to `getSendspinPlayer` and the `sendspin.player` event, which now also fires when music starts or stops. It follows the player `sendspinControl` controls, the followed player when the kiosk follows one. Document it under The kiosk's player in Music Assistant, with an example that pauses the music and resumes it only if it was playing.
+
 - Add `includeHidden` to `entity` settings and `entity` fields in `list` settings. With it, the entity picker also lists the entities Home Assistant hides, marked with the hidden icon. Older Kiosk Satellite releases ignore it. Document it under Choose an entity in Settings in Home Assistant.
 
 - Document the barcode scanner's screen light button, which turns the screen white around a smaller preview at full brightness to light the code for a front camera, and which the kiosk remembers for the next scan. Document it under Scan a code in Camera.

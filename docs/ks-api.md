@@ -72,7 +72,7 @@ Except for `getBrightness`, `getVolume` and `getHaEntityState`, every read comma
 | `getNoiseLevel` | `{available, dbfs, held, updated}`. Requires `noise`. See [Room noise level](#room-noise-level) |
 | `getHaEntityState` | `{entityId: string}` arguments. Returns `{entityId, status, state, attributes, lastChanged, lastUpdated}`. Read-only HA entity snapshot. See the [Home Assistant guide](home-assistant.md) |
 | `haStatus` | `{configured, connected}` booleans reflecting KS's existing Home Assistant connection check. This does not initiate a new connection check |
-| `getSendspinPlayer` | `{enabled, running, connected, clientId, playerName, serverName, maConfigured, maPlayerId, maServerId, maServerName, maServerVersion}`: the kiosk's own Sendspin player and the Music Assistant player that stands for it. See [The kiosk's player](music-assistant.md#the-kiosks-player) |
+| `getSendspinPlayer` | `{enabled, running, connected, playing, clientId, playerName, serverName, maConfigured, maPlayerId, maServerId, maServerName, maServerVersion}`: the kiosk's own Sendspin player and the Music Assistant player that stands for it. See [The kiosk's player](music-assistant.md#the-kiosks-player) |
 | `getLauncherApps` | A list of `{package, label}`, one per app the plugin can open with `launchApp`, in the App Launcher's order. See [Open an app](#open-an-app) |
 
 Object responses expose only the fields listed above. A field absent from the underlying feature is returned as null. KS failure details are reduced to a generic SDK error rather than exposing internal responses. Reads use the existing feature state and queries. They do not request Android permissions or enable disabled features.
@@ -222,7 +222,7 @@ Pass the subscription name from this table to `subscribe` or `unsubscribe`. Deli
 | `stopword.detected` | No additional fields |
 | `browser.state` | No additional fields. The main WebView URL or saved HA/Start URL changed. Read `getDashboardState` for the current snapshot |
 | `camera.view` | `active`, `viewId`, `viewName` and `focusedCameraId` |
-| `sendspin.player` | The `getSendspinPlayer` fields. Fires when the player turns on or off, connects or disconnects, or Music Assistant names its player |
+| `sendspin.player` | The `getSendspinPlayer` fields. Fires when the player turns on or off, connects or disconnects, starts or stops playing, or Music Assistant names its player |
 | `audio.noise` | `available`, `dbfs` and `held`. Requires `noise`. See [Room noise level](#room-noise-level) |
 
 Events are passive observations. Motion, face, person, proximity and wake-word events only exist when the corresponding KS feature is already producing them. A subscription never starts a camera, opens a microphone or changes the screensaver policy. No general event-bus subscription is provided.
