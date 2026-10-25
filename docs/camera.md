@@ -37,7 +37,7 @@ host.scanBarcode(options, (ok, data, error) -> {
 | `title` | Up to 80 characters. "Scan a code" when left out |
 | `message` | Up to 200 characters under the title. "Hold the code inside the frame." when left out |
 
-The scanner always names the plugin that opened it. The person can close it, flip the camera and turn on the flashlight where the device has one. Back closes it too.
+The scanner always names the plugin that opened it. The person can close it, flip the camera and turn on the flashlight where the device has one. Back closes it too. The screen light button turns the screen white around a smaller preview at full brightness to light the code for a front camera. The kiosk remembers it for the next scan, whichever plugin opens the scanner.
 
 On success `data` is `{value, format}`. `value` is the code's text as read and `format` is one of the format names above. On failure `error` and `data.code` are the same code:
 
