@@ -24,6 +24,8 @@ Declare `host.read` in `capabilities` and add an `entity` setting:
 
 Both settings interfaces use KS's existing searchable entity picker. The value is the selected entity ID, such as `sensor.living_room_temperature`. An empty string means no selection. Clear removes the selection. Changes save automatically and arrive in `configure` like other plugin settings.
 
+The picker leaves out entities that Home Assistant hides. Add `"includeHidden": true` to list them too, marked with the hidden icon. Use it for entities people hide from generated dashboards but still want to control, such as a light group. It works the same on `entity` fields in a `list` setting. Older Kiosk Satellite versions ignore it.
+
 Entity IDs must match `domain.object_id`, with lowercase letters, digits or underscores and at most 255 characters. Wildcards and URL paths are rejected. Entity settings are a convenience for choosing IDs, not an access restriction. `host.read` allows reading any entity available to KS's configured HA account. Plugins run inside KS and are trusted code.
 
 ## Read the current state
