@@ -150,6 +150,11 @@
     "added": "2026-10-19"
   },
   {
+    "repository": "patrick11994/ks-reolink-doorbell-intercom",
+    "id": "reolink-doorbell",
+    "added": "2026-10-25"
+  },
+  {
     "repository": "shin-01/Voice-satellite-QR-code-plugin",
     "id": "voice-satellite-qrcode",
     "added": "2026-10-21"
