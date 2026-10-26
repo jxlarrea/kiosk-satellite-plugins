@@ -135,6 +135,7 @@ class ManifestTest(unittest.TestCase):
         cp.validate_manifest(manifest())
         cp.validate_manifest(manifest(capabilities=['camera', 'barcode', 'ma']))
         cp.validate_manifest(manifest(capabilities=['screensaver', 'screensaver.mode']))
+        cp.validate_manifest(manifest(settings=[{'key': 'tap', 'title': 'Tap', 'type': 'action', 'default': {}}]))
 
     def test_rules_from_the_app(self):
         for change in [
@@ -142,6 +143,7 @@ class ManifestTest(unittest.TestCase):
             {'minAndroidSdk': 23}, {'capabilities': ['microphone']}, {'capabilities': ['noise']},
             {'capabilities': ['voice.skin', 'overlay']}, {'author': ' '}, {'headless': 'yes'},
             {'voiceSkinThumbnail': 'thumb.png'}, {'settings': [{'key': 'a', 'title': 'A', 'type': 'secret', 'default': 'x'}]},
+            {'settings': [{'key': 'a', 'title': 'A', 'type': 'action', 'default': {'type': 'refresh'}}]},
             {'settings': [{'key': 'a', 'title': 'A', 'type': 'string'}, {'key': 'a', 'title': 'B', 'type': 'string'}]},
             {'commands': [{'id': 'Run', 'title': 'Run'}]}, {'buttons': [{'id': 'test', 'title': 'Test'}]},
             {'minAppVersion': '2026.10'}, {'minAppVersion': '2026.09.1'}, {'minAppVersion': 'v2026.10.40'},

@@ -51,7 +51,7 @@ CAPABILITIES = {
 }
 SETTING_TYPES = {
     'string', 'secret', 'entity', 'icon', 'dashboard', 'cameraView', 'boolean',
-    'color', 'number', 'select', 'list',
+    'color', 'number', 'select', 'list', 'action',
 }
 ID_PATTERN = re.compile(r'[a-z][a-z0-9]*(?:-[a-z0-9]+)*')
 VERSION_PATTERN = re.compile(r'[0-9]+\.[0-9]+\.[0-9]+(?:-[a-zA-Z0-9.-]+)?')
@@ -220,6 +220,8 @@ def validate_manifest(manifest):
             raise ValueError(f'Unsupported setting type for {key}')
         if setting.get('type') == 'secret' and setting.get('default') != '':
             raise ValueError('Secret settings must default to an empty string')
+        if setting.get('type') == 'action' and setting.get('default') != {}:
+            raise ValueError('Action settings must default to {}')
     for kind in ('commands', 'triggers', 'buttons'):
         ids = set()
         for item in manifest.get(kind, []):

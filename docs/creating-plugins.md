@@ -102,7 +102,7 @@ See [kiosk-satellite-plugin.json](../kiosk-satellite-plugin.json) for a complete
 | `voiceSkinThumbnail` | Optional. A PNG, JPEG or WebP under `assets/`, at most 256 KB, that shows the plugin's voice skin in the Skin picker. Requires `voice.skin`. See [Voice skins](voice-skins.md#thumbnail) |
 | `headless` | Optional. `true` when the plugin also runs on a device without a screen, such as an Echo Dot. See [Devices without a screen](#devices-without-a-screen) |
 
-A setting declares `key`, `title`, `type` and `default`. Types are `string`, `secret`, `boolean`, `number`, `color`, `select`, `entity`, `icon`, `dashboard`, `cameraView` and `list`. Strings and secrets allow up to 512 characters. See [Pickers, lists and conditions](#pickers-lists-and-conditions) for the last four. Keys start with a letter and contain letters, digits or underscores. A command or trigger declares `id` and `title`. Their IDs start with a lowercase letter and contain letters or digits. IDs must be unique within their respective lists.
+A setting declares `key`, `title`, `type` and `default`. Types are `string`, `secret`, `boolean`, `number`, `color`, `select`, `entity`, `icon`, `dashboard`, `cameraView`, `list` and `action`. Strings and secrets allow up to 512 characters. See [Pickers, lists and conditions](#pickers-lists-and-conditions) for `icon`, `dashboard`, `cameraView` and `list`, and [Action settings](#action-settings) for `action`. Keys start with a letter and contain letters, digits or underscores. A command or trigger declares `id` and `title`. Their IDs start with a lowercase letter and contain letters or digits. IDs must be unique within their respective lists.
 
 Settings and commands are scoped to the plugin ID. Do not change that ID after publication. Increasing a plugin's own version does not increase the SDK version.
 
@@ -140,6 +140,45 @@ host.fireTrigger("hardwareKey");
 - No extra capability or SDK version is required.
 
 Keep trigger IDs stable across releases. A gesture saved for a trigger that a later version removes no longer fires. Plugins are installed per kiosk, so Fleet Management does not sync gestures that use a plugin trigger. Hello World fires `hardwareKey` from its Hardware keys demo.
+
+## Action settings
+
+An `action` setting lets the user pick any Kiosk Satellite action in the plugin's settings, with the same chooser the Gestures page uses: a dashboard view, a Home Assistant script or service, another app, another plugin's action and the rest. Run the saved action with `host.runAction`. A plugin bar or menu can then open whatever the user chose, with no code for any particular action and no trip to the Gestures page.
+
+```json
+{ "key": "tap", "type": "action", "title": "Tap action", "default": {} }
+```
+
+```java
+host.runAction("tap", (ok, data, error) -> {
+    if (!ok) host.log("Tap action: " + error);
+});
+```
+
+In a list, name the row field by the list key, the row index and the field key, such as `items.2.action`:
+
+```json
+{
+  "key": "items", "type": "list", "title": "Items", "default": [],
+  "row": { "title": "label", "subtitle": "action", "icon": "icon" },
+  "fields": [
+    { "key": "label", "type": "string", "title": "Label", "required": true },
+    { "key": "icon", "type": "icon", "title": "Icon" },
+    { "key": "action", "type": "action", "title": "Action", "required": true }
+  ]
+}
+```
+
+- Only the user chooses an action. `saveSettings` keeps action settings, and lists that hold an action field, as the user saved them. `updateSettings` throws `IllegalArgumentException` for them. The default must be `{}`, so a manifest cannot choose one either.
+- The plugin decides when an action runs, never what it does. That is why `runAction` needs no capability: a plugin without `ha` can still run the Home Assistant script the user picked.
+- `configure` receives the action as a read-only `Map`, or an empty one when none is chosen. Treat it as opaque and check only whether it is empty. Its fields can change between Kiosk Satellite releases.
+- Show your own label for the action, such as a list row's `label` field. As a row's `subtitle`, an action field shows what the action does. It cannot be the row's `title`.
+- The callback hears `ok=false` with an error when no action is chosen, the row does not exist, Lockdown Mode is on or the action fails. Kiosk Mode's Disable Gestures does not stop it, since the plugin runs the action from a control of its own.
+- KS refuses runs past four per second per plugin with `Too many actions`.
+- An action setting cannot be the target of `visibleWhen`.
+- A path that names no action setting throws `IllegalArgumentException`. Kiosk Satellite versions without action settings throw `UnsupportedOperationException` and reject a manifest that uses the type, so set `minAppVersion` to 2026.10.42 or later.
+
+Hello World's **Action demo** group has a Run button for a single action and a list of quick actions that show in its top bar's More menu. See [ActionDemo.java](../src/me/jxl/kiosk/plugins/hello/ActionDemo.java).
 
 ## Lifecycle
 

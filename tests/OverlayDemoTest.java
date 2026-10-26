@@ -35,7 +35,7 @@ public final class OverlayDemoTest {
 
     public static void main(String[] args) {
         Host host = new Host();
-        OverlayDemo demo = new OverlayDemo();
+        OverlayDemo demo = new OverlayDemo(new ActionDemo());
 
         // Nothing shows before start or until an action asks for it.
         demo.showBar();
@@ -85,7 +85,7 @@ public final class OverlayDemoTest {
 
         Host older = new Host();
         older.older = true;
-        OverlayDemo fallback = new OverlayDemo();
+        OverlayDemo fallback = new OverlayDemo(new ActionDemo());
         fallback.start(older);
         fallback.showBar();
         assert older.status.contains("newer Kiosk Satellite");

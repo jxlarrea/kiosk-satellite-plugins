@@ -10,6 +10,8 @@
 
 ### Added
 
+- Add the `action` setting type and `host.runAction`. The user picks any Kiosk Satellite action in the plugin's settings with the Gestures action chooser, and the plugin runs it by naming the setting, or a list row field such as `items.2.action`. Only the user chooses an action: `saveSettings` keeps action settings as the user saved them, `updateSettings` refuses them and the default must be `{}`. `runAction` needs no capability, reports errors through its callback, follows Lockdown Mode and allows four runs per second. Hello World's new **Action demo** group has a Run button for one action and a list of quick actions that show in its top bar's More menu. Hello World now needs Kiosk Satellite 2026.10.42 or newer. Community Plugins accepts the type. Document it under Action settings in Creating plugins.
+
 - Add `playing` to `getSendspinPlayer` and the `sendspin.player` event, which now also fires when music starts or stops. It follows the player `sendspinControl` controls, the followed player when the kiosk follows one. Document it under The kiosk's player in Music Assistant, with an example that pauses the music and resumes it only if it was playing.
 
 - Add `includeHidden` to `entity` settings and `entity` fields in `list` settings. With it, the entity picker also lists the entities Home Assistant hides, marked with the hidden icon. Older Kiosk Satellite releases ignore it. Document it under Choose an entity in Settings in Home Assistant.

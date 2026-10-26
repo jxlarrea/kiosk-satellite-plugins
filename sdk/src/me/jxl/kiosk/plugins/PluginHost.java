@@ -102,6 +102,13 @@ public interface PluginHost {
     default void removeStatusTile(String key) { throw new UnsupportedOperationException("Status tiles are unavailable"); }
     /** SDK 1. Fire a trigger declared in the manifest. Gestures mapped to it run their actions. At most four per second, extras are dropped. */
     default void fireTrigger(String id) { throw new UnsupportedOperationException("Gesture triggers are unavailable"); }
+    /**
+     * SDK 1. Run the action the user chose in an "action" setting. The setting is its key, or for a list row field
+     * the list key, the row index and the field key joined by dots, such as "items.2.action". The callback hears
+     * ok=false with an error when nothing is chosen, Lockdown Mode is on or the action fails. At most four per
+     * second. Plugins cannot change action settings, so only the user decides what runs.
+     */
+    default void runAction(String setting, CommandCallback callback) { throw new UnsupportedOperationException("Action settings are unavailable"); }
     /** SDK 1, overlay. Show a native overlay, or replace the one with this key. Never blocks: KS builds its view later on the main thread through the factory. At most four per plugin. */
     default void showOverlay(String key, OverlaySpec spec, OverlayFactory factory) { throw new UnsupportedOperationException("Native overlays are unavailable"); }
     /** SDK 1, overlay. Remove an overlay. Unknown keys are ignored. */

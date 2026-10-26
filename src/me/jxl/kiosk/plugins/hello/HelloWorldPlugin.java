@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 import me.jxl.kiosk.plugins.KioskPlugin;
 import me.jxl.kiosk.plugins.PluginHost;
 
-/** Settings controls including lists, pickers, buttons and plugin choices, a floating window, native overlays, actions, live readings, a read-only chart, an Overview status tile, hardware keys, Voice Satellite state, a voice skin, intercom state, camera frames, barcode scans and a native screensaver of the kiosk's own stats. */
+/** Settings controls including lists, pickers, buttons, plugin choices and action settings, a floating window, native overlays, actions, live readings, a read-only chart, an Overview status tile, hardware keys, Voice Satellite state, a voice skin, intercom state, camera frames, barcode scans and a native screensaver of the kiosk's own stats. */
 public final class HelloWorldPlugin implements KioskPlugin {
     private final HomeAssistantDemo homeAssistant = new HomeAssistantDemo();
     private final StatusTileDemo statusTile = new StatusTileDemo();
@@ -21,7 +21,8 @@ public final class HelloWorldPlugin implements KioskPlugin {
     private final VoiceSkinDemo voiceSkin = new VoiceSkinDemo();
     private final IntercomDemo intercom = new IntercomDemo();
     private final ListDemo lists = new ListDemo();
-    private final OverlayDemo overlays = new OverlayDemo();
+    private final ActionDemo actions = new ActionDemo();
+    private final OverlayDemo overlays = new OverlayDemo(actions);
     private final SetupDemo setup = new SetupDemo();
     private final CameraDemo camera = new CameraDemo();
     private final BarcodeDemo barcode = new BarcodeDemo();
@@ -49,6 +50,7 @@ public final class HelloWorldPlugin implements KioskPlugin {
     @Override
     public synchronized void start(PluginHost host, Map<String, Object> settings) {
         this.host = host;
+        actions.start(host);
         overlays.start(host);
         voiceSkin.start(host);
         setup.start(host);
@@ -93,6 +95,7 @@ public final class HelloWorldPlugin implements KioskPlugin {
         voice.configure(host, settings);
         intercom.configure(host, settings);
         lists.configure(host, settings);
+        actions.configure(settings);
         setup.configure(settings);
         stats.configure(settings);
         Map<String, Object> nextScreensaver = DvdScreensaver.options(settings);
@@ -192,6 +195,7 @@ public final class HelloWorldPlugin implements KioskPlugin {
         voiceSkin.onEvent(event, payload);
         intercom.onEvent(event, payload);
         setup.onEvent(event, payload);
+        actions.onEvent(event, payload);
         camera.onEvent(event, payload);
         musicAssistant.onEvent(event, payload);
         stats.onEvent(event, payload);
@@ -234,6 +238,7 @@ public final class HelloWorldPlugin implements KioskPlugin {
         voiceSkin.stop();
         intercom.stop();
         overlays.stop();
+        actions.stop();
         setup.stop();
         camera.stop();
         barcode.stop();

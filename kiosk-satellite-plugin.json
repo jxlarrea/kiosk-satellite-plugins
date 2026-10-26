@@ -5,7 +5,7 @@
   "version": "1.0.1",
   "apiVersion": 1,
   "minAndroidSdk": 24,
-  "minAppVersion": "2026.10.36",
+  "minAppVersion": "2026.10.42",
   "entryClass": "me.jxl.kiosk.plugins.hello.HelloWorldPlugin",
   "description": "A sample plugin that showcases the SDK capabilities. Use this plugin as a starting point for your own.",
   "author": "jxlarrea",
@@ -399,6 +399,48 @@
       }
     },
     {
+      "key": "buttonAction",
+      "type": "action",
+      "title": "Run button action",
+      "default": {},
+      "group": "Action demo",
+      "description": "Action picker: the Run button below runs this action. Only you choose it. The plugin only runs it."
+    },
+    {
+      "key": "quickActions",
+      "type": "list",
+      "title": "Quick actions",
+      "group": "Action demo",
+      "addTitle": "Add quick action",
+      "maxItems": 6,
+      "description": "Each quick action shows in the top bar's More menu. Show the top bar with its plugin action.",
+      "row": {
+        "title": "label",
+        "subtitle": "action",
+        "icon": "icon"
+      },
+      "default": [],
+      "fields": [
+        {
+          "key": "label",
+          "type": "string",
+          "title": "Label",
+          "required": true
+        },
+        {
+          "key": "icon",
+          "type": "icon",
+          "title": "Icon"
+        },
+        {
+          "key": "action",
+          "type": "action",
+          "title": "Action",
+          "required": true
+        }
+      ]
+    },
+    {
       "key": "setupAddress",
       "type": "string",
       "title": "Device address",
@@ -434,6 +476,13 @@
     }
   ],
   "buttons": [
+    {
+      "id": "runAction",
+      "title": "Run the action",
+      "label": "Run",
+      "group": "Action demo",
+      "description": "Button: runs the Run button action and reports the result here."
+    },
     {
       "id": "setupTest",
       "title": "Test connection",
@@ -606,6 +655,13 @@
       "readings": [
         "text_sensor.list_summary",
         "text_sensor.picker_values"
+      ]
+    },
+    {
+      "title": "Action demo",
+      "readingsTitle": "Action demo readings",
+      "readings": [
+        "text_sensor.last_action"
       ]
     },
     {

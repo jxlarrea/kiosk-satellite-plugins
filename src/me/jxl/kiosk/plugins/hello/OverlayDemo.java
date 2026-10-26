@@ -17,6 +17,8 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import java.util.ArrayList;
+import java.util.List;
 import me.jxl.kiosk.plugins.KsTheme;
 import me.jxl.kiosk.plugins.OverlayFactory;
 import me.jxl.kiosk.plugins.OverlaySpec;
@@ -24,7 +26,8 @@ import me.jxl.kiosk.plugins.PluginHost;
 
 /**
  * Native overlays drawn with the KS theme: a small bar at the top of the
- * kiosk with a menu that opens under its More button, a full screen card
+ * kiosk with a menu that opens under its More button and lists the quick
+ * actions from the Action demo settings, a full screen card
  * and an animated edge glow that draws over everything like the voice
  * overlay while every touch passes through. Views are built on the main
  * thread, so their click listeners run there too.
@@ -36,11 +39,14 @@ final class OverlayDemo {
     static final String GLOW = "glow";
     /** Where the bar sits below the top edge, in dp. */
     static final int BAR_INSET = 16;
+    private final ActionDemo actions;
     private PluginHost host;
     private volatile int greetings;
     private volatile int level = 50;
     /** The bar's greeting, so the menu's Say hello can update it. Touched on the main thread only. */
     private TextView barLabel;
+
+    OverlayDemo(ActionDemo actions) { this.actions = actions; }
 
     synchronized void start(PluginHost host) { this.host = host; }
 
@@ -249,31 +255,43 @@ final class OverlayDemo {
         }
     }
 
-    /** A small card of actions, each with a KS icon. Tapping one closes the menu. */
+    /**
+     * A small card of actions, each with a KS icon, then the quick actions the user set up. Tapping one closes the
+     * menu. A quick action runs whatever the user chose for it.
+     */
     private final class Menu implements OverlayFactory {
-        private final String[][] rows = {
-            {"mdi:hand-wave", "Say hello"},
-            {"mdi:fullscreen", "Full screen"},
-            {"mdi:close", "Hide top bar"},
-        };
+        private final List<String[]> rows = new ArrayList<>();
+        private final List<Runnable> taps = new ArrayList<>();
+
+        Menu() {
+            add("mdi:hand-wave", "Say hello", () -> {
+                greetings++;
+                if (barLabel != null) barLabel.setText(greeting());
+            });
+            add("mdi:fullscreen", "Full screen", OverlayDemo.this::showFull);
+            add("mdi:close", "Hide top bar", OverlayDemo.this::hideBar);
+            for (ActionDemo.QuickAction quick : actions.quickActions()) {
+                add(quick.icon, quick.label, () -> actions.run(quick.label, quick.path));
+            }
+        }
+
+        private void add(String icon, String label, Runnable tap) {
+            rows.add(new String[] {icon, label});
+            taps.add(tap);
+        }
 
         @Override public View create(Context context, KsTheme theme) {
             LinearLayout card = new LinearLayout(context);
             card.setOrientation(LinearLayout.VERTICAL);
-            for (int i = 0; i < rows.length; i++) {
+            for (int i = 0; i < rows.size(); i++) {
                 TextView row = new TextView(context);
-                row.setText(rows[i][1]);
+                row.setText(rows.get(i)[1]);
                 row.setGravity(Gravity.CENTER_VERTICAL);
                 row.setMinHeight(theme.px(48));
-                final int index = i;
+                final Runnable action = taps.get(i);
                 row.setOnClickListener(view -> tap(() -> {
                     hideMenu();
-                    if (index == 0) {
-                        greetings++;
-                        if (barLabel != null) barLabel.setText(greeting());
-                    }
-                    else if (index == 1) showFull();
-                    else hideBar();
+                    action.run();
                 }));
                 card.addView(row, new LinearLayout.LayoutParams(theme.px(220), LinearLayout.LayoutParams.WRAP_CONTENT));
             }
@@ -289,7 +307,7 @@ final class OverlayDemo {
                 TextView row = (TextView) card.getChildAt(i);
                 theme.styleText(row, 15, 500, "onSurface");
                 row.setPadding(theme.px(12), 0, theme.px(12), 0);
-                Drawable glyph = icon(theme, rows[i][0], "onSurfaceVariant");
+                Drawable glyph = icon(theme, rows.get(i)[0], "onSurfaceVariant");
                 if (glyph != null) glyph.setBounds(0, 0, theme.px(22), theme.px(22));
                 row.setCompoundDrawablesRelative(glyph, null, null, null);
                 row.setCompoundDrawablePadding(theme.px(14));
