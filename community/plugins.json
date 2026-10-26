@@ -125,6 +125,11 @@
     "added": "2026-10-19"
   },
   {
+    "repository": "missing-foss/alpine-clock",
+    "id": "alpine-clock",
+    "added": "2026-10-26"
+  },
+  {
     "repository": "missing-foss/literal-clock",
     "id": "literal-clock",
     "added": "2026-10-23"
