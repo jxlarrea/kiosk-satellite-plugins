@@ -10,6 +10,8 @@
 
 ### Added
 
+- Add `builtIn` to `getDashboards`. Home Assistant's own pages, such as Energy, History and Media, and the pages integrations add are now listed after the dashboards and apps, with no views, and the `dashboard` setting's picker offers them too. Older Kiosk Satellite releases leave them out. Document it in the KS API reference and under Pickers, lists and conditions in Creating plugins.
+
 - Add the `action` setting type and `host.runAction`. The user picks any Kiosk Satellite action in the plugin's settings with the Gestures action chooser, and the plugin runs it by naming the setting, or a list row field such as `items.2.action`. Only the user chooses an action: `saveSettings` keeps action settings as the user saved them, `updateSettings` refuses them and the default must be `{}`. `runAction` needs no capability, reports errors through its callback, follows Lockdown Mode and allows four runs per second. Hello World's new **Action demo** group has a Run button for one action and a list of quick actions that show in its top bar's More menu. Hello World now needs Kiosk Satellite 2026.10.42 or newer. Community Plugins accepts the type. Document it under Action settings in Creating plugins.
 
 - Add `playing` to `getSendspinPlayer` and the `sendspin.player` event, which now also fires when music starts or stops. It follows the player `sendspinControl` controls, the followed player when the kiosk follows one. Document it under The kiosk's player in Music Assistant, with an example that pauses the music and resumes it only if it was playing.

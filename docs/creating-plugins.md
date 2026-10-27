@@ -300,7 +300,7 @@ Three setting types open the app's own pickers, so users never type an ID:
 | Type | Stores | Picker |
 | --- | --- | --- |
 | `icon` | An MDI name such as `mdi:garage`, or an empty string | Every Material Design Icon, searchable by name |
-| `dashboard` | A Home Assistant path such as `lovelace/0`, or an empty string | The dashboard and view picker. Pass the value to `haNavigate` |
+| `dashboard` | A Home Assistant path such as `lovelace/0` or `energy`, or an empty string | The dashboard and view picker, which also lists Home Assistant's own pages such as Energy. Pass the value to `haNavigate` |
 | `cameraView` | A KS camera view ID, or an empty string | The kiosk's camera views by name. Pass the value to `showCameraView` |
 
 A `list` setting holds rows that users add, edit, reorder and delete. Each row is a small form described by `fields`. Row fields take the same types as settings, except `secret`, and can be `required`. On the kiosk the rows show inline on the plugin page and each opens an editor. Remote Admin works the same way and also moves rows with arrow buttons. The whole list saves when the editor's Save is pressed, a row is deleted or rows are reordered.
