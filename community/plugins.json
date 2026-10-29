@@ -170,6 +170,11 @@
     "added": "2026-10-25"
   },
   {
+    "repository": "rsaberr/kiosk-satellite-video-intercom",
+    "id": "video-intercom",
+    "added": "2026-10-29"
+  },
+  {
     "repository": "shin-01/Voice-satellite-QR-code-plugin",
     "id": "voice-satellite-qrcode",
     "added": "2026-10-21"
