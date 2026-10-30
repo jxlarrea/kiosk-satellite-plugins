@@ -15,6 +15,11 @@
     "added": "2026-10-19"
   },
   {
+    "repository": "antipasta/kiosk-dock",
+    "id": "dock",
+    "added": "2026-10-30"
+  },
+  {
     "repository": "dark-matter-design/kiosk-satellite-plugin-apple-shared-album",
     "id": "apple-shared-album",
     "added": "2026-10-20"
