@@ -150,6 +150,9 @@ host.executeCommand("showCameraView", Collections.singletonMap("viewId", "front-
 | `showMusicAssistant` | `{}`. Open the configured Music Assistant interface |
 | `openCalendar` | `{view?: "day" \| "week" \| "month" \| "schedule", date?: string}`. Open the full screen calendar, waking the display and dismissing the screensaver. `date` is the day to open on, as `yyyy-MM-dd`. Without them it opens on the default view from **Settings > Calendar** and today. If the calendar is already open, it moves to the view and day asked for |
 | `hideCalendar` | `{}`. Close the calendar |
+| `openAlarms` | `{alarm?: "next"}`. Open the full screen alarm list, waking the display and dismissing the screensaver. With `alarm: "next"` it opens the alarm that rings next, snoozed alarms included, on its details page, or the list when no alarm is set. If the list is already open, it moves to that alarm |
+| `hideAlarms` | `{}`. Close the alarm list. An alarm being edited keeps its changes |
+| `openKioskLink` | `{url: string}`, such as `ks://alarms`. Run a `ks://` link the way a dashboard button does, so a plugin reaches every screen that has a link, including ones added later. See [Open a kiosk link](#open-a-kiosk-link) |
 | `loadUrl` | `{url: string}`. Navigate the main WebView to HTTP or HTTPS. Does not change the saved Start URL |
 | `loadDashboard` | `{dashboard: string}`. Navigate to a dashboard path on the configured HA server |
 | `loadStartUrl` | `{}`. Navigate to the saved Start URL |
@@ -159,6 +162,20 @@ host.executeCommand("showCameraView", Collections.singletonMap("viewId", "front-
 Controls return null on success unless the table documents a boolean result. Missing configuration, unsupported media commands and normal KS feature gates can cause failure. URLs must not contain credentials or use executable schemes such as `javascript:`. Dashboard paths accept slash-separated letters, digits, underscores and hyphens. `haNavigate` paths also accept dots, a query string and a fragment, but no `.` or `..` segments. Unknown arguments are rejected.
 
 These commands change live presentation or playback without editing saved configuration or content. Navigation can leave an unfinished form and screen-off can interrupt someone using the device. Authors should make these behaviors intentional. The usual screensaver session bookkeeping and idle behavior still apply. Plugins cannot take ownership of shared internal voice suppression or screen wake-lock flags.
+
+### Open a kiosk link
+
+`openKioskLink` takes any link from [Dashboard Links](https://kiosksatellite.com/docs/dashboard-links/#kiosk-features-ks), such as `ks://alarms/next`, `ks://music-library` or `ks://calendar/week`, and runs it with the same rules a dashboard link follows. For example, `ks://apps` fails while the App Launcher is off or has no apps. It also fails:
+
+- While Lockdown Mode is on.
+- For `ks://android-settings`, since Android Settings is a way out of the kiosk.
+- For `ks://intercom/<kiosk id>`, since a kiosk can answer a call on its own. `ks://intercom`, which opens the **Call a kiosk** sheet, works.
+- For a link Kiosk Satellite does not know, or one with a query or fragment. Older releases fail every `openKioskLink` call, so check `getHostApi` or `minAppVersion` first.
+
+```java
+host.executeCommand("openKioskLink", Collections.singletonMap("url", "ks://alarms"),
+    (ok, data, error) -> { if (!ok) host.status(error, true); });
+```
 
 ### Open an app
 

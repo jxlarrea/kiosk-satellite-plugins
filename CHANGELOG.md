@@ -10,6 +10,10 @@
 
 ### Added
 
+- Add `openKioskLink` to `host.control`. A plugin can run any `ks://` link a dashboard can, such as `ks://alarms`, so every screen with a link is reachable without a control for each. Lockdown Mode refuses it, and so do the links that open Android Settings or call a kiosk. Document it under Open a kiosk link in the KS API reference (kiosk-satellite#1213).
+
+- Add the `openAlarms` and `hideAlarms` controls to `host.control`, so a plugin can open the Kiosk Satellite alarm list, or the alarm that rings next with `alarm: "next"`, and close it again (kiosk-satellite#1213).
+
 - Add `builtIn` to `getDashboards`. Home Assistant's own pages, such as Energy, History and Media, and the pages integrations add are now listed after the dashboards and apps, with no views, and the `dashboard` setting's picker offers them too. Older Kiosk Satellite releases leave them out. Document it in the KS API reference and under Pickers, lists and conditions in Creating plugins.
 
 - Add the `action` setting type and `host.runAction`. The user picks any Kiosk Satellite action in the plugin's settings with the Gestures action chooser, and the plugin runs it by naming the setting, or a list row field such as `items.2.action`. Only the user chooses an action: `saveSettings` keeps action settings as the user saved them, `updateSettings` refuses them and the default must be `{}`. `runAction` needs no capability, reports errors through its callback, follows Lockdown Mode and allows four runs per second. Hello World's new **Action demo** group has a Run button for one action and a list of quick actions that show in its top bar's More menu. Hello World now needs Kiosk Satellite 2026.10.42 or newer. Community Plugins accepts the type. Document it under Action settings in Creating plugins.
