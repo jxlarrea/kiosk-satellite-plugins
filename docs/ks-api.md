@@ -177,6 +177,8 @@ host.executeCommand("openKioskLink", Collections.singletonMap("url", "ks://alarm
     (ok, data, error) -> { if (!ok) host.status(error, true); });
 ```
 
+Hello World's **Kiosk link demo** group runs a link you type and has **Open the next alarm** and **Close the alarm list** actions. See [LinkDemo.java](../src/me/jxl/kiosk/plugins/hello/LinkDemo.java).
+
 ### Open an app
 
 `launchApp` opens only the apps added in **Settings > App Launcher > Apps**, never any other app on the device. `getLauncherApps` lists them, so a plugin can offer them with [plugin choices](setup-controls.md#plugin-choices) instead of asking for a package name. Kiosk Mode restrictions apply:

@@ -71,7 +71,7 @@ The plugin runs trusted code inside Kiosk Satellite. It can access app data and 
 
 Tap the Hello World entry to open its subpage. **Greeting** changes the message. **Show window when enabled** controls whether it opens automatically. Settings save automatically. On the kiosk, tap **Greeting** to edit it in a dialog.
 
-The settings are grouped into **Greeting window**, **Chart demo**, **Home Assistant demo**, **Shizuku demo**, **Status tile demo**, **Screensaver demo**, **Device stats demo**, **List demo** and **Setup demo**. The chart uses simulated values, not device measurements. Its 120-sample history covers about four minutes and updates every two seconds while **Show demo chart** is on.
+The settings are grouped into **Greeting window**, **Chart demo**, **Home Assistant demo**, **Shizuku demo**, **Status tile demo**, **Screensaver demo**, **Device stats demo**, **List demo**, **Kiosk link demo** and **Setup demo**. The chart uses simulated values, not device measurements. Its 120-sample history covers about four minutes and updates every two seconds while **Show demo chart** is on.
 
 | Control | Example |
 | --- | --- |
@@ -103,6 +103,10 @@ Use the ESPHome entity picker to exclude any of these. The [entity guide](entiti
 ### Try native overlays
 
 Run the **Show top bar** action from Hello World's subpage, a gesture or a drawer shortcut. A pill slides in at the top of the dashboard with a greeting counter, a slider, a **Say hello** button, a **Full screen** button and a **More** button. **More** opens a small menu under the bar that closes when you tap anywhere else. While the bar shows, the dashboard starts below it instead of underneath. It is a native Android view drawn with the KS theme. Back leaves it alone and **Hide top bar** removes it. **Full screen**, or the **Show full screen overlay** action, opens a card over a dimmed kiosk. Close it with back, its **Close** button or a tap outside the card. **Show edge glow** draws an animated glow along the screen edges, over the screensaver and camera views like the voice overlay, while every tap still reaches the dashboard. Back or **Hide edge glow** removes it. See the [overlay guide](overlays.md) and [OverlayDemo.java](../src/me/jxl/kiosk/plugins/hello/OverlayDemo.java).
+
+### Try kiosk links
+
+In the **Kiosk link demo** group, **Open** runs the **Kiosk link** setting with `openKioskLink`, the same way a dashboard button runs a `ks://` link, and reports the result under the button. It starts on `ks://alarms/next`, which opens the alarm that rings next. Try `ks://calendar/week` or `ks://music-library` too. The **Open the next alarm** and **Close the alarm list** actions call `openAlarms` and `hideAlarms`, and **Last link** shows how the last one went. See [Open a kiosk link](ks-api.md#open-a-kiosk-link) and [LinkDemo.java](../src/me/jxl/kiosk/plugins/hello/LinkDemo.java).
 
 ### Try the status tile
 

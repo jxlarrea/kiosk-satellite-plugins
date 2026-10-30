@@ -5,7 +5,7 @@
   "version": "1.0.1",
   "apiVersion": 1,
   "minAndroidSdk": 24,
-  "minAppVersion": "2026.10.42",
+  "minAppVersion": "2026.10.45",
   "entryClass": "me.jxl.kiosk.plugins.hello.HelloWorldPlugin",
   "description": "A sample plugin that showcases the SDK capabilities. Use this plugin as a starting point for your own.",
   "author": "jxlarrea",
@@ -17,6 +17,7 @@
     "screensaver",
     "screensaver.mode",
     "host.read",
+    "host.control",
     "ha",
     "voice.skin",
     "voice.text",
@@ -441,6 +442,14 @@
       ]
     },
     {
+      "key": "kioskLink",
+      "type": "string",
+      "title": "Kiosk link",
+      "default": "ks://alarms/next",
+      "group": "Kiosk link demo",
+      "description": "Text input: the ks:// link the Open button runs, such as ks://alarms, ks://calendar/week or ks://music-library."
+    },
+    {
       "key": "setupAddress",
       "type": "string",
       "title": "Device address",
@@ -482,6 +491,13 @@
       "label": "Run",
       "group": "Action demo",
       "description": "Button: runs the Run button action and reports the result here."
+    },
+    {
+      "id": "openKioskLink",
+      "title": "Open the link",
+      "label": "Open",
+      "group": "Kiosk link demo",
+      "description": "Button: runs the link with openKioskLink and reports the result here."
     },
     {
       "id": "setupTest",
@@ -567,6 +583,14 @@
     {
       "id": "restoreScreensaver",
       "title": "Restore screensaver mode"
+    },
+    {
+      "id": "openNextAlarm",
+      "title": "Open the next alarm"
+    },
+    {
+      "id": "hideAlarms",
+      "title": "Close the alarm list"
     }
   ],
   "triggers": [

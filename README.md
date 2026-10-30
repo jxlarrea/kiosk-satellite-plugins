@@ -8,7 +8,7 @@
 
 This repository holds the [Kiosk Satellite](https://github.com/jxlarrea/kiosk-satellite) plugin SDK, its documentation and **Hello World**, a working starter template. It also keeps the list behind **Community Plugins**, the plugin directory on [kiosksatellite.com](https://kiosksatellite.com/plugins/) and under **Plugin Manager > Browse plugins** in Kiosk Satellite.
 
-Hello World needs Kiosk Satellite 2026.10.42 or newer. Older versions refuse to install it.
+Hello World needs Kiosk Satellite 2026.10.45 or newer. Older versions refuse to install it.
 
 If you installed Hello World, [Hello World starter template](docs/getting-started.md#hello-world-starter-template) walks through what it does.
 
