@@ -70,6 +70,11 @@
     "added": "2026-10-19"
   },
   {
+    "repository": "dimatx/kiosk-satellite-live-notifications",
+    "id": "ks-live-notifications",
+    "added": "2026-10-31"
+  },
+  {
     "repository": "dimatx/kiosk-satellite-navbar",
     "id": "ks-navbar",
     "added": "2026-10-19"
