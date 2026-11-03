@@ -80,7 +80,17 @@ host.publishScreensaverView("board", "PC sensors", new OverlayFactory() {
 
 `publishScreensaverView(String key, String title, OverlayFactory factory)` shares the keys, titles and limits of the HTML renderers. Publishing a view under a key replaces an HTML renderer under it, and the other way around. The renderer shows in the mode picker the same way, as **Title (Plugin Name)**.
 
-KS builds the view on the main thread each time the screensaver shows it and fills the screensaver area with it, on black. The context and `KsTheme` carry the kiosk's UI scale, colors, Rubik and the Material Design Icons `KsTheme.icon` and `KsTheme.iconPath` draw, so the view can use the same `mdi:` names as the `icon` setting. Stock widgets, At a Glance and pixel shift work the same as for HTML renderers. Touches stay with KS.
+KS builds the view on the main thread each time the screensaver shows it and fills the screensaver area with it, on black. The context and `KsTheme` carry the kiosk's UI scale, colors, Rubik and the Material Design Icons `KsTheme.icon` and `KsTheme.iconPath` draw, so the view can use the same `mdi:` names as the `icon` setting. Stock widgets, At a Glance and pixel shift work the same as for HTML renderers. Touches stay with KS unless the screensaver takes taps.
+
+### Take taps
+
+Pass `true` as a fourth argument to give the view its taps, so it can have buttons or change what it shows when someone touches it:
+
+```java
+host.publishScreensaverView("light", "Night light", factory, true);
+```
+
+Single taps then reach the view and a double tap closes the screensaver, the same way **Double tap to dismiss** works on the Home Assistant Dashboard screensaver. Show a hint such as "Double tap to close", because KS does not draw one. Motion, a face, the wake word and the back button still close the screensaver as usual. A quick double tap on a button presses it once and then closes the screensaver, so leave room between controls. Kiosk Satellite versions without it throw `UnsupportedOperationException`. Catch it and publish without touch to keep the screensaver working there.
 
 `onDestroy` means the screensaver is gone: dismissed, switched to another mode or covered by full-screen Now Playing. Stop updating the view then. KS calls `create` again the next time, and also after its Activity restarts or the UI scale changes, so keep the state outside the view. KS does not pause the view while the screen is off. A view that animates should stop when it is not shown, for example in `onWindowVisibilityChanged`. An exception from `create` or the view's code disables the plugin.
 
