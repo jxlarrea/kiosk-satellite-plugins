@@ -90,7 +90,15 @@ Pass `true` as a fourth argument to give the view its taps, so it can have butto
 host.publishScreensaverView("light", "Night light", factory, true);
 ```
 
-Single taps then reach the view and a double tap closes the screensaver, the same way **Double tap to dismiss** works on the Home Assistant Dashboard screensaver. Show a hint such as "Double tap to close", because KS does not draw one. Motion, a face, the wake word and the back button still close the screensaver as usual. A quick double tap on a button presses it once and then closes the screensaver, so leave room between controls. Kiosk Satellite versions without it throw `UnsupportedOperationException`. Catch it and publish without touch to keep the screensaver working there.
+Single taps then reach the view and a double tap closes the screensaver, the same way **Double tap to dismiss** works on the Home Assistant Dashboard screensaver. Show a hint such as "Double tap to close", because KS does not draw one. Motion, a face, the wake word and the back button still close the screensaver as usual. A quick double tap on a button presses it once and then closes the screensaver, so leave room between controls. Kiosk Satellite versions without it throw `UnsupportedOperationException` or `LinkageError`. Catch both and publish without touch to keep the screensaver working there:
+
+```java
+try {
+    host.publishScreensaverView("light", "Night light", factory, true);
+} catch (UnsupportedOperationException | LinkageError olderHost) {
+    host.publishScreensaverView("light", "Night light", factory);
+}
+```
 
 `onDestroy` means the screensaver is gone: dismissed, switched to another mode or covered by full-screen Now Playing. Stop updating the view then. KS calls `create` again the next time, and also after its Activity restarts or the UI scale changes, so keep the state outside the view. KS does not pause the view while the screen is off. A view that animates should stop when it is not shown, for example in `onWindowVisibilityChanged`. An exception from `create` or the view's code disables the plugin.
 
