@@ -10,6 +10,8 @@
 
 ### Added
 
+- Add `setScreensaverTint` and `clearScreensaverTint` for plugin screensavers. A screensaver can draw the stock widgets and At a Glance row over itself in one color, the way the Clock screensaver's Night mode does, for example when the room goes dark. The tint ends when that screensaver leaves the screen, so it never reaches another one. Only the `screensaver` capability is needed. Document it under Tint the widgets in the screensaver guide (kiosk-satellite#1299).
+
 - Add `host.publishScreensaverView(key, title, factory, touch)`. With `touch` set, single taps reach the native screensaver's view and a double tap closes it, so a screensaver can have its own buttons. Motion, the wake word and the back button still close it. Older Kiosk Satellite releases throw `UnsupportedOperationException` or `LinkageError`. Document it under Take taps in the screensaver guide (kiosk-satellite#1282).
 
 - Add `getScreensaverAppearance` and the `screensaver.appearance` event to `host.read`. They report whether the Clock screensaver shows its Night mode colors and give its night text, background and flip card colors as ARGB, so an overlay can switch colors with the clock. Document it under Clock Night mode in the KS API reference (kiosk-satellite#1250).

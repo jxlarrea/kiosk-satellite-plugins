@@ -106,6 +106,43 @@ Hello World's **Device stats (Hello World)** screensaver draws a card for each o
 
 Update a native view from any thread with `view.post`. Unlike an HTML renderer, the plugin changes what the view shows without publishing again, so live readings cost nothing beyond drawing them. Kiosk Satellite versions without native screensavers throw `UnsupportedOperationException`. Catch it, along with `LinkageError`, if the plugin should still install there.
 
+## Tint the widgets
+
+The Clock screensaver's Night mode draws the stock corner widgets and At a Glance row in its night color. A plugin screensaver can do the same over itself with `setScreensaverTint`, for example to dim them when the room goes dark. The `screensaver` capability is enough. It does not need `host.read` or `host.control`.
+
+```java
+host.executeCommand("setScreensaverTint", Collections.singletonMap("color", "#822222"), (ok, data, error) -> {});
+// Later, to give the widgets their own colors back:
+host.executeCommand("clearScreensaverTint", Collections.emptyMap(), (ok, data, error) -> {});
+```
+
+| Command | Arguments and result |
+| --- | --- |
+| `setScreensaverTint` | `{color: string}`, an opaque `#RRGGBB` color. Draws the widgets and At a Glance row over this plugin's screensaver in it. Fails while none of the plugin's screensavers is on screen |
+| `clearScreensaverTint` | `{}`. Gives the widgets their own colors back |
+
+The widget text and icons take the color, weather icons lose their own colors and the At a Glance chips turn into faint washes of it, the same look Night mode gives the clock.
+
+The tint belongs to the screensaver on screen when the plugin set it, and KS drops it once that screensaver leaves the screen. That happens when it is dismissed, when the mode changes, even to another of the plugin's own screensavers, and when the plugin stops. It stays while a black screen stands in for the screen turning off. Set the tint again each time the screensaver shows, for example from the view's `create`. A tint never reaches the Clock or any other screensaver.
+
+To follow the room's light, add `host.read`, subscribe to `device.light` and pick your own threshold:
+
+```java
+host.subscribe("device.light");
+
+// In KioskPlugin.onEvent:
+if (event.equals("ks.device.light") && payload.get("lux") instanceof Number) {
+    boolean dark = ((Number) payload.get("lux")).doubleValue() < 5;
+    if (dark) {
+        host.executeCommand("setScreensaverTint", Collections.singletonMap("color", "#822222"), (ok, data, error) -> {});
+    } else {
+        host.executeCommand("clearScreensaverTint", Collections.emptyMap(), (ok, data, error) -> {});
+    }
+}
+```
+
+Kiosk Satellite versions without these commands fail them through the callback when the plugin declares a host capability. Without one, they throw `IllegalStateException`. Check `getHostApi` before relying on them.
+
 ## Switch screensavers
 
 Declare `screensaver.mode` to change which screensaver shows, for example to show the plugin's own while a game runs. The capability works on its own. It does not need `host.read` or `host.control`.
@@ -140,7 +177,7 @@ KS creates the document only while that screensaver surface is visible. Replacin
 
 Input belongs to KS. Buttons and links inside the document do not receive taps. Stock dismissal settings apply to the whole surface. Stock widgets and At a Glance render above it and retain their schedule overrides. Stock pixel shift moves the rendered surface. Mode-specific settings for other screensavers, such as a stock photo folder or clock font, continue to configure those screensavers. Define your own content settings in the plugin manifest.
 
-If native code needs to fetch content, perform that work asynchronously in the plugin and publish new rendering options or an inline document when it changes. Do not block SDK lifecycle callbacks. Optional `host.read` subscriptions can observe stock screensaver state through the existing [KS interaction API](ks-api.md). Rendering alone needs only the `screensaver` capability.
+If native code needs to fetch content, perform that work asynchronously in the plugin and publish new rendering options or an inline document when it changes. Do not block SDK lifecycle callbacks. Optional `host.read` subscriptions can observe stock screensaver state through the existing [KS interaction API](ks-api.md). Rendering alone needs only the `screensaver` capability, and so does [tinting the widgets](#tint-the-widgets).
 
 ## Fleet management
 

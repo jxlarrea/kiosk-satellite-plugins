@@ -9,7 +9,7 @@ Every plugin declares `"apiVersion": 1`. All features below belong to that singl
 | Manifest capability | Host interaction |
 | --- | --- |
 | `overlay` | Show or update the plugin's floating window and [native overlays](overlays.md) |
-| `screensaver` | Register rendering content inside the stock screensaver system |
+| `screensaver` | Register rendering content inside the stock screensaver system and tint the widgets over it. See [Tint the widgets](screensavers.md#tint-the-widgets) |
 | `screensaver.mode` | Choose which screensaver shows while the plugin runs. See [Switch screensavers](screensavers.md#switch-screensavers) |
 | None | Hide its window, log, publish runtime status and charts, save its own settings and receive declared actions |
 | `native` | Locate its verified packaged JNI library and DEX container |
@@ -346,6 +346,8 @@ private void applyAppearance(Map<?, ?> appearance) {
 ```
 
 Older Kiosk Satellite releases do not have this command. Check `getHostApi` before relying on it.
+
+Night mode belongs to the Clock screensaver. A plugin screensaver can give the widgets over itself a color of its own with `setScreensaverTint`. See [Tint the widgets](screensavers.md#tint-the-widgets).
 
 ### Intercom state
 
