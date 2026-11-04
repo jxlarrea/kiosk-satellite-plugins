@@ -200,6 +200,11 @@
     "added": "2026-10-19"
   },
   {
+    "repository": "ostat/kiosk-satellite-night-light-plugin",
+    "id": "night-light",
+    "added": "2026-11-04"
+  },
+  {
     "repository": "patrick11994/ks-portworld-panel-hardware-control",
     "id": "portworld-yc-sm08p",
     "added": "2026-10-27"
