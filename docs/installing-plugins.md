@@ -48,6 +48,8 @@ New plugins start disabled. Enabling a plugin runs it immediately and saves that
 
 To update a plugin, use its check for updates button and review the replacement release before choosing **Trust and update**. KS validates the replacement before stopping the active session, then restores the enabled state automatically. Disabled plugins stay disabled. If the master switch is off, the saved enabled choice is retained without running code. A normal update does not require an app restart. If activation fails, KS restores the previous package and settings and resumes it when shutdown was clean. Compatible settings are retained. A replacement with incompatible saved setting types is rejected, leaving the old package installed. A release that needs a newer Kiosk Satellite than the kiosk runs, through its `minAppVersion`, is rejected the same way, with a message that names both versions. Remove and reinstall if you want to discard those settings.
 
+Plugin updates are checked a minute after the app starts and every 12 hours. A plugin with a newer release shows **New version** on its row and gets a row under **Needs attention** on the remote admin Overview, where **Update** opens the same review. Updates never install automatically. Plugins installed from a ZIP and plugins a fleet leader keeps in step are not checked.
+
 Each callback has a three-second deadline. A failure disables that plugin and records the error in settings. A timed-out callback or failed stop blocks enabling and replacing that plugin until the app restarts. Threads that ignore interruption cannot be forcibly stopped safely. An unfinished automatic plugin startup causes enabled plugins to be disabled on the next launch. This recovery can also trigger if Android kills the process during the startup grace period.
 
 ## Trust and package checks
@@ -74,6 +76,7 @@ The existing authenticated command API exposes these commands:
 | `listPlugins` | None. Returns the installed plugin list. Saved `secret` settings read `__set__` |
 | `previewPluginRepository` | `url`: public GitHub repository URL |
 | `checkPluginUpdate` | `id` |
+| `getPluginUpdates` | None. Returns the installed plugins with a newer release from the last check, each with `id`, `name` and `version` |
 | `installPlugin` | Developer testing only. `data`: base64-encoded plugin ZIP up to 4 MB, `trusted`: true |
 | `installPluginRepository` | `previewId`: returned by preview, `trusted`: true |
 | `enablePlugin` | `id` |
