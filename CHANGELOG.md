@@ -4,11 +4,15 @@
 
 ### Fixed
 
+- Document that `night` in `getScreensaverAppearance` stays true for a Clock screensaver in a shared layout. It is now false only under a Now Playing player that fills the screen.
+
 - Keep Community Plugins download counts steady. GitHub sometimes answers a release list with an empty page, which showed a plugin with 0 downloads. The refresh now asks again and never lowers a count from one refresh to the next.
 
 - Updating a plugin that removes a field from a list setting's rows no longer fails with "Unknown plugin setting" when rows were saved. Kiosk Satellite drops the field from the saved rows, the way it drops a removed setting. Document it under Settings.
 
 ### Added
+
+- Add `nowPlaying` to `getScreensaverAppearance` and `screensaver.appearance`. It is true while the Now Playing player is on screen, including a paused player and a shared layout, and the event fires when the player opens or closes over an unchanged view. `nowPlayingShared` is true while the screensaver view stays in sight beside the player. A plugin drawn over the screensaver can use them to get out of the way of the player (kiosk-satellite#1335).
 
 - Document plugin update notices and the `getPluginUpdates` remote command. Plugin updates are checked a minute after the app starts and every 12 hours and never install automatically.
 

@@ -49,7 +49,7 @@ Except for `getBrightness`, `getVolume` and `getHaEntityState`, every read comma
 | `isScreensaverActive` | Boolean indicating whether the screensaver is active |
 | `getScreensaverDue` | Next idle deadline as an ISO 8601 UTC string, or null while no countdown is armed |
 | `getScreensaverSuppressed` | Boolean. Currently true because KS owns the screen and suppresses the dashboard's separate screensaver |
-| `getScreensaverAppearance` | `{view, night, textColor, backgroundColor, cardColor, widgetsHidden}`: whether the Clock screensaver shows its Night mode colors and what they are. See [Clock Night mode](#clock-night-mode) |
+| `getScreensaverAppearance` | `{view, night, nowPlaying, nowPlayingShared, textColor, backgroundColor, cardColor, widgetsHidden}`: whether the Clock screensaver shows its Night mode colors and what they are and whether the Now Playing player is on screen. See [Clock Night mode](#clock-night-mode) |
 | `isScreenOn` | Boolean representing KS's logical screen state |
 | `getBrightness` | Brightness from 0 to 1, or null if unavailable. `{}` reads the level controlled by the Screen light. `{"panel": true}` reads current panel brightness. `{"ceiling": true}` reads the adaptive brightness ceiling. Both flags accept booleans and cannot both be true |
 | `getAmbientDisplay` | Boolean indicating whether KS has detected that the device leaves an ambient display lit after screen-off |
@@ -216,7 +216,7 @@ Pass the subscription name from this table to `subscribe` or `unsubscribe`. Deli
 | `screensaver.state` | `active`: boolean |
 | `screensaver.countdown` | `due`: ISO 8601 UTC string or null |
 | `screensaver.view` | `view`: active overlay mode string or null. Dim mode has no overlay |
-| `screensaver.appearance` | The `getScreensaverAppearance` fields. Fires when Night mode starts or ends on the clock, its colors change or the view changes. See [Clock Night mode](#clock-night-mode) |
+| `screensaver.appearance` | The `getScreensaverAppearance` fields. Fires when Night mode starts or ends on the clock, its colors change, the view changes or the Now Playing player opens, closes or changes layout. See [Clock Night mode](#clock-night-mode) |
 | `screen.state` | `on`: boolean, `source`: `app`, `system` or `probe` |
 | `screen.brightness` | `level`: configured control level, `panel`: actual panel level. Both normalized to 0 through 1 |
 | `screen.ambient` | `on`: boolean indicating detected ambient display behavior |
@@ -317,7 +317,9 @@ Older KS versions reject the `voice.state` subscription with `IllegalArgumentExc
 | Field | Value |
 | --- | --- |
 | `view` | The screensaver view on screen, as `screensaver.view` reports it, or null |
-| `night` | True while the Clock screensaver shows its Night mode colors. Always false on any other view, under Now Playing or while no screensaver shows |
+| `night` | True while the Clock screensaver shows its Night mode colors. Always false on any other view, under a Now Playing player that fills the screen or while no screensaver shows. A Clock screensaver in a shared layout keeps its Night mode |
+| `nowPlaying` | True while the Now Playing player is on screen, including a paused player and a shared layout. False while music plays with no player on screen. `view` keeps naming the screensaver view under the player. Older Kiosk Satellite versions leave this field out |
+| `nowPlayingShared` | True while the player shares the screen and the screensaver view stays in sight beside it. False while the player fills the screen or `nowPlaying` is false. A shared layout can take a moment to report after the player opens and can end on a rotation, so follow the event. Older Kiosk Satellite versions leave this field out |
 | `textColor` | The **Night color** of the clock and its widgets, as an opaque ARGB number. Null while `night` is false |
 | `backgroundColor` | The **Night background** behind the clock, as ARGB. A background photo stays on top of it unless **Hide background photo** is on. Null while `night` is false |
 | `cardColor` | The **Night card color** of the flip cards, as ARGB. Null unless `night` is true and the Flip style is picked |
