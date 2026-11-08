@@ -240,6 +240,11 @@
     "added": "2026-10-21"
   },
   {
+    "repository": "sonic1200/ks-aerial-views",
+    "id": "aerial-views-launcher",
+    "added": "2026-11-08"
+  },
+  {
     "repository": "stuartp44/kiosk-satellite-plugin-smt101",
     "id": "smt101-sensors",
     "added": "2026-10-23"
