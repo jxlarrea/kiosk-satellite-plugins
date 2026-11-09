@@ -7,7 +7,7 @@ import java.util.Map;
 import me.jxl.kiosk.plugins.PluginHost;
 
 /**
- * The kiosk's own Music Assistant player. host.read names it through getSendspinPlayer and sendspin.player. The ma
+ * The kiosk's own Music Assistant player, while Show Music Assistant player is on. host.read names it through getSendspinPlayer and sendspin.player. The ma
  * capability reads it, follows its player_updated events and plays or pauses it, all without a Music Assistant token.
  */
 final class MusicAssistantDemo {
@@ -15,13 +15,28 @@ final class MusicAssistantDemo {
 
     private PluginHost host;
     private String playerId = "";
+    private boolean watching;
 
-    void start(PluginHost host) {
-        this.host = host;
+    void start(PluginHost host) { this.host = host; }
+
+    /** Show Music Assistant player: follow the kiosk's player while it is on. */
+    void configure(Map<String, Object> settings) {
+        if (host == null) return;
+        boolean next = Boolean.TRUE.equals(settings.get("musicAssistantDemo"));
+        if (next == watching) return;
+        watching = next;
+        if (!watching) {
+            follow("");
+            host.unsubscribe("sendspin.player");
+            host.removeTextSensor("ma_player");
+            host.removeTextSensor("ma_volume");
+            return;
+        }
         host.publishTextSensor("ma_player", "Music Assistant player", "Waiting for the kiosk's player");
         host.publishTextSensor("ma_volume", "Music Assistant volume", null);
         host.subscribe("sendspin.player");
         host.executeCommand("getSendspinPlayer", Collections.emptyMap(), (ok, data, error) -> {
+            if (!watching) return;
             if (ok) identity((Map<?, ?>) data);
             else player("Not available: " + error);
         });
@@ -29,7 +44,8 @@ final class MusicAssistantDemo {
 
     /** The Play or pause Music Assistant action. */
     void playPause() {
-        if (host == null || playerId.isEmpty()) throw new IllegalStateException("The kiosk has no Music Assistant player yet");
+        if (host == null || !watching) throw new IllegalStateException("Turn on Show Music Assistant player first");
+        if (playerId.isEmpty()) throw new IllegalStateException("The kiosk has no Music Assistant player yet");
         PluginHost current = host;
         host.maCall("players/cmd/play_pause", Collections.singletonMap("player_id", playerId), (ok, data, error) -> {
             // The new state arrives through the player_updated subscription.
@@ -38,7 +54,7 @@ final class MusicAssistantDemo {
     }
 
     void onEvent(String event, Map<String, Object> payload) {
-        if (host == null) return;
+        if (host == null || !watching) return;
         if (event.equals("ks.sendspin.player")) identity(payload);
         else if (event.equals("ks.ma.subscription." + PLAYER)) playerEvent(payload);
     }
@@ -58,8 +74,8 @@ final class MusicAssistantDemo {
         if (next.equals(playerId)) return;
         if (!playerId.isEmpty()) host.maUnsubscribe(PLAYER);
         playerId = next;
-        host.publishTextSensor("ma_volume", "Music Assistant volume", null);
         if (playerId.isEmpty()) return;
+        host.publishTextSensor("ma_volume", "Music Assistant volume", null);
         read();
         // Music Assistant sends every event to every client. The filter keeps this player's updates only.
         Map<String, Object> filter = new LinkedHashMap<>();
@@ -106,5 +122,5 @@ final class MusicAssistantDemo {
         return value instanceof Map ? (Map<?, ?>) value : Collections.emptyMap();
     }
 
-    void stop() { host = null; playerId = ""; }
+    void stop() { host = null; playerId = ""; watching = false; }
 }

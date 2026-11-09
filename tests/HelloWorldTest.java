@@ -3,6 +3,9 @@ import java.util.HashMap;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import me.jxl.kiosk.plugins.PlayerLibrary;
+import me.jxl.kiosk.plugins.PlayerListener;
+import me.jxl.kiosk.plugins.PlayerQueue;
 import me.jxl.kiosk.plugins.PluginHost;
 import me.jxl.kiosk.plugins.hello.HelloWorldPlugin;
 
@@ -10,6 +13,12 @@ public final class HelloWorldTest {
     static final class Host implements PluginHost {
         Map<String, Object> screensaver;
         int screensaverPublications;
+        PlayerListener player;
+        String playerTitle;
+        public void publishPlayer(String key, String title, PlayerListener listener) {
+            assert "archive".equals(key); player = listener; playerTitle = title;
+        }
+        public void removePlayer(String key) { assert "archive".equals(key); player = null; }
         public void publishScreensaverAsset(String key, String title, String entry, Map<String, Object> data) {
             assert "dvd".equals(key) && "DVD Logo".equals(title);
             assert "dvd/index.html".equals(entry); screensaver = new HashMap<>(data); screensaverPublications++;
@@ -79,6 +88,12 @@ public final class HelloWorldTest {
         try {
             plugin.start(host, settings);
             assert host.visible && "Testing".equals(host.message);
+            // The Internet Archive player is offered with its library and queue, and the setting takes it back.
+            assert "Internet Archive".equals(host.playerTitle);
+            assert host.player instanceof PlayerLibrary && host.player instanceof PlayerQueue;
+            assert ((PlayerLibrary) host.player).hasSearch() && ((PlayerLibrary) host.player).hasDiscover();
+            settings.put("archivePlayer", false); plugin.configure(settings); assert host.player == null;
+            settings.put("archivePlayer", true); plugin.configure(settings); assert host.player != null;
             assert "on".equals(host.tileLevel) && "Simulated data flowing".equals(host.tileText) && host.tilePublications == 1;
             plugin.configure(settings);
             assert host.tilePublications == 1 : "Unchanged settings republished the status tile";

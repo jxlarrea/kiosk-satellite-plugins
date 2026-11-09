@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+### Added
+
+- Add the `player` capability. `host.publishPlayer(key, title, listener)` offers a player under Settings > Media Player > Player, and `PlayerListener` hears when the user picks it, when the pick moves on and the transport commands. `PluginPlayer.update` shows the track, artwork, progress and the buttons in Now Playing, and `PluginPlayer.openAudio` gives a 16-bit PCM `AudioOutput` that plays through the kiosk's own output, so the echo canceller, the media volume and the assistant's duck apply to it. `AudioOutput.getTimestamp` reports when written frames are heard, for players that keep time with other speakers. Implement `PlayerQueue` for a queue the user edits in Now Playing and `PlayerLibrary` for a Music Library source with Discover, Search and Browse. Hello World offers a player that plays Creative Commons music from the Internet Archive, with a queue and a library. Document it in the new Players guide (kiosk-satellite-plugins#61).
+
+### Changed
+
+- Hello World 1.1.0 needs Kiosk Satellite 2026.11.14 or newer. Its demos start off, so a fresh install does almost nothing until you turn a demo on: the greeting window, the chart, the status tile, the hardware keys, Voice Satellite and intercom states, the Music Assistant player and the Internet Archive player each have a switch in their group. The Music Assistant demo gets its own **Show Music Assistant player** switch. The voice skin demo follows only `voice.skin` until its skin is picked, and the device stats demo reads the screensaver mode when its settings page opens instead of at start.
+
 ### Fixed
 
 - Document that `night` in `getScreensaverAppearance` stays true for a Clock screensaver in a shared layout. It is now false only under a Now Playing player that fills the screen.

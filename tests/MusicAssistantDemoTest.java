@@ -15,6 +15,8 @@ public final class MusicAssistantDemoTest {
         PluginHost.CommandCallback identity;
         String statusError;
         public void subscribe(String event) { subscriptions.add(event); }
+        public void unsubscribe(String event) { subscriptions.remove(event); }
+        public void removeTextSensor(String key) { values.remove(key); }
         public void executeCommand(String command, Map<String, Object> arguments, PluginHost.CommandCallback callback) {
             assert "getSendspinPlayer".equals(command);
             identity = callback;
@@ -47,6 +49,10 @@ public final class MusicAssistantDemoTest {
         Host host = new Host();
         MusicAssistantDemo demo = new MusicAssistantDemo();
         demo.start(host);
+        // Off by default: nothing is followed or read until the setting turns it on.
+        demo.configure(Collections.<String, Object>emptyMap());
+        assert host.subscriptions.isEmpty() && host.identity == null && host.values.isEmpty();
+        demo.configure(Collections.<String, Object>singletonMap("musicAssistantDemo", true));
         assert host.subscriptions.contains("sendspin.player");
         boolean refused = false;
         try { demo.playPause(); } catch (IllegalStateException expected) { refused = true; }
@@ -99,6 +105,11 @@ public final class MusicAssistantDemoTest {
         assert "Music Assistant has not listed the player yet".equals(host.values.get("ma_player"));
         host.maCallbacks.get(1).onResult(true, player, null);
         assert "Music Assistant has not listed the player yet".equals(host.values.get("ma_player"));
+        // Turned off: it lets go of the player and its readings.
+        demo.onEvent("ks.sendspin.player", identity(true, "up_abc"));
+        assert !host.maSubscriptions.isEmpty();
+        demo.configure(Collections.<String, Object>singletonMap("musicAssistantDemo", false));
+        assert host.maSubscriptions.isEmpty() && host.subscriptions.isEmpty() && !host.values.containsKey("ma_player");
         demo.stop();
         demo.onEvent("ks.sendspin.player", identity(true, "up_abc"));
         assert host.maSubscriptions.isEmpty();

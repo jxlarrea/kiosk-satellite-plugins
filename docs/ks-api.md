@@ -23,6 +23,7 @@ Every plugin declares `"apiVersion": 1`. All features below belong to that singl
 | `camera` | Receive frames from the device camera. See [Camera frames](camera.md#camera-frames) |
 | `barcode` | Open the KS scanner and read a barcode or a QR code. See [Scan a code](camera.md#scan-a-code) |
 | `ma` | Run Music Assistant commands for players, queues and the library and follow its events. See the [Music Assistant guide](music-assistant.md#run-commands) |
+| `player` | Offer a player under Media Player > Player that plays through the kiosk's own audio output, with an optional queue and Music Library source. See [Players](players.md) |
 
 Request only the capabilities the plugin uses. `getHostApi` is available with either host capability and lists the commands and events available to that session. Plugins execute inside the app and are not sandboxed from arbitrary Java or native code. These capabilities describe the public API contract. Users must trust installed code.
 

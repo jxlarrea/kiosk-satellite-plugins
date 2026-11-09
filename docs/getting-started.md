@@ -19,6 +19,7 @@ All documented features use **SDK 1**, the first public plugin SDK. Plugins requ
 - [Settings buttons and plugin choices](setup-controls.md): guided setup on the settings page, with buttons that report progress, choices the plugin finds and questions asked partway through.
 - [Camera and barcodes](camera.md): scan a barcode or a QR code with the KS scanner, or receive frames from the device camera.
 - [Music Assistant](music-assistant.md): find the kiosk's own player, control players, queues and the library and follow Music Assistant events through the kiosk's connection.
+- [Players](players.md): be one of the kiosk's own players, with audio through the echo canceller, Now Playing, a queue and a Music Library source.
 - [Sensors, selects and switches](entities.md): show live readings in KS, publish them to Home Assistant and handle writable controls.
 - [Dashboard URLs](dashboard.md): discover the configured server and current view without duplicating URL settings.
 - [SDK source](../sdk/src/me/jxl/kiosk/plugins): the `KioskPlugin` and `PluginHost` interfaces and the overlay classes supplied by Kiosk Satellite at runtime.
@@ -63,15 +64,15 @@ Start with [HelloWorldPlugin.java](../src/me/jxl/kiosk/plugins/hello/HelloWorldP
 1. Open **Settings > Plugin Manager** on the kiosk or **Plugin Manager** in Remote Admin and turn on **Enable Plugins**.
 2. Choose **Browse plugins** and pick **Hello World**, or choose **Add plugin**, paste `https://github.com/jxlarrea/kiosk-satellite-plugins` and choose **Preview**.
 3. Read the manifest and the README. Choose **Trust and install** if you trust the code.
-4. Enable **Hello World** from its entry row. Return to the dashboard to see the window.
+4. Enable **Hello World** from its entry row.
 
 The plugin runs trusted code inside Kiosk Satellite. It can access app data and granted Android permissions. Review the source before enabling it.
 
 ### Try the template
 
-Tap the Hello World entry to open its subpage. **Greeting** changes the message. **Show window when enabled** controls whether it opens automatically. Settings save automatically. On the kiosk, tap **Greeting** to edit it in a dialog.
+Tap the Hello World entry to open its subpage. Every demo that does something on its own starts off, so Hello World does almost nothing until you turn a demo on in its group. Turn on the ones you want to try. **Greeting** changes the message, and **Show window when enabled** opens the window when the plugin starts. Settings save automatically. On the kiosk, tap **Greeting** to edit it in a dialog.
 
-The settings are grouped into **Greeting window**, **Chart demo**, **Home Assistant demo**, **Shizuku demo**, **Status tile demo**, **Screensaver demo**, **Device stats demo**, **List demo**, **Kiosk link demo** and **Setup demo**. The chart uses simulated values, not device measurements. Its 120-sample history covers about four minutes and updates every two seconds while **Show demo chart** is on.
+The settings are grouped into **Greeting window**, **Chart demo**, **Home Assistant demo**, **Shizuku demo**, **Status tile demo**, **Hardware keys demo**, **Voice Satellite demo**, **Intercom demo**, **Screensaver demo**, **Device stats demo**, **List demo**, **Action demo**, **Kiosk link demo**, **Setup demo**, **Music Assistant demo** and **Player demo**. The chart uses simulated values, not device measurements. Its 120-sample history covers about four minutes and updates every two seconds while **Show demo chart** is on.
 
 | Control | Example |
 | --- | --- |
@@ -150,7 +151,11 @@ Run the **Scan a code** action from Hello World's subpage, a gesture or a drawer
 
 ### Try Music Assistant
 
-With Music Assistant set up in **Settings > Media Player** and the Sendspin player connected, **Music Assistant player** in the readings shows the kiosk's player in Music Assistant and whether it plays, and **Music Assistant volume** its volume. Both follow changes made anywhere, such as the Music Assistant app. Run **Play or pause Music Assistant** from Hello World's subpage, a gesture or a drawer shortcut. See [Music Assistant](music-assistant.md).
+Turn on **Show Music Assistant player** in the **Music Assistant demo** group. With Music Assistant set up in **Settings > Media Player** and the Sendspin player connected, **Music Assistant player** in the readings shows the kiosk's player in Music Assistant and whether it plays, and **Music Assistant volume** its volume. Both follow changes made anywhere, such as the Music Assistant app. Run **Play or pause Music Assistant** from Hello World's subpage, a gesture or a drawer shortcut. See [Music Assistant](music-assistant.md).
+
+### Try the player
+
+Turn on **Internet Archive player** in the **Player demo** group. Hello World then offers a player called **Hello World: Internet Archive** that plays Creative Commons music from the Internet Archive's netlabel collection. Pick it under **Settings > Media Player > Player**, then open the Music Library and choose it as the source. Browse the featured releases or search, play a release and change the queue in Now Playing. The music plays through the kiosk's own output, so the wake word still works over it. Turn **Internet Archive player** off again to take the player away. See [Players](players.md).
 
 ### Try Shizuku
 

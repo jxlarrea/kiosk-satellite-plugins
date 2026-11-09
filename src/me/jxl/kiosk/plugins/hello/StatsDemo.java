@@ -69,7 +69,7 @@ final class StatsDemo {
         } catch (UnsupportedOperationException | LinkageError olderHost) {
             host.log("Native screensavers need a newer Kiosk Satellite.");
         }
-        readMode();
+        // The screensaver mode is read when the settings page opens, not at start.
         poller = Executors.newSingleThreadScheduledExecutor(task -> {
             Thread thread = new Thread(task, "hello-world-stats");
             thread.setDaemon(true);

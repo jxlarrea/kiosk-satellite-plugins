@@ -94,7 +94,7 @@ See [kiosk-satellite-plugin.json](../kiosk-satellite-plugin.json) for a complete
 | `description` | Plain text, at most 1000 characters |
 | `author` | Author name, at most 120 characters |
 | `license` | License identifier, at most 120 characters |
-| `capabilities` | Any required entries from `overlay`, `native`, `entities`, `host.read`, `host.control`, `ha`, `shizuku`, `screensaver`, `screensaver.mode`, `noise`, `voice.skin`, `voice.text`, `camera`, `barcode` and `ma`. `noise` and `voice.text` require `host.read`. `voice.skin` requires `overlay` and `host.read` |
+| `capabilities` | Any required entries from `overlay`, `native`, `entities`, `host.read`, `host.control`, `ha`, `shizuku`, `screensaver`, `screensaver.mode`, `noise`, `voice.skin`, `voice.text`, `camera`, `barcode`, `ma` and `player`. `noise` and `voice.text` require `host.read`. `voice.skin` requires `overlay` and `host.read` |
 | `settings` | Up to 50 settings. Kiosk Satellite versions without native overlays accept up to 20 |
 | `commands` | Up to 20 named commands |
 | `triggers` | Up to 20 named [gesture triggers](#gesture-triggers) |
@@ -356,6 +356,10 @@ Use the `entity` setting type for KS's searchable Home Assistant entity picker i
 ## Music Assistant
 
 Declare `host.read` to read the kiosk's own Sendspin player with `getSendspinPlayer` and the ID of the Music Assistant player that stands for it. Declare `ma` to run Music Assistant commands for players, queues and the library with `host.maCall` and follow its events with `host.maSubscribe`, through the kiosk's own connection and token. See the [Music Assistant guide](music-assistant.md) and the Hello World demo.
+
+## Players
+
+Declare `player` to offer a player under **Settings > Media Player > Player**. Its audio plays through the kiosk's own output, so the echo canceller, the media volume and the assistant's duck apply to it, and Now Playing shows what it plays. Implement `PlayerQueue` to add a queue and `PlayerLibrary` to add a Music Library source. See [Players](players.md) and the Hello World demo.
 
 ## Group settings, charts and readings
 

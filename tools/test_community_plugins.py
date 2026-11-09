@@ -133,7 +133,7 @@ class RepositoryTest(unittest.TestCase):
 class ManifestTest(unittest.TestCase):
     def test_valid_manifest(self):
         cp.validate_manifest(manifest())
-        cp.validate_manifest(manifest(capabilities=['camera', 'barcode', 'ma']))
+        cp.validate_manifest(manifest(capabilities=['camera', 'barcode', 'ma', 'player']))
         cp.validate_manifest(manifest(capabilities=['screensaver', 'screensaver.mode']))
         cp.validate_manifest(manifest(settings=[{'key': 'tap', 'title': 'Tap', 'type': 'action', 'default': {}}]))
 

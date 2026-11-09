@@ -124,6 +124,6 @@ if (event.equals("ks.voice.text")) {
 
 ## Example
 
-Hello World declares `voice.skin` and `voice.text` and ships a thumbnail. Pick **Hello World** in **Voice Satellite > Appearance > Assistant 1 skin** and press **Preview**, or say the wake word. A ring swells with the voice, an arc turns while the assistant thinks and the conversation shows under it. With **Overlay mode** set to Docked, the same ring and conversation sit in a card at the bottom of the screen. Change Theme, Background, Text size or Reactive activity bar to see both looks follow them. See [VoiceSkinDemo.java](../src/me/jxl/kiosk/plugins/hello/VoiceSkinDemo.java).
+Hello World declares `voice.skin` and `voice.text` and ships a thumbnail. Pick **Hello World** in **Voice Satellite > Appearance > Assistant 1 skin** and press **Preview**, or say the wake word. A ring swells with the voice, an arc turns while the assistant thinks and the conversation shows under it. With **Overlay mode** set to Docked, the same ring and conversation sit in a card at the bottom of the screen. Change Theme, Background, Text size or Reactive activity bar to see both looks follow them. Until its skin is picked, the demo follows only `voice.skin`, and it subscribes to the turn's events once the skin is picked, so a skin costs nothing while another one draws the turn. See [VoiceSkinDemo.java](../src/me/jxl/kiosk/plugins/hello/VoiceSkinDemo.java).
 
 KS versions without voice skins refuse to install a plugin that declares `voice.skin` or `voice.text`.

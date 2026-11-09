@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "id": "hello-world",
   "name": "Hello World",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "apiVersion": 1,
   "minAndroidSdk": 24,
-  "minAppVersion": "2026.10.45",
+  "minAppVersion": "2026.11.14",
   "entryClass": "me.jxl.kiosk.plugins.hello.HelloWorldPlugin",
   "description": "A sample plugin that showcases the SDK capabilities. Use this plugin as a starting point for your own.",
   "author": "jxlarrea",
@@ -23,7 +23,8 @@
     "voice.text",
     "camera",
     "barcode",
-    "ma"
+    "ma",
+    "player"
   ],
   "icon": "icon.png",
   "voiceSkinThumbnail": "voice-skin.webp",
@@ -40,7 +41,7 @@
       "key": "showOnStart",
       "type": "boolean",
       "title": "Show window when enabled",
-      "default": true,
+      "default": false,
       "group": "Greeting window",
       "description": "Toggle: open the floating window when the plugin starts."
     },
@@ -48,7 +49,7 @@
       "key": "showChart",
       "type": "boolean",
       "title": "Show demo chart",
-      "default": true,
+      "default": false,
       "group": "Chart demo",
       "description": "Display simulated data in the plugin subpage."
     },
@@ -133,7 +134,7 @@
       "key": "showStatusTile",
       "type": "boolean",
       "title": "Show status tile",
-      "default": true,
+      "default": false,
       "group": "Status tile demo",
       "description": "Toggle: publish a Hello World tile on the Remote Admin Overview Status panel."
     },
@@ -163,7 +164,7 @@
       "key": "showKeys",
       "type": "boolean",
       "title": "Show hardware keys",
-      "default": true,
+      "default": false,
       "group": "Hardware keys demo",
       "description": "Subscribe to hardware key presses. The last key appears in Readings."
     },
@@ -171,7 +172,7 @@
       "key": "showVoice",
       "type": "boolean",
       "title": "Show Voice Satellite state",
-      "default": true,
+      "default": false,
       "group": "Voice Satellite demo",
       "description": "Follow this kiosk's voice turns: idle, listening, processing or responding. The state appears in Readings."
     },
@@ -179,7 +180,7 @@
       "key": "showIntercom",
       "type": "boolean",
       "title": "Show intercom state",
-      "default": true,
+      "default": false,
       "group": "Intercom demo",
       "description": "Follow this kiosk's intercom calls and announcements. The state appears in Readings."
     },
@@ -482,6 +483,22 @@
         "notEmpty": true
       },
       "description": "Filled in by the plugin when you pick a device."
+    },
+    {
+      "key": "musicAssistantDemo",
+      "type": "boolean",
+      "title": "Show Music Assistant player",
+      "default": false,
+      "group": "Music Assistant demo",
+      "description": "Toggle: follow the kiosk's own Music Assistant player and show it under the readings. Needs Music Assistant set up in Media Player."
+    },
+    {
+      "key": "archivePlayer",
+      "type": "boolean",
+      "title": "Internet Archive player",
+      "default": false,
+      "group": "Player demo",
+      "description": "Toggle: offer a player under Media Player > Player that plays Creative Commons music from the Internet Archive, with a Music Library source and a queue."
     }
   ],
   "buttons": [
@@ -690,6 +707,17 @@
     },
     {
       "title": "Setup demo"
+    },
+    {
+      "title": "Music Assistant demo",
+      "readingsTitle": "Music Assistant readings",
+      "readings": [
+        "text_sensor.ma_player",
+        "text_sensor.ma_volume"
+      ]
+    },
+    {
+      "title": "Player demo"
     }
   ]
 }

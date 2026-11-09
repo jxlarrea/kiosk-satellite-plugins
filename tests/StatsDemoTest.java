@@ -70,7 +70,8 @@ public final class StatsDemoTest {
         demo.start(host);
         demo.configure(settings("cpu", "cpuClock", "temp"));
         assert "stats: Device stats".equals(host.screensaver);
-        assert "Clock\nFrom Screensaver mode".equals(host.texts.get("screensaver_mode")) : host.texts.get("screensaver_mode");
+        // Nothing is read at start.
+        assert host.texts.get("screensaver_mode") == null : host.texts.get("screensaver_mode");
 
         // The choices are listed at start, grouped, without values until the page opens.
         assert host.choices.size() == StatsDemo.READINGS.length;

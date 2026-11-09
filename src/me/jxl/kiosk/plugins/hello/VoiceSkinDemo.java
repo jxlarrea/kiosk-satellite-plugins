@@ -35,7 +35,8 @@ final class VoiceSkinDemo {
     static final String KEY = "voice_skin";
     /** Where the docked bubble sits above the bottom edge, in dp. */
     static final int DOCK_INSET = 24;
-    static final String[] EVENTS = {"voice.skin", "voice.overlay", "voice.level", "voice.text", "voice.appearance"};
+    /** The turn's events, followed only while the skin is picked. voice.skin itself is followed all along. */
+    static final String[] EVENTS = {"voice.overlay", "voice.level", "voice.text", "voice.appearance"};
     /** The full screen backdrop's opacity when Background is left at Skin default. */
     static final float DEFAULT_BACKGROUND = 0.8f;
     private PluginHost host;
@@ -58,46 +59,69 @@ final class VoiceSkinDemo {
     private volatile float textScale = 1;
     private volatile boolean reactive = true;
     private boolean appearanceHeard;
+    /** Whether the turn's events are followed, which they are only while the skin is picked. */
+    private boolean following;
     /** The showing view, so new words can reach it. Touched on the main thread only. */
     private SkinView view;
 
+    /**
+     * Only the skin choice is followed from the start: one subscription and one read. The turn's events and reads
+     * start once the skin is picked, so the demo costs nothing while another skin draws the turn.
+     */
     synchronized void start(PluginHost host) {
         this.host = host;
         int current = ++generation;
         try {
-            for (String event : EVENTS) host.subscribe(event);
+            host.subscribe("voice.skin");
         } catch (IllegalArgumentException | UnsupportedOperationException olderHost) {
             // Kiosk Satellite versions without voice skins never list this one.
             return;
         }
         try {
-            read(current);
+            // Events win over this read: they are newer.
+            host.executeCommand("getVoiceState", Collections.<String, Object>emptyMap(), (ok, data, error) -> {
+                synchronized (VoiceSkinDemo.this) {
+                    if (current != generation || !ok || !(data instanceof Map)) return;
+                    Map<?, ?> state = (Map<?, ?>) data;
+                    if (!skinHeard) selected = Boolean.TRUE.equals(state.get("skinSelected"));
+                    if ("hidden".equals(overlay) && state.get("overlay") instanceof String) overlay = (String) state.get("overlay");
+                    follow();
+                    update();
+                }
+            });
         } catch (UnsupportedOperationException olderHost) {
-            // Events alone still bring the skin up.
+            // The voice.skin event alone still brings the skin up.
         }
     }
 
-    private void read(int current) {
-        // Events win over these reads: they are newer.
-        host.executeCommand("getVoiceState", Collections.<String, Object>emptyMap(), (ok, data, error) -> {
-            synchronized (VoiceSkinDemo.this) {
-                if (current != generation || !ok || !(data instanceof Map)) return;
-                Map<?, ?> state = (Map<?, ?>) data;
-                if (!skinHeard) selected = Boolean.TRUE.equals(state.get("skinSelected"));
-                if ("hidden".equals(overlay) && state.get("overlay") instanceof String) overlay = (String) state.get("overlay");
-                update();
+    /** Follow the turn while the skin is picked, and let it go when another skin is. */
+    private void follow() {
+        if (host == null || selected == following) return;
+        following = selected;
+        int current = generation;
+        for (String event : EVENTS) {
+            try {
+                if (following) host.subscribe(event);
+                else host.unsubscribe(event);
+            } catch (IllegalArgumentException olderHost) {
+                // An event this Kiosk Satellite does not have.
             }
-        });
-        host.executeCommand("getVoiceAppearance", Collections.<String, Object>emptyMap(), (ok, data, error) -> {
-            synchronized (VoiceSkinDemo.this) {
-                if (current == generation && ok && data instanceof Map && !appearanceHeard) appearance((Map<?, ?>) data);
-            }
-        });
-        host.executeCommand("getVoiceText", Collections.<String, Object>emptyMap(), (ok, data, error) -> {
-            synchronized (VoiceSkinDemo.this) {
-                if (current == generation && ok && data instanceof Map && command.isEmpty() && answer.isEmpty()) words((Map<?, ?>) data);
-            }
-        });
+        }
+        if (!following) return;
+        try {
+            host.executeCommand("getVoiceAppearance", Collections.<String, Object>emptyMap(), (ok, data, error) -> {
+                synchronized (VoiceSkinDemo.this) {
+                    if (current == generation && ok && data instanceof Map && !appearanceHeard) appearance((Map<?, ?>) data);
+                }
+            });
+            host.executeCommand("getVoiceText", Collections.<String, Object>emptyMap(), (ok, data, error) -> {
+                synchronized (VoiceSkinDemo.this) {
+                    if (current == generation && ok && data instanceof Map && command.isEmpty() && answer.isEmpty()) words((Map<?, ?>) data);
+                }
+            });
+        } catch (UnsupportedOperationException olderHost) {
+            // Events alone still bring the skin up.
+        }
     }
 
     synchronized void onEvent(String event, Map<String, Object> payload) {
@@ -105,6 +129,7 @@ final class VoiceSkinDemo {
         if ("ks.voice.skin".equals(event)) {
             selected = Boolean.TRUE.equals(payload.get("selected"));
             skinHeard = true;
+            follow();
         } else if ("ks.voice.overlay".equals(event)) {
             overlay = String.valueOf(payload.get("overlay"));
         } else if ("ks.voice.level".equals(event)) {
@@ -182,6 +207,7 @@ final class VoiceSkinDemo {
         textScale = 1;
         reactive = true;
         appearanceHeard = false;
+        following = false;
     }
 
     private final class Skin implements OverlayFactory {

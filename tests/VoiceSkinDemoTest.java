@@ -17,6 +17,7 @@ public final class VoiceSkinDemoTest {
             reads.put(command, callback);
         }
         public void subscribe(String event) { if (older) throw new IllegalArgumentException("Unknown KS event"); subscriptions.add(event); }
+        public void unsubscribe(String event) { subscriptions.remove(event); }
         public void showOverlay(String key, OverlaySpec spec, OverlayFactory factory) { assert key.matches("[a-z][a-z0-9_]{0,39}") : key; overlays.put(key, spec); }
         public void hideOverlay(String key) { overlays.remove(key); }
         public void showWindow(String title, String message, String button) {}
@@ -35,8 +36,9 @@ public final class VoiceSkinDemoTest {
         Host host = new Host();
         VoiceSkinDemo demo = new VoiceSkinDemo();
         demo.start(host);
-        assert host.subscriptions.containsAll(Arrays.asList(VoiceSkinDemo.EVENTS));
-        assert host.reads.containsKey("getVoiceState") && host.reads.containsKey("getVoiceText") && host.reads.containsKey("getVoiceAppearance");
+        // Until its skin is picked, it follows only the skin choice: one subscription and one read.
+        assert host.subscriptions.equals(Collections.singleton("voice.skin")) : host.subscriptions;
+        assert host.reads.keySet().equals(Collections.singleton("getVoiceState")) : host.reads.keySet();
 
         // Not picked: the turn is KS's to draw.
         host.reads.get("getVoiceState").onResult(true, map("enabled", true, "state", "idle", "skinSelected", false, "overlay", "hidden"), null);
@@ -45,6 +47,8 @@ public final class VoiceSkinDemoTest {
 
         // Picked: it draws while the overlay shows full screen, on top and passing touches through.
         demo.onEvent("ks.voice.skin", map("selected", true));
+        assert host.subscriptions.containsAll(Arrays.asList(VoiceSkinDemo.EVENTS));
+        assert host.reads.containsKey("getVoiceText") && host.reads.containsKey("getVoiceAppearance");
         OverlaySpec spec = host.overlays.get(VoiceSkinDemo.KEY);
         assert spec != null && spec.onTop() && !spec.touchable();
         demo.onEvent("ks.voice.level", map("level", 0.5));
@@ -72,6 +76,7 @@ public final class VoiceSkinDemoTest {
         demo.onEvent("ks.voice.overlay", map("overlay", "full"));
         demo.onEvent("ks.voice.skin", map("selected", false));
         assert host.overlays.isEmpty();
+        assert host.subscriptions.equals(Collections.singleton("voice.skin")) : host.subscriptions;
 
         // A read that lands after the events does not undo them.
         Host late = new Host();

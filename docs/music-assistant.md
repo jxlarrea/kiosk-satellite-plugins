@@ -152,6 +152,6 @@ Each plugin holds at most 16 subscriptions. Subscribing with a key that is alrea
 
 ## Hello World demo
 
-**Music Assistant player** and **Music Assistant volume** in Hello World's readings show the kiosk's Music Assistant player, whether it plays and its volume. The demo reads `getSendspinPlayer`, follows `sendspin.player` and subscribes to `player_updated` for that player. The **Play or pause Music Assistant** action calls `players/cmd/play_pause` on it through `maCall`. Run it from the plugin's actions or map it to a gesture.
+Turn on **Show Music Assistant player** in Hello World's **Music Assistant demo** group. **Music Assistant player** and **Music Assistant volume** in its readings then show the kiosk's Music Assistant player, whether it plays and its volume. The demo reads `getSendspinPlayer`, follows `sendspin.player` and subscribes to `player_updated` for that player. The **Play or pause Music Assistant** action calls `players/cmd/play_pause` on it through `maCall`. Run it from the plugin's actions or map it to a gesture.
 
 See [MusicAssistantDemo.java](../src/me/jxl/kiosk/plugins/hello/MusicAssistantDemo.java) for the complete example.
