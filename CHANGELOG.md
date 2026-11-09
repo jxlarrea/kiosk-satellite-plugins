@@ -12,6 +12,8 @@
 
 ### Added
 
+- Add `duplicate` to list settings. With `"duplicate": true`, the row editor on the kiosk and in Remote Admin offers Duplicate beside Delete. It opens a new row that holds a copy of the row on screen, action fields included, and Save adds it at the end of the list. A plugin cannot write action settings itself, so this is the way to copy a row with an action. It works for a nested list too. Older Kiosk Satellite releases ignore the field. Document it under Settings (kiosk-satellite#1357).
+
 - Add `nowPlaying` to `getScreensaverAppearance` and `screensaver.appearance`. It is true while the Now Playing player is on screen, including a paused player and a shared layout, and the event fires when the player opens or closes over an unchanged view. `nowPlayingShared` is true while the screensaver view stays in sight beside the player. A plugin drawn over the screensaver can use them to get out of the way of the player (kiosk-satellite#1335).
 
 - Document plugin update notices and the `getPluginUpdates` remote command. Plugin updates are checked a minute after the app starts and every 12 hours and never install automatically.
