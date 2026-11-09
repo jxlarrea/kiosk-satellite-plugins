@@ -60,7 +60,8 @@ Each overlay is its own Android view hosted inside KS's Flutter screen, and crea
 | `enter(transition)`, `exit(transition)` | How the overlay appears and leaves: `NONE`, `FADE`, `SLIDE` or `SCALE`. Both default to `NONE`. See [Transitions](#transitions) |
 | `transitionDuration(ms)` | Length of both transitions, 50 to 1000 ms. Defaults to 200 |
 | `closeOnBack(boolean)` | Whether back closes the overlay. Defaults to on |
-| `onTop(boolean)` | Draw where the KS voice overlay does, over the screensaver, the menu and camera views. Defaults to off |
+| `layer(layer)` | Where the overlay draws: `LAYER_DASHBOARD`, `LAYER_VIEWS` or `LAYER_TOP`. Defaults to `LAYER_DASHBOARD`. See [Layering](#layering) |
+| `onTop(boolean)` | The same as `layer(LAYER_TOP)`: draw where the KS voice overlay does, over the screensaver, the menu and camera views. Defaults to off |
 | `touchable(boolean)` | Off makes the overlay visual only, and every touch passes through to whatever is under it. Defaults to on |
 
 A `WRAP` side follows the view's measured size and updates when the view asks for a new layout. KS measures it against the kiosk area less the insets on that axis. A `FILL` side takes the whole area less the insets. A fixed size is capped at the available area.
@@ -155,15 +156,23 @@ Overlays of a session that ends, such as a disabled plugin, leave at once withou
 
 ## Back and events
 
-Back closes the topmost overlay with `closeOnBack` on, after any floating window. KS removes it and sends `onEvent("overlay.closed", {"key": key})`. An overlay with `closeOnBack(false)` is left alone and back does what it normally does. Use that for bars that should stay up. `hideOverlay` does not send `overlay.closed`.
+Back closes the topmost overlay with `closeOnBack` on, after any floating window. Over a KS page or view, such as the Calendar, back closes an overlay of the views layer first and then the page. Overlays of the other layers close on back only over the dashboard. KS removes it and sends `onEvent("overlay.closed", {"key": key})`. An overlay with `closeOnBack(false)` is left alone and back does what it normally does. Use that for bars that should stay up. `hideOverlay` does not send `overlay.closed`.
 
 While Lockdown Mode is on, back never closes an overlay.
 
 ## Layering
 
-Overlays sit above the dashboard and its web overlays and below the Sendspin player, the menu, the screensaver, notifications and Lockdown Mode. The menu slides them aside with the dashboard. Floating windows sit above them. Within those layers, a new or replaced overlay goes on top.
+`layer` picks one of three layers. Within a layer, a new or replaced overlay goes on top.
 
-An overlay with `onTop(true)` moves to the slot of the KS voice overlay, over the screensaver, the menu and camera views. Notifications, intercom call cards, announcements, the voice overlay itself, the screensaver's black cover and Lockdown Mode still cover it. During a voice turn it draws over the black cover too, so a [voice skin](voice-skins.md) shows on a blanked screen. Use it for visuals that must show whatever the kiosk is doing. It does not stop or dismiss the screensaver.
+| Layer | Where it draws |
+| --- | --- |
+| `LAYER_DASHBOARD` | Above the dashboard and its overlay pages, and below the Sendspin player, the KS pages and views, the menu, the screensaver, notifications and Lockdown Mode. The menu slides it aside with the dashboard. Floating windows sit above it. The default |
+| `LAYER_VIEWS` | Above every KS page and view: the Calendar, the Music Library, alarms, the app launcher, Call a kiosk, camera views and other plugins' overlays in the dashboard layer. Hidden while the screensaver, the Classic menu or the Quick Controls view is up, and during a Compass swipe |
+| `LAYER_TOP` | The slot of the KS voice overlay, over the screensaver, the menu and camera views. The same as `onTop(true)` |
+
+Use `LAYER_VIEWS` for controls that should stay with the user wherever the kiosk goes, such as a navigation bar. It needs no change when a page or camera view opens or closes. Show the overlays it opens, such as a menu, in the same layer, or they open under the page. `setContentInsets` keeps only the dashboard clear, so the overlay covers the edge of a page under it, such as a page's title bar. With Compass navigation, Now Playing as the view on screen counts as a view, so the layer shows over it. Now Playing in place of the screensaver hides it like any other screensaver. Follow [`navigation.view`](ks-api.md#events) to tell which page or view is on screen, for example to mark the active item or stay away from one view. Older Kiosk Satellite releases throw `NoSuchMethodError` for `layer`. Catch `LinkageError` and fall back to the dashboard layer there.
+
+An overlay in `LAYER_TOP` draws over the screensaver, the menu and camera views. Notifications, intercom call cards, announcements, the voice overlay itself, the screensaver's black cover and Lockdown Mode still cover it. During a voice turn it draws over the black cover too, so a [voice skin](voice-skins.md) shows on a blanked screen. Use it for visuals that must show whatever the kiosk is doing. It does not stop or dismiss the screensaver.
 
 ## Limits and lifetime
 

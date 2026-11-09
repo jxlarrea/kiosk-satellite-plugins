@@ -64,6 +64,7 @@ Except for `getBrightness`, `getVolume` and `getHaEntityState`, every read comma
 | `getFaceEnabled` | Boolean indicating whether camera face detection is enabled |
 | `getProximityEnabled` | Boolean indicating whether proximity detection is enabled |
 | `getCameraViewState` | `{active, viewId, viewName, focusedCameraId}` for the existing camera overlay. IDs and name can be null. No images or stream URLs |
+| `getNavigationView` | `{mode, view, id}`: the page or view on screen. See [Navigation view](#navigation-view) |
 | `getCameraViews` | A list of `{id, name, cameraCount}`, one per camera view set up in KS, in their order. Pass `id` to `showCameraView`. No servers, stream URLs or credentials |
 | `getDashboards` | A list of `{urlPath, title, icon, custom, builtIn, views}`, one per Home Assistant dashboard, with `views` a list of `{path, title, icon, subview}`. Pass a view's `path` to `haNavigate`. Icons are MDI names or null. `custom` marks KS's Custom Pages entry. `builtIn` marks Home Assistant's own pages, such as Energy, History and Media, and the pages integrations add. They have no views, so pass `urlPath` to `haNavigate`. Older Kiosk Satellite releases leave them out. Fails while Home Assistant is not set up or cannot be reached |
 | `getWakeWordState` | `{available, stopWordAvailable, enabled, active, listening, engine, engineLabel, status, statusLabel, muted}`. Engine names can be null. No audio, model files or internal configuration |
@@ -244,6 +245,7 @@ Pass the subscription name from this table to `subscribe` or `unsubscribe`. Deli
 | `stopword.detected` | No additional fields |
 | `browser.state` | No additional fields. The main WebView URL or saved HA/Start URL changed. Read `getDashboardState` for the current snapshot |
 | `camera.view` | `active`, `viewId`, `viewName` and `focusedCameraId` |
+| `navigation.view` | `mode`, `view` and `id`, as `getNavigationView` reports them. Fires when another page or view comes up. See [Navigation view](#navigation-view) |
 | `sendspin.player` | The `getSendspinPlayer` fields. Fires when the player turns on or off, connects or disconnects, starts or stops playing, or Music Assistant names its player |
 | `audio.noise` | `available`, `dbfs` and `held`. Requires `noise`. See [Room noise level](#room-noise-level) |
 
@@ -283,6 +285,25 @@ if ("VOLUME_UP".equals(payload.get("key"))) {
     });
 }
 ```
+
+### Navigation view
+
+`getNavigationView` and `navigation.view` report what the kiosk shows. `mode` is the navigation style, `classic` or `compass`. `view` is the topmost page or view:
+
+| `view` | What is on screen |
+| --- | --- |
+| `dashboard` | The dashboard |
+| `overlay_page` | An overlay page over the dashboard, such as a rotation page or one from `showOverlayPage` |
+| `menu` | The Classic menu, or the Quick Controls view with Compass |
+| `app_launcher` | The app launcher |
+| `intercom` | Call a kiosk |
+| `alarms` | The alarm list |
+| `calendar` | The Calendar |
+| `music_library` | The Music Library |
+| `now_playing` | Now Playing, as a view or in place of the screensaver |
+| `camera` | A camera view. `id` is its ID, as `getCameraViews` lists it |
+
+`id` is null for every view but `camera`. The screensaver is not a view: the view under it stays the one reported, and `screensaver.state` says when it comes and goes. A plugin's own overlays and windows are not reported either. Use it with [`LAYER_VIEWS`](overlays.md#layering) to keep a control on screen across pages, for example to mark the active item of a navigation bar.
 
 ### Voice Satellite state
 

@@ -4,6 +4,10 @@
 
 ### Added
 
+- Add `OverlaySpec.layer` with `LAYER_DASHBOARD`, `LAYER_VIEWS` and `LAYER_TOP`. An overlay in `LAYER_VIEWS` draws over every Kiosk Satellite page and view, camera views included, and hides while the screensaver, the menu or the Quick Controls view is up, so a navigation bar stays on screen without replacing itself when a page or camera view opens. Back closes it before the page under it. `onTop(true)` is now the same as `layer(LAYER_TOP)`. Older Kiosk Satellite releases throw `NoSuchMethodError` for `layer`. Document it under Layering in the overlay guide (kiosk-satellite#1366).
+
+- Add `getNavigationView` and the `navigation.view` event to `host.read`. They report the page or view on screen, such as `dashboard`, `calendar`, `music_library`, `camera` with its ID or `menu`, and whether Classic or Compass navigation is on. Document it under Navigation view in the KS API reference (kiosk-satellite#1366).
+
 - Add the `player` capability. `host.publishPlayer(key, title, listener)` offers a player under Settings > Media Player > Player, and `PlayerListener` hears when the user picks it, when the pick moves on and the transport commands. `PluginPlayer.update` shows the track, artwork, progress and the buttons in Now Playing, and `PluginPlayer.openAudio` gives a 16-bit PCM `AudioOutput` that plays through the kiosk's own output, so the echo canceller, the media volume and the assistant's duck apply to it. `AudioOutput.getTimestamp` reports when written frames are heard, for players that keep time with other speakers. Implement `PlayerQueue` for a queue the user edits in Now Playing and `PlayerLibrary` for a Music Library source with Discover, Search and Browse. Hello World offers a player that plays Creative Commons music from the Internet Archive, with a queue and a library. Document it in the new Players guide (kiosk-satellite-plugins#61).
 
 ### Changed
