@@ -16,6 +16,8 @@
 
 ### Changed
 
+- Shizuku stays available while `stop()` runs, so a plugin can undo what it set up as root, such as iptables rules. During `stop()` the `executeShizuku` callback runs on KS's Shizuku thread, so `stop()` can wait for it within its three-second deadline. Once `stop()` returns, KS takes no new commands, lets a command already sent run to its timeout and discards its callback. Earlier Kiosk Satellite releases revoke Shizuku before `stop()`. Document it under Bounds and lifecycle in the Shizuku guide.
+
 - Hello World publishes a **Demo amplitude** number for its Amplitude setting. Home Assistant shows it as a 0 to 100% slider in steps of 5, and a change saves the setting and shows under Chart readings.
 
 - Hello World 1.1.0 needs Kiosk Satellite 2026.11.14 or newer. Its demos start off, so a fresh install does almost nothing until you turn a demo on: the greeting window, the chart, the status tile, the hardware keys, Voice Satellite and intercom states, the Music Assistant player and the Internet Archive player each have a switch in their group. The Music Assistant demo gets its own **Show Music Assistant player** switch. The voice skin demo follows only `voice.skin` until its skin is picked, and the device stats demo reads the screensaver mode when its settings page opens instead of at start.

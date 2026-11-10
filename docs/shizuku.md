@@ -45,7 +45,7 @@ if (Boolean.TRUE.equals(state.get("granted"))) {
 
 Plugins declaring `shizuku` receive `onEvent("shizuku.state", state)` when the binder connects, disconnects or a permission request completes. Read the initial state in `start()`. No `host.read` capability or subscription is needed. Treat this event as a reason to recheck readiness, not as a guarantee that the next command will succeed.
 
-`executeShizuku(String[] command, int timeoutMs, CommandCallback callback)` is asynchronous. The callback runs on the plugin's serialized callback executor and follows its existing three-second callback deadline. Do not block waiting for it inside `start`, `configure`, `execute` or `onEvent`.
+`executeShizuku(String[] command, int timeoutMs, CommandCallback callback)` is asynchronous. The callback runs on the plugin's serialized callback executor and follows its existing three-second callback deadline. Do not block waiting for it inside `start`, `configure`, `execute` or `onEvent`. `stop()` is the exception, see [Bounds and lifecycle](#bounds-and-lifecycle).
 
 | Result field | Meaning |
 | --- | --- |
@@ -63,7 +63,7 @@ Plugins declaring `shizuku` receive `onEvent("shizuku.state", state)` when the b
 - Supply 1 to 32 arguments, at most 4096 characters per argument and 16384 characters total. Null characters are rejected.
 - Execution timeouts range from 100 to 30000 milliseconds. Helper connection has a separate five-second deadline. KS also enforces an overall watchdog that includes connection overhead.
 - One command may be pending per plugin, with at least 250 milliseconds between requests. Both output streams are drained and each retains at most 32768 bytes. Stdin is closed immediately.
-- Disabling, uninstalling, updating or stopping the plugin revokes callbacks and stops its helper. A master plugin shutdown does the same. Other plugin sessions keep their own helpers.
+- Shizuku stays available while `stop()` runs, so a plugin can undo what it set up, such as iptables rules. Every other host call is already revoked by then. During `stop()` the callback runs on KS's Shizuku thread instead of the plugin's executor, so `stop()` can wait for it within its three-second deadline. Once `stop()` returns, KS takes no new commands. A command already sent still runs to its timeout, its callback is discarded and then the helper stops. This applies to disabling, uninstalling, updating or stopping the plugin and to a master plugin shutdown. Other plugin sessions keep their own helpers.
 - KS discards a timed-out or disconnected helper. The next request can reconnect when Shizuku is available and permission remains granted. Permission changes may cause Android or Shizuku to restart KS.
 - Helpers are not daemons. Shizuku stops them when the KS process dies. Stopping a helper kills its process group and ordinary child commands. Do not launch detached daemons or commands that create a new session or process group. This API is for bounded commands, not persistent root services, streaming processes or interactive shells.
 
