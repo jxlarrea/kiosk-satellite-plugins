@@ -4,6 +4,8 @@
 
 ### Added
 
+- Add dashboard links for plugin actions. `ks://plugin/PLUGIN_ID/COMMAND_ID` runs a declared command from a dashboard button, and each command's dialog on the plugin subpage shows its link. Parts after the command ID reach `execute` as `arguments.get("args")`, a list of up to 8 strings. Gestures, drawer shortcuts and ESPHome buttons still pass an empty map. `openKioskLink` refuses `ks://plugin` links. Document it under Dashboard links in Creating plugins (kiosk-satellite#1385).
+
 - Add `publishNumber(key, name, metadata, state)` and `removeNumber(key)` to the `entities` capability. Metadata takes `min`, `max`, `step`, `unit` and `mode` (`auto`, `slider` or `box`). Home Assistant shows the number as a slider or an input box, and a change arrives as `onEvent("number.KEY", {"value": double})` within min and max. Publish the applied value to confirm it. Readings show it with its unit and the decimals of its step, and manifest groups take `number.KEY` references. Older Kiosk Satellite releases throw `UnsupportedOperationException`. Document it under Writable numbers in the entity guide (kiosk-satellite#1378).
 
 - Add `OverlaySpec.layer` with `LAYER_DASHBOARD`, `LAYER_VIEWS` and `LAYER_TOP`. An overlay in `LAYER_VIEWS` draws over every Kiosk Satellite page and view, camera views included, and hides while the screensaver, the menu or the Quick Controls view is up, so a navigation bar stays on screen without replacing itself when a page or camera view opens. Back closes it before the page under it. `onTop(true)` is now the same as `layer(LAYER_TOP)`. Older Kiosk Satellite releases throw `NoSuchMethodError` for `layer`. Document it under Layering in the overlay guide (kiosk-satellite#1366).

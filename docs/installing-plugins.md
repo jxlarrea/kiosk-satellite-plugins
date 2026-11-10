@@ -24,7 +24,7 @@ The window stays inside Kiosk Satellite. It needs no Android permission to draw 
 
 In **Gestures**, choose **Run a plugin action** and select a command from a running plugin. The mapping keeps the plugin and command IDs. Disabling the plugin pauses its actions and a gesture targeting it reports that it cannot run.
 
-In the plugin subpage, open an action to enable **Show in kiosk drawer** or **Expose to Home Assistant**. Both start off. Drawer shortcuts also appear while locked when the owner allows the kiosk drawer. Home Assistant exposure adds a button to the existing ESPHome device and requires ESPHome with native entities enabled. Settings does not include buttons to run actions directly.
+In the plugin subpage, open an action to enable **Show in kiosk drawer** or **Expose to Home Assistant**. Both start off. Drawer shortcuts also appear while locked when the owner allows the kiosk drawer. Home Assistant exposure adds a button to the existing ESPHome device and requires ESPHome with native entities enabled. The dialog also shows the action's **Dashboard link**, such as `ks://plugin/hello-world/show`. Point a dashboard button's tap action at it to run the action on the kiosk that shows the dashboard. See [Dashboard Links](https://kiosksatellite.com/docs/dashboard-links/#kiosk-features-ks). Settings does not include buttons to run actions directly.
 
 Stopping a plugin removes its active shortcuts and ESPHome buttons. Re-enabling restores the selected placements. An update keeps the choices for commands whose IDs still exist. Removing a command removes its placements. Old gesture mappings remain editable and report a failure until reassigned.
 
@@ -90,7 +90,7 @@ The existing authenticated command API exposes these commands:
 | `getPluginActions` | None. Returns declared actions and their availability |
 | `getPluginTriggers` | None. Returns declared gesture triggers and their availability |
 | `configurePluginAction` | `id`, `command`, `drawer`: boolean, `homeAssistant`: boolean |
-| `runPluginCommand` | `id`, `command`: manifest command ID |
+| `runPluginCommand` | `id`, `command`: manifest command ID, `args`: optional list of up to 8 strings the plugin receives as `arguments.get("args")` |
 
 Use `POST /api/commands/<command>` with the existing remote admin authentication. Each plugin's commands are addressed by its stable ID and command ID. They cannot replace core commands. Plugin management is not exposed to dashboard JavaScript.
 

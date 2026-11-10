@@ -110,6 +110,24 @@ Declared commands are reusable actions. Users can select them in **Gestures > Ru
 
 Keep command IDs stable across releases. The host retains shortcut choices for commands that survive an update and removes choices for deleted commands. New commands start without drawer or Home Assistant exposure. Commands run through `execute` only while the plugin is running. A saved gesture targeting a disabled or missing plugin reports a failure. Plugins should use hardware entities such as RGB lights for ongoing stateful control and commands for individual operations.
 
+### Dashboard links
+
+A dashboard button runs a command with `ks://plugin/PLUGIN_ID/COMMAND_ID`, such as `ks://plugin/hello-world/show`. The command's dialog on the plugin subpage shows the link with a copy button. Anything after the command ID reaches `execute` as `arguments.get("args")`, a `List<String>` of the decoded parts. `ks://plugin/doorbell/showCamera/front-door` passes `["front-door"]`. A link carries at most 8 arguments of up to 256 characters each. A link with more is refused before it reaches the plugin.
+
+Only dashboard links pass arguments. A gesture, a drawer shortcut or an ESPHome button calls `execute` with an empty map, so a command that takes arguments needs a sensible default without them. The arguments are whatever the dashboard's author typed, so check each one before using it. Plugins cannot open `ks://plugin` links with `openKioskLink`. Kiosk Satellite releases before 2026.11.16 refuse links with arguments, so set `minAppVersion` when a command needs them.
+
+```java
+@Override
+public void execute(String command, Map<String, Object> arguments) {
+    if ("showCamera".equals(command)) {
+        Object args = arguments.get("args");
+        String camera = args instanceof List && !((List<?>) args).isEmpty()
+            ? (String) ((List<?>) args).get(0) : defaultCamera;
+        showCamera(camera);
+    }
+}
+```
+
 ### Minimum Kiosk Satellite version
 
 Set `minAppVersion` to the oldest Kiosk Satellite release that has every host method and manifest field the plugin uses. Raise it when a release of the plugin starts using something newer.
@@ -188,7 +206,7 @@ Implement `me.jxl.kiosk.plugins.KioskPlugin`:
 | --- | --- |
 | `start(host, settings)` | Save the host handle and acquire resources |
 | `configure(settings)` | Apply the complete validated configuration |
-| `execute(command, arguments)` | Run a declared command. SDK 1 passes an empty arguments map |
+| `execute(command, arguments)` | Run a declared command. `arguments` is empty, except for the `args` list of a [dashboard link](#dashboard-links) |
 | `onEvent(event, payload)` | Handle a window or overlay event, RGB command or subscribed KS event. See the [complete interaction reference](ks-api.md) |
 | `stop()` | Release timers, threads and resources |
 

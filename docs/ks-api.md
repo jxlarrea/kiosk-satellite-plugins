@@ -173,6 +173,7 @@ These commands change live presentation or playback without editing saved config
 - While Lockdown Mode is on.
 - For `ks://android-settings`, since Android Settings is a way out of the kiosk.
 - For `ks://intercom/<kiosk id>`, since a kiosk can answer a call on its own. `ks://intercom`, which opens the **Call a kiosk** sheet, works.
+- For `ks://plugin/<plugin id>/<command id>`, so a plugin cannot run another plugin's commands. Call your own code directly instead.
 - For a link Kiosk Satellite does not know, or one with a query or fragment. Older releases fail every `openKioskLink` call, so check `getHostApi` or `minAppVersion` first.
 
 ```java
@@ -458,7 +459,7 @@ These methods operate on resources owned by the plugin and are part of SDK 1.
 | `removeLight(key)` | Removes the plugin-owned light |
 | `start(host, settings)` | Receives the host and validated settings when the plugin starts |
 | `configure(settings)` | Receives validated saved settings changes |
-| `execute(command, arguments)` | Receives a declared action invoked by a gesture, drawer shortcut, ESPHome button or authenticated API. Arguments are currently empty |
+| `execute(command, arguments)` | Receives a declared action invoked by a gesture, drawer shortcut, ESPHome button, dashboard link or authenticated API. Arguments are empty, except for the `args` list of a [dashboard link](creating-plugins.md#dashboard-links) |
 | `onEvent("window.action", payload)` | The plugin window's button was pressed. Empty payload |
 | `onEvent("window.closed", payload)` | The user dismissed its window. Empty payload |
 | `onEvent("overlay.closed", payload)` | Back closed one of its overlays. `key` names it |
