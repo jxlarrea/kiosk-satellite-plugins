@@ -1,6 +1,6 @@
 # Plugin interactions with Kiosk Satellite
 
-SDK 1 is the first public plugin API. Plugins can inspect KS state, observe passive events and use transient controls such as dismissing the screensaver or opening a configured camera view. The host bridge does not edit saved KS settings, except the volume levels `setVolume` changes and the wake word mute `setWakeWordMuted` sets, and does not manage files or change permissions. Plugin-owned windows, settings, charts, actions, sensors, selects, switches, RGB lights and screensaver renderers are also supported.
+SDK 1 is the first public plugin API. Plugins can inspect KS state, observe passive events and use transient controls such as dismissing the screensaver or opening a configured camera view. The host bridge does not edit saved KS settings, except the volume levels `setVolume` changes and the wake word mute `setWakeWordMuted` sets, and does not manage files or change permissions. Plugin-owned windows, settings, charts, actions, sensors, selects, switches, numbers, RGB lights and screensaver renderers are also supported.
 
 ## Capabilities
 
@@ -13,7 +13,7 @@ Every plugin declares `"apiVersion": 1`. All features below belong to that singl
 | `screensaver.mode` | Choose which screensaver shows while the plugin runs. See [Switch screensavers](screensavers.md#switch-screensavers) |
 | None | Hide its window, log, publish runtime status and charts, save its own settings and receive declared actions |
 | `native` | Locate its verified packaged JNI library and DEX container |
-| `entities` | Publish and remove its own RGB lights, sensors, selects and switches |
+| `entities` | Publish and remove its own RGB lights, sensors, selects, switches and numbers |
 | `host.read` | Execute read commands and subscribe to passive events |
 | `host.control` | Execute the transient controls listed below |
 | `noise` | Read the [room noise level](#room-noise-level). Requires `host.read` |
@@ -451,8 +451,10 @@ These methods operate on resources owned by the plugin and are part of SDK 1.
 | `publishSensor`, `publishTextSensor`, `publishBinarySensor` | Publish numeric, text or boolean readings shown on the plugin subpage and exposed through ESPHome. See the [entity API](entities.md) for signatures, metadata and limits |
 | `publishSwitch(key, name, state)` | Publish a writable switch with a confirmed boolean state. Commands arrive as `onEvent("switch.KEY", {"on": boolean})`. See the [entity API](entities.md#writable-switches) |
 | `publishSelect(key, name, options, state)` | Publish a writable select. Confirm applied changes by publishing its resulting state |
-| `removeSensor`, `removeTextSensor`, `removeBinarySensor`, `removeSelect`, `removeSwitch` | Remove the corresponding entity owned by the active session |
+| `publishNumber(key, name, metadata, state)` | Publish a writable number with `min`, `max`, `step`, `unit` and `mode`. Changes arrive as `onEvent("number.KEY", {"value": double})`. See the [entity API](entities.md#writable-numbers) |
+| `removeSensor`, `removeTextSensor`, `removeBinarySensor`, `removeSelect`, `removeSwitch`, `removeNumber` | Remove the corresponding entity owned by the active session |
 | `onEvent("select.KEY", payload)` | A request for an advertised select option, passed as `option`. No automatic setting write or optimistic state change |
+| `onEvent("number.KEY", payload)` | A request for a number value between its `min` and `max`, passed as `value`. No automatic setting write or optimistic state change |
 | `removeLight(key)` | Removes the plugin-owned light |
 | `start(host, settings)` | Receives the host and validated settings when the plugin starts |
 | `configure(settings)` | Receives validated saved settings changes |

@@ -20,7 +20,7 @@ All documented features use **SDK 1**, the first public plugin SDK. Plugins requ
 - [Camera and barcodes](camera.md): scan a barcode or a QR code with the KS scanner, or receive frames from the device camera.
 - [Music Assistant](music-assistant.md): find the kiosk's own player, control players, queues and the library and follow Music Assistant events through the kiosk's connection.
 - [Players](players.md): be one of the kiosk's own players, with audio through the echo canceller, Now Playing, a queue and a Music Library source.
-- [Sensors, selects and switches](entities.md): show live readings in KS, publish them to Home Assistant and handle writable controls.
+- [Sensors, selects, switches and numbers](entities.md): show live readings in KS, publish them to Home Assistant and handle writable controls.
 - [Dashboard URLs](dashboard.md): discover the configured server and current view without duplicating URL settings.
 - [SDK source](../sdk/src/me/jxl/kiosk/plugins): the `KioskPlugin` and `PluginHost` interfaces and the overlay classes supplied by Kiosk Satellite at runtime.
 - [Read-only example](../examples/read-only): a buildable plugin that observes screen, screensaver and dashboard state.

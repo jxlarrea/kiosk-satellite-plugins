@@ -265,9 +265,9 @@ Entity catalog changes reconnect ESPHome. State updates do not. Disabling a plug
 
 The Rockchip LED Control repository demonstrates these additions without putting a device driver into KS itself.
 
-## Sensors, selects and switches
+## Sensors, selects, switches and numbers
 
-The `entities` capability also supports numeric sensors, text sensors, binary sensors, writable selects and switches. See the [entity API](entities.md) for signatures, metadata, lifecycle rules and migration steps. Hello World demonstrates all five with simulated readings, a select for its Pattern setting and a switch for Show demo chart.
+The `entities` capability also supports numeric sensors, text sensors, binary sensors, writable selects, switches and numbers. See the [entity API](entities.md) for signatures, metadata, lifecycle rules and migration steps. Hello World demonstrates all five with simulated readings, a select for its Pattern setting and a switch for Show demo chart.
 
 ## Charts
 
@@ -381,7 +381,7 @@ An optional top-level `groups` array orders settings groups and places their cha
 ]
 ```
 
-Charts appear after the group's settings, followed by a separate readings section. `readingsTitle` defaults to `Readings`. Chart references use the key passed to `publishSeries`. Reading references use `type.key`, where type is `sensor`, `text_sensor`, `binary_sensor`, `select` or `switch`. Each reference can belong to only one group. A plugin that makes its keys at runtime claims them with a wildcard instead: `"*"` takes every reading or chart no other group names, and `"sensor.*"` takes every reading of one type. A group naming a key wins over a type wildcard, which wins over `"*"`. Older Kiosk Satellite versions reject a manifest with wildcards. Hello World's **Device stats demo** group claims the chart of each tile with `"charts": ["*"]`.
+Charts appear after the group's settings, followed by a separate readings section. `readingsTitle` defaults to `Readings`. Chart references use the key passed to `publishSeries`. Reading references use `type.key`, where type is `sensor`, `text_sensor`, `binary_sensor`, `select`, `switch` or `number`. Each reference can belong to only one group. A plugin that makes its keys at runtime claims them with a wildcard instead: `"*"` takes every reading or chart no other group names, and `"sensor.*"` takes every reading of one type. A group naming a key wins over a type wildcard, which wins over `"*"`. Older Kiosk Satellite versions reject a manifest with wildcards. Hello World's **Device stats demo** group claims the chart of each tile with `"charts": ["*"]`.
 
 ```json
 { "title": "Home Assistant", "readingsTitle": "Sent to Home Assistant", "readings": ["*"] }

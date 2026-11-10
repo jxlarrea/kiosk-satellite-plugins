@@ -632,6 +632,7 @@
         "binary_sensor.chart_active",
         "switch.chart",
         "select.pattern",
+        "number.amplitude",
         "sensor.samples",
         "text_sensor.summary"
       ]

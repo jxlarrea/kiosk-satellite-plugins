@@ -4,6 +4,8 @@
 
 ### Added
 
+- Add `publishNumber(key, name, metadata, state)` and `removeNumber(key)` to the `entities` capability. Metadata takes `min`, `max`, `step`, `unit` and `mode` (`auto`, `slider` or `box`). Home Assistant shows the number as a slider or an input box, and a change arrives as `onEvent("number.KEY", {"value": double})` within min and max. Publish the applied value to confirm it. Readings show it with its unit and the decimals of its step, and manifest groups take `number.KEY` references. Older Kiosk Satellite releases throw `UnsupportedOperationException`. Document it under Writable numbers in the entity guide (kiosk-satellite#1378).
+
 - Add `OverlaySpec.layer` with `LAYER_DASHBOARD`, `LAYER_VIEWS` and `LAYER_TOP`. An overlay in `LAYER_VIEWS` draws over every Kiosk Satellite page and view, camera views included, and hides while the screensaver, the menu or the Quick Controls view is up, so a navigation bar stays on screen without replacing itself when a page or camera view opens. Back closes it before the page under it. `onTop(true)` is now the same as `layer(LAYER_TOP)`. Older Kiosk Satellite releases throw `NoSuchMethodError` for `layer`. Document it under Layering in the overlay guide (kiosk-satellite#1366).
 
 - Add `getNavigationView` and the `navigation.view` event to `host.read`. They report the page or view on screen, such as `dashboard`, `calendar`, `music_library`, `camera` with its ID or `menu`, and whether Classic or Compass navigation is on. Document it under Navigation view in the KS API reference (kiosk-satellite#1366).
@@ -11,6 +13,8 @@
 - Add the `player` capability. `host.publishPlayer(key, title, listener)` offers a player under Settings > Media Player > Player, and `PlayerListener` hears when the user picks it, when the pick moves on and the transport commands. `PluginPlayer.update` shows the track, artwork, progress and the buttons in Now Playing, and `PluginPlayer.openAudio` gives a 16-bit PCM `AudioOutput` that plays through the kiosk's own output, so the echo canceller, the media volume and the assistant's duck apply to it. `AudioOutput.getTimestamp` reports when written frames are heard, for players that keep time with other speakers. Implement `PlayerQueue` for a queue the user edits in Now Playing and `PlayerLibrary` for a Music Library source with Discover, Search and Browse. Hello World offers a player that plays Creative Commons music from the Internet Archive, with a queue and a library. Document it in the new Players guide (kiosk-satellite-plugins#61).
 
 ### Changed
+
+- Hello World publishes a **Demo amplitude** number for its Amplitude setting. Home Assistant shows it as a 0 to 100% slider in steps of 5, and a change saves the setting and shows under Chart readings.
 
 - Hello World 1.1.0 needs Kiosk Satellite 2026.11.14 or newer. Its demos start off, so a fresh install does almost nothing until you turn a demo on: the greeting window, the chart, the status tile, the hardware keys, Voice Satellite and intercom states, the Music Assistant player and the Internet Archive player each have a switch in their group. The Music Assistant demo gets its own **Show Music Assistant player** switch. The voice skin demo follows only `voice.skin` until its skin is picked, and the device stats demo reads the screensaver mode when its settings page opens instead of at start.
 

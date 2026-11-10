@@ -49,6 +49,8 @@ public final class HelloWorldTest {
         public void fireTrigger(String id) { triggers.add(id); }
         public void publishBinarySensor(String key, String name, String deviceClass, Boolean state) { binary = state; }
         public void publishSelect(String key, String name, String[] options, String state) { selection = state; assert options.length == 2; }
+        volatile Double number;
+        public void publishNumber(String key, String name, Map<String, Object> metadata, Double state) { number = state; assert "slider".equals(metadata.get("mode")) && Integer.valueOf(5).equals(metadata.get("step")); }
         public void saveSettings(Map<String, Object> values) { saved = new HashMap<>(values); }
         volatile int publications;
         volatile Map<String, Object> chart;
@@ -137,6 +139,13 @@ public final class HelloWorldTest {
             try { plugin.onEvent("select.pattern", Collections.singletonMap("option", "Unsafe")); throw new AssertionError("Invalid select accepted"); }
             catch (IllegalArgumentException expected) {}
             assert "Triangle".equals(host.selection);
+            assert Double.valueOf(60).equals(host.number);
+            plugin.onEvent("number.amplitude", Collections.singletonMap("value", 37.0));
+            assert Double.valueOf(35).equals(host.number) && Long.valueOf(35).equals(host.saved.get("amplitude"));
+            assert "Triangle".equals(host.saved.get("pattern"));
+            try { plugin.onEvent("number.amplitude", Collections.singletonMap("value", "50")); throw new AssertionError("Invalid number accepted"); }
+            catch (IllegalArgumentException expected) {}
+            assert Double.valueOf(35).equals(host.number);
             assert host.summary.startsWith("Pattern: Triangle\n");
             assert ((List<?>) host.chart.get("timestamps")).size() >= 40;
             assert ((List<?>) host.chart.get("series")).size() == 2;

@@ -150,12 +150,21 @@ public final class HelloWorldPlugin implements KioskPlugin {
         host.publishBinarySensor("chart_active", "Demo chart active", "", showChart);
         host.publishSwitch("chart", "Demo chart", showChart);
         host.publishSelect("pattern", "Demo pattern", new String[] {"Sine", "Triangle"}, pattern);
+        host.publishNumber("amplitude", "Demo amplitude", amplitudeMetadata(), amplitude);
         // The same entities appear as local readings, even without Home Assistant.
         Map<String, Object> countMetadata = new LinkedHashMap<>();
         countMetadata.put("accuracyDecimals", 0);
         host.publishSensor("samples", "Samples in history", countMetadata, (double) times.size());
         host.publishTextSensor("summary", "Sample details",
             "Pattern: " + pattern + "\nHistory: up to 120 samples\nInterval: 2 seconds");
+    }
+
+    /** The same range as the Amplitude setting, so Home Assistant shows the same slider. */
+    private static Map<String, Object> amplitudeMetadata() {
+        Map<String, Object> metadata = new LinkedHashMap<>();
+        metadata.put("min", 0); metadata.put("max", 100); metadata.put("step", 5);
+        metadata.put("unit", "%"); metadata.put("mode", "slider");
+        return metadata;
     }
 
     private void publishChart() {
@@ -220,6 +229,15 @@ public final class HelloWorldPlugin implements KioskPlugin {
             if (!(on instanceof Boolean)) throw new IllegalArgumentException("Chart switch requires a boolean");
             Map<String, Object> next = new LinkedHashMap<>(savedSettings);
             next.put("showChart", on);
+            configure(next);
+            host.saveSettings(next);
+        } else if ("number.amplitude".equals(event)) {
+            Object value = payload.get("value");
+            if (!(value instanceof Number)) throw new IllegalArgumentException("Amplitude requires a number");
+            // An automation can set any value in the range, so snap it to the setting's step.
+            long applied = Math.max(0, Math.min(100, Math.round(((Number) value).doubleValue() / 5) * 5));
+            Map<String, Object> next = new LinkedHashMap<>(savedSettings);
+            next.put("amplitude", applied);
             configure(next);
             host.saveSettings(next);
         } else if ("select.pattern".equals(event)) {
