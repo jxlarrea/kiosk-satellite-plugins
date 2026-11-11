@@ -120,6 +120,11 @@
     "added": "2026-10-21"
   },
   {
+    "repository": "ian-white83/ks-airplay-receiver",
+    "id": "airplay2-multiroom",
+    "added": "2026-11-11"
+  },
+  {
     "repository": "iiliev-nemetschek/kiosk-satellite-rockchip-proximity",
     "id": "rockchip-proximity-sensor",
     "added": "2026-10-30"
