@@ -135,6 +135,11 @@
     "added": "2026-10-30"
   },
   {
+    "repository": "itsgreat2misha/ks-task-scheduler",
+    "id": "ks-task-scheduler",
+    "added": "2026-11-12"
+  },
+  {
     "repository": "josephyancey/kiosk-satellite-intercom-bridge",
     "id": "intercom-bridge",
     "added": "2026-11-02"
