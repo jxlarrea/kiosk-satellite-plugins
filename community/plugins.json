@@ -293,5 +293,10 @@
     "repository": "tibohlami/kiosk-satellite-plugin-frigate",
     "id": "kiosk-satellite-frigate",
     "added": "2026-11-13"
+  },
+  {
+    "repository": "vednolacni/kiosk-satellite-cook-mode",
+    "id": "cook-mode",
+    "added": "2026-11-18"
   }
 ]
