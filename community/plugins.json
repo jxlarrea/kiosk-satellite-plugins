@@ -1,5 +1,10 @@
 [
   {
+    "repository": "Bjoern3003/kiosk-satellite-doorbird-intercom",
+    "id": "doorbird-intercom",
+    "added": "2026-11-20"
+  },
+  {
     "repository": "Coffmad/kiosk-satellite-google-photos",
     "id": "google-photos-screensaver",
     "added": "2026-10-19"
