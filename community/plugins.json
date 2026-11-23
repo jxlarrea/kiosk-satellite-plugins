@@ -140,6 +140,11 @@
     "added": "2026-10-21"
   },
   {
+    "repository": "hopkinsag1/kiosk-satellite-alfred-skin",
+    "id": "alfred-bat-voice-skin",
+    "added": "2026-11-23"
+  },
+  {
     "repository": "ian-white83/ks-airplay-receiver",
     "id": "airplay2-multiroom",
     "added": "2026-11-11"
