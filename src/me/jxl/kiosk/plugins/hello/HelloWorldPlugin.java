@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 import me.jxl.kiosk.plugins.KioskPlugin;
 import me.jxl.kiosk.plugins.PluginHost;
 
-/** Settings controls including lists, pickers, buttons, plugin choices and action settings, a floating window, kiosk links and the alarm list, native overlays, actions, live readings, a read-only chart, an Overview status tile, hardware keys, Voice Satellite state, a voice skin, intercom state, camera frames, barcode scans, a native screensaver of the kiosk's own stats and a music player with a library and a queue. */
+/** Settings controls including lists, pickers, buttons, plugin choices and action settings, a floating window, kiosk links and the alarm list, native overlays, actions, live readings, a read-only chart, an Overview status tile, hardware keys, Voice Satellite state, a voice skin, intercom state, alarm state with Snooze and Stop, camera frames, barcode scans, a native screensaver of the kiosk's own stats and a music player with a library and a queue. */
 public final class HelloWorldPlugin implements KioskPlugin {
     private final HomeAssistantDemo homeAssistant = new HomeAssistantDemo();
     private final StatusTileDemo statusTile = new StatusTileDemo();
@@ -20,6 +20,7 @@ public final class HelloWorldPlugin implements KioskPlugin {
     private final VoiceDemo voice = new VoiceDemo();
     private final VoiceSkinDemo voiceSkin = new VoiceSkinDemo();
     private final IntercomDemo intercom = new IntercomDemo();
+    private final AlarmDemo alarms = new AlarmDemo();
     private final ListDemo lists = new ListDemo();
     private final ActionDemo actions = new ActionDemo();
     private final LinkDemo links = new LinkDemo();
@@ -54,6 +55,7 @@ public final class HelloWorldPlugin implements KioskPlugin {
         this.host = host;
         actions.start(host);
         links.start(host);
+        alarms.start(host);
         overlays.start(host);
         voiceSkin.start(host);
         setup.start(host);
@@ -98,6 +100,7 @@ public final class HelloWorldPlugin implements KioskPlugin {
         keys.configure(host, settings);
         voice.configure(host, settings);
         intercom.configure(host, settings);
+        alarms.configure(settings);
         lists.configure(host, settings);
         actions.configure(settings);
         links.configure(settings);
@@ -212,6 +215,7 @@ public final class HelloWorldPlugin implements KioskPlugin {
         voice.onEvent(event, payload);
         voiceSkin.onEvent(event, payload);
         intercom.onEvent(event, payload);
+        alarms.onEvent(event, payload);
         setup.onEvent(event, payload);
         actions.onEvent(event, payload);
         links.onEvent(event, payload);
@@ -265,6 +269,7 @@ public final class HelloWorldPlugin implements KioskPlugin {
         voice.stop();
         voiceSkin.stop();
         intercom.stop();
+        alarms.stop();
         overlays.stop();
         actions.stop();
         links.stop();

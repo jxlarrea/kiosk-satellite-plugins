@@ -185,6 +185,26 @@
       "description": "Follow this kiosk's intercom calls and announcements. The state appears in Readings."
     },
     {
+      "key": "showAlarms",
+      "type": "boolean",
+      "title": "Show alarm state",
+      "default": false,
+      "group": "Alarm demo",
+      "description": "Follow this kiosk's alarms: idle, sunrise, ringing or snoozed, with the snoozes of each ring. The state appears in Readings."
+    },
+    {
+      "key": "sayAlarmSnoozes",
+      "type": "boolean",
+      "title": "Say the snooze count",
+      "default": false,
+      "group": "Alarm demo",
+      "visibleWhen": {
+        "key": "showAlarms",
+        "equals": true
+      },
+      "description": "Say Snooze 1, Snooze 2 and so on in the alarms voice after each snooze."
+    },
+    {
       "key": "dvdLogoSize",
       "type": "number",
       "title": "Logo size",
@@ -517,6 +537,27 @@
       "description": "Button: runs the link with openKioskLink and reports the result here."
     },
     {
+      "id": "alarmSnooze",
+      "title": "Snooze the alarm",
+      "label": "Snooze",
+      "group": "Alarm demo",
+      "description": "Button: snoozes the ringing alarm with snoozeAlarm."
+    },
+    {
+      "id": "alarmStop",
+      "title": "Stop the alarm",
+      "label": "Stop",
+      "group": "Alarm demo",
+      "description": "Button: stops the ringing or snoozed alarm with stopAlarm."
+    },
+    {
+      "id": "alarmSkip",
+      "title": "Skip the next alarm",
+      "label": "Skip",
+      "group": "Alarm demo",
+      "description": "Button: skips the next ring with skipNextAlarm."
+    },
+    {
       "id": "setupTest",
       "title": "Test connection",
       "label": "Test",
@@ -676,6 +717,13 @@
       "readingsTitle": "Intercom readings",
       "readings": [
         "text_sensor.intercom_state"
+      ]
+    },
+    {
+      "title": "Alarm demo",
+      "readingsTitle": "Alarm readings",
+      "readings": [
+        "text_sensor.alarm_state"
       ]
     },
     {

@@ -72,7 +72,7 @@ The plugin runs trusted code inside Kiosk Satellite. It can access app data and 
 
 Tap the Hello World entry to open its subpage. Every demo that does something on its own starts off, so Hello World does almost nothing until you turn a demo on in its group. Turn on the ones you want to try. **Greeting** changes the message, and **Show window when enabled** opens the window when the plugin starts. Settings save automatically. On the kiosk, tap **Greeting** to edit it in a dialog.
 
-The settings are grouped into **Greeting window**, **Chart demo**, **Home Assistant demo**, **Shizuku demo**, **Status tile demo**, **Hardware keys demo**, **Voice Satellite demo**, **Intercom demo**, **Screensaver demo**, **Device stats demo**, **List demo**, **Action demo**, **Kiosk link demo**, **Setup demo**, **Music Assistant demo** and **Player demo**. The chart uses simulated values, not device measurements. Its 120-sample history covers about four minutes and updates every two seconds while **Show demo chart** is on.
+The settings are grouped into **Greeting window**, **Chart demo**, **Home Assistant demo**, **Shizuku demo**, **Status tile demo**, **Hardware keys demo**, **Voice Satellite demo**, **Intercom demo**, **Alarm demo**, **Screensaver demo**, **Device stats demo**, **List demo**, **Action demo**, **Kiosk link demo**, **Setup demo**, **Music Assistant demo** and **Player demo**. The chart uses simulated values, not device measurements. Its 120-sample history covers about four minutes and updates every two seconds while **Show demo chart** is on.
 
 | Control | Example |
 | --- | --- |
@@ -136,6 +136,10 @@ The **Voice Satellite demo** group subscribes to `voice.state` while **Show Voic
 ### Try intercom state
 
 The **Intercom demo** group subscribes to `intercom.state` while **Show intercom state** is on. With the intercom on, call this kiosk from another one. **Intercom state** under Readings shows ringing, the call and its end, with the other kiosk's name. See [Intercom state](ks-api.md#intercom-state) and [IntercomDemo.java](../src/me/jxl/kiosk/plugins/hello/IntercomDemo.java).
+
+### Try alarm state
+
+The **Alarm demo** group subscribes to `alarm.state` while **Show alarm state** is on. Set an alarm a minute ahead in **Settings > Alarms**. **Alarm state** under Readings shows the ring, each snooze with the count for that ring, and the stop. Turn on **Say the snooze count** to hear Snooze 1, Snooze 2 and so on after each snooze with `sayAlarm`. The **Snooze**, **Stop** and **Skip** buttons call `snoozeAlarm`, `stopAlarm` and `skipNextAlarm`. See [Alarms](ks-api.md#alarms) and [AlarmDemo.java](../src/me/jxl/kiosk/plugins/hello/AlarmDemo.java).
 
 ### Try list settings
 

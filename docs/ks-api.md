@@ -72,6 +72,7 @@ Except for `getBrightness`, `getVolume` and `getHaEntityState`, every read comma
 | `getVoiceAppearance` | `{theme, background, textScale, reactive}`: Voice Satellite's Appearance settings a skin follows. See [Appearance settings](voice-skins.md#appearance-settings) |
 | `getVoiceText` | `{command, answer, tools, streaming, announcement}`. Requires `voice.text`. See [Conversation text](voice-skins.md#conversation-text) |
 | `getIntercomState` | `{enabled, state, kiosk, dnd}`. `enabled` is true while the intercom is on. See [Intercom state](#intercom-state) |
+| `getAlarmState` | `{phase, label, at, snoozedUntil, next}`: what this kiosk's alarms are doing. See [Alarms](#alarms) |
 | `getNoiseLevel` | `{available, dbfs, held, updated}`. Requires `noise`. See [Room noise level](#room-noise-level) |
 | `getHaEntityState` | `{entityId: string}` arguments. Returns `{entityId, status, state, attributes, lastChanged, lastUpdated}`. Read-only HA entity snapshot. See the [Home Assistant guide](home-assistant.md) |
 | `haStatus` | `{configured, connected}` booleans reflecting KS's existing Home Assistant connection check. This does not initiate a new connection check |
@@ -155,6 +156,10 @@ host.executeCommand("showCameraView", Collections.singletonMap("viewId", "front-
 | `hideCalendar` | `{}`. Close the calendar |
 | `openAlarms` | `{alarm?: "next"}`. Open the full screen alarm list, waking the display and dismissing the screensaver. With `alarm: "next"` it opens the alarm that rings next, snoozed alarms included, on its details page, or the list when no alarm is set. If the list is already open, it moves to that alarm |
 | `hideAlarms` | `{}`. Close the alarm list. An alarm being edited keeps its changes |
+| `snoozeAlarm` | `{}`. Snooze the ringing alarm for the **Snooze length** in **Settings > Alarms**. Fails with `no alarm is ringing` when none rings |
+| `stopAlarm` | `{}`. Stop the ringing or snoozed alarm, or a sunrise. Stopping a sunrise skips its ring. Fails with `no alarm is going` when there is nothing to stop |
+| `skipNextAlarm` | `{}`. Skip the next ring and every alarm set to the same minute. A repeating alarm rings again on its next day and a one time alarm turns off. Ends a sunrise going for that ring. Fails with `no alarm to skip` while an alarm rings or is snoozed, or when no alarm is set |
+| `sayAlarm` | `{text: string}`. Say up to 250 characters once in the alarms voice at the alarm volume, such as a snooze count. See [Alarms](#alarms) |
 | `openKioskLink` | `{url: string}`, such as `ks://alarms`. Run a `ks://` link the way a dashboard button does, so a plugin reaches every screen that has a link, including ones added later. See [Open a kiosk link](#open-a-kiosk-link) |
 | `loadUrl` | `{url: string}`. Navigate the main WebView to HTTP or HTTPS. Does not change the saved Start URL |
 | `loadDashboard` | `{dashboard: string}`. Navigate to a dashboard path on the configured HA server |
@@ -241,6 +246,7 @@ Pass the subscription name from this table to `subscribe` or `unsubscribe`. Deli
 | `voice.appearance` | `theme`, `background`, `textScale` and `reactive`. See [Appearance settings](voice-skins.md#appearance-settings) |
 | `voice.text` | `command`, `answer`, `tools`, `streaming` and `announcement`. Requires `voice.text`. See [Conversation text](voice-skins.md#conversation-text) |
 | `intercom.state` | `state`, `kiosk` and `dnd`. See [Intercom state](#intercom-state) |
+| `alarm.state` | The `getAlarmState` fields. Fires when one of them changes. See [Alarms](#alarms) |
 | `wakeword.state` | `active`, `listening` and `muted`: booleans |
 | `wakeword.detected` | `model` and `phrase`: wake-word identifiers. No captured audio |
 | `stopword.detected` | No additional fields |
@@ -392,6 +398,31 @@ Night mode belongs to the Clock screensaver. A plugin screensaver can give the w
 `kiosk` is the other kiosk's name during a call and the caller's through `missed`, else an empty string. `dnd` is true while Do not disturb holds, from the answer mode or Lockdown Mode.
 
 The event fires only when one of the three values changes. While the intercom is off, `getIntercomState` returns `enabled: false` and no events arrive. Read `getIntercomState` once after subscribing and let an event win over an older read, the same as [Voice Satellite state](#voice-satellite-state). No audio, call IDs or kiosk addresses are included. Older KS versions reject the subscription with `IllegalArgumentException`. See [IntercomDemo.java](../src/me/jxl/kiosk/plugins/hello/IntercomDemo.java).
+
+### Alarms
+
+`alarm.state` follows this kiosk's own alarms, the ones in **Settings > Alarms**. It works without Home Assistant. Use it with the alarm controls to turn the whole screen or a hardware key into Snooze and Stop.
+
+| Field | Meaning |
+| --- | --- |
+| `phase` | `idle`, `sunrise`, `ringing` or `snoozed` |
+| `label` | The ringing, snoozed or sunrise alarm's name. Empty when it has none or nothing is going |
+| `at` | The ring time the phase is about, as an ISO 8601 UTC string. Null while idle. It stays the same through every snooze of a ring, so a plugin can count snoozes per ring |
+| `snoozedUntil` | When a snoozed alarm rings again. Null unless `phase` is `snoozed` |
+| `next` | The next ring of any alarm, snoozes included. Null when no alarm is set |
+
+A ring goes from `ringing` to `snoozed` and back as often as it is snoozed, and to `idle` when someone stops it or **Silence after** ends it. A sunrise alarm starts at `sunrise`. The event fires only when a field changes, not on every edit to the list. The alarm list, times and days stay private. Read `getAlarmState` once after subscribing and let an event win over an older read, the same as [Voice Satellite state](#voice-satellite-state).
+
+`sayAlarm` speaks through Home Assistant with the engine, language and voice under **Settings > Alarms > Text to Speech**, at the **Alarm volume**, so a confirmation sounds like the alarm's own phrase. KS keeps each text it has spoken, so saying the same words again plays at once. It works during a sunrise or a snooze and for 30 seconds after an alarm stops, so "Alarm off" still plays after `stopAlarm`. It fails with `an alarm is ringing` while one rings, because the tone would cover the words, and with `no alarm is going` outside an alarm. A slow Home Assistant can take longer than the eight second command timeout. The words then still play once they arrive.
+
+```java
+host.executeCommand("snoozeAlarm", Collections.emptyMap(), (ok, data, error) -> {
+    if (ok) host.executeCommand("sayAlarm", Collections.singletonMap("text", "Snooze 1, 10 minutes"),
+        (said, none, why) -> { if (!said) host.log("Not said: " + why); });
+});
+```
+
+The controls need `host.control` and the read and the event need `host.read`. Older KS versions reject the subscription with `IllegalArgumentException` and the controls with `ok=false`. See [AlarmDemo.java](../src/me/jxl/kiosk/plugins/hello/AlarmDemo.java).
 
 Entity-specific events use `ha.entity.<entity_id>` with `host.read` and arrive as `ks.ha.entity.<entity_id>`. They include an initial state, live updates and connection status. See the [Home Assistant guide](home-assistant.md) for payloads, limits and subscription cleanup.
 
