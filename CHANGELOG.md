@@ -4,6 +4,8 @@
 
 ### Added
 
+- Add an optional `percent` to `sayAlarm`, from `5` to `100` as text like `setVolume`, to say a text quieter than the alarm volume. It never plays louder than the **Alarm volume**. Kiosk Satellite 2026.11.30 refuses it with `Invalid host command arguments` (kiosk-satellite#1585).
+
 - Add the alarms to `host.read` and `host.control`. `getAlarmState` and the `alarm.state` event report the phase of the kiosk's own alarms (`idle`, `sunrise`, `ringing` or `snoozed`), the alarm's name, its ring time, the end of a snooze and the next ring, without Home Assistant. `snoozeAlarm`, `stopAlarm` and `skipNextAlarm` run the alarm's buttons and fail with the reason, such as `no alarm is ringing`. `sayAlarm` says up to 250 characters in the alarms voice at the alarm volume during a sunrise or a snooze and for 30 seconds after an alarm stops. Hello World's new **Alarm demo** group shows the state with the snoozes of each ring, can say the count and has Snooze, Stop and Skip buttons. Document it under Alarms in the KS API reference (kiosk-satellite#1585).
 
 - Add dashboard links for plugin actions. `ks://plugin/PLUGIN_ID/COMMAND_ID` runs a declared command from a dashboard button, and each command's dialog on the plugin subpage shows its link. Parts after the command ID reach `execute` as `arguments.get("args")`, a list of up to 8 strings. Gestures, drawer shortcuts and ESPHome buttons still pass an empty map. `openKioskLink` refuses `ks://plugin` links. Document it under Dashboard links in Creating plugins (kiosk-satellite#1385).
