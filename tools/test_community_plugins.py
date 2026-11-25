@@ -135,12 +135,13 @@ class ManifestTest(unittest.TestCase):
         cp.validate_manifest(manifest())
         cp.validate_manifest(manifest(capabilities=['camera', 'barcode', 'ma', 'player']))
         cp.validate_manifest(manifest(capabilities=['screensaver', 'screensaver.mode']))
+        cp.validate_manifest(manifest(capabilities=['host.read', 'face.recognition']))
         cp.validate_manifest(manifest(settings=[{'key': 'tap', 'title': 'Tap', 'type': 'action', 'default': {}}]))
 
     def test_rules_from_the_app(self):
         for change in [
             {'schemaVersion': True}, {'apiVersion': 2}, {'id': 'Weather'}, {'version': '1.2'}, {'entryClass': 'Plugin'},
-            {'minAndroidSdk': 23}, {'capabilities': ['microphone']}, {'capabilities': ['noise']},
+            {'minAndroidSdk': 23}, {'capabilities': ['microphone']}, {'capabilities': ['noise']}, {'capabilities': ['face.recognition']},
             {'capabilities': ['voice.skin', 'overlay']}, {'author': ' '}, {'headless': 'yes'},
             {'voiceSkinThumbnail': 'thumb.png'}, {'settings': [{'key': 'a', 'title': 'A', 'type': 'secret', 'default': 'x'}]},
             {'settings': [{'key': 'a', 'title': 'A', 'type': 'action', 'default': {'type': 'refresh'}}]},

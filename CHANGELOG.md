@@ -4,6 +4,8 @@
 
 ### Added
 
+- Add the `face.recognition` capability. `getFaceRecognition` and the `face.recognition` event report who Kiosk Satellite's Face Recognition sees at the kiosk: the person at the kiosk with their Home Assistant person and color, everyone recognized in view and, with Presence sensors on, whether someone is in front of the kiosk and looking at it. `face.arrival` fires when someone recognized arrives at the kiosk and when they leave. It requires `host.read`. Older Kiosk Satellite releases refuse a manifest that declares it. Document it under Who is at the kiosk in the KS API reference.
+
 - Add an optional `percent` to `sayAlarm`, from `5` to `100` as text like `setVolume`, to say a text quieter than the alarm volume. It never plays louder than the **Alarm volume**. Kiosk Satellite 2026.11.30 refuses it with `Invalid host command arguments` (kiosk-satellite#1585).
 
 - Add the alarms to `host.read` and `host.control`. `getAlarmState` and the `alarm.state` event report the phase of the kiosk's own alarms (`idle`, `sunrise`, `ringing` or `snoozed`), the alarm's name, its ring time, the end of a snooze and the next ring, without Home Assistant. `snoozeAlarm`, `stopAlarm` and `skipNextAlarm` run the alarm's buttons and fail with the reason, such as `no alarm is ringing`. `sayAlarm` says up to 250 characters in the alarms voice at the alarm volume during a sunrise or a snooze and for 30 seconds after an alarm stops. Hello World's new **Alarm demo** group shows the state with the snoozes of each ring, can say the count and has Snooze, Stop and Skip buttons. Document it under Alarms in the KS API reference (kiosk-satellite#1585).

@@ -20,6 +20,7 @@ Every plugin declares `"apiVersion": 1`. All features below belong to that singl
 | `ha` | Call Home Assistant services, run other commands and subscribe to triggers, events and templates. See the [Home Assistant guide](home-assistant.md#call-services-and-other-commands) |
 | `voice.skin` | Appear in Voice Satellite's skin lists and draw the turn in place of the KS overlay. Requires `overlay` and `host.read`. See [Voice skins](voice-skins.md) |
 | `voice.text` | Read what the user said and the assistant answered. Requires `host.read`. See [Conversation text](voice-skins.md#conversation-text) |
+| `face.recognition` | Read who Face Recognition sees at the kiosk. Requires `host.read`. See [Who is at the kiosk](#who-is-at-the-kiosk) |
 | `camera` | Receive frames from the device camera. See [Camera frames](camera.md#camera-frames) |
 | `barcode` | Open the KS scanner and read a barcode or a QR code. See [Scan a code](camera.md#scan-a-code) |
 | `ma` | Run Music Assistant commands for players, queues and the library and follow its events. See the [Music Assistant guide](music-assistant.md#run-commands) |
@@ -74,6 +75,7 @@ Except for `getBrightness`, `getVolume` and `getHaEntityState`, every read comma
 | `getIntercomState` | `{enabled, state, kiosk, dnd}`. `enabled` is true while the intercom is on. See [Intercom state](#intercom-state) |
 | `getAlarmState` | `{phase, label, at, snoozedUntil, next}`: what this kiosk's alarms are doing. See [Alarms](#alarms) |
 | `getNoiseLevel` | `{available, dbfs, held, updated}`. Requires `noise`. See [Room noise level](#room-noise-level) |
+| `getFaceRecognition` | `{enabled, name, person, color, people, present, looking}`. Requires `face.recognition`. See [Who is at the kiosk](#who-is-at-the-kiosk) |
 | `getHaEntityState` | `{entityId: string}` arguments. Returns `{entityId, status, state, attributes, lastChanged, lastUpdated}`. Read-only HA entity snapshot. See the [Home Assistant guide](home-assistant.md) |
 | `haStatus` | `{configured, connected}` booleans reflecting KS's existing Home Assistant connection check. This does not initiate a new connection check |
 | `getSendspinPlayer` | `{enabled, running, connected, playing, clientId, playerName, serverName, maConfigured, maPlayerId, maServerId, maServerName, maServerVersion}`: the kiosk's own Sendspin player and the Music Assistant player that stands for it. See [The kiosk's player](music-assistant.md#the-kiosks-player) |
@@ -255,6 +257,8 @@ Pass the subscription name from this table to `subscribe` or `unsubscribe`. Deli
 | `navigation.view` | `mode`, `view` and `id`, as `getNavigationView` reports them. Fires when another page or view comes up. See [Navigation view](#navigation-view) |
 | `sendspin.player` | The `getSendspinPlayer` fields. Fires when the player turns on or off, connects or disconnects, starts or stops playing, or Music Assistant names its player |
 | `audio.noise` | `available`, `dbfs` and `held`. Requires `noise`. See [Room noise level](#room-noise-level) |
+| `face.recognition` | The `getFaceRecognition` fields. Fires when one of them changes. Requires `face.recognition`. See [Who is at the kiosk](#who-is-at-the-kiosk) |
+| `face.arrival` | `event` (`arrived` or `left`), `name` and `person`. Requires `face.recognition`. See [Who is at the kiosk](#who-is-at-the-kiosk) |
 
 Events are passive observations. Motion, face, person, proximity and wake-word events only exist when the corresponding KS feature is already producing them. A subscription never starts a camera, opens a microphone or changes the screensaver policy. No general event-bus subscription is provided.
 
@@ -438,6 +442,28 @@ Entity-specific events use `ha.entity.<entity_id>` with `host.read` and arrive a
 | `updated` | ISO 8601 UTC time of the latest measurement. `getNoiseLevel` only |
 
 `getNoiseLevel` returns the latest 5 second reading. `audio.noise` fires when the level moves by 2 dB or more and when `held` or `available` changes. The level comes from the capture the wake word engine already has open, so subscribing never opens the microphone. No audio, spectrum or speech detection is exposed. The reading is relative to the microphone and its gain, not a calibrated sound level, so let users set thresholds for their room.
+
+### Who is at the kiosk
+
+`getFaceRecognition`, `face.recognition` and `face.arrival` report who Kiosk Satellite's [Face Recognition](https://github.com/jxlarrea/kiosk-satellite/blob/main/docs/vision-match.md#face-recognition) sees at the kiosk. They need the `face.recognition` capability on top of `host.read`, which tells users the plugin learns who is in front of the kiosk. Face Recognition runs on Ground Control, so the kiosk needs Ground Control with Vision Match and Face Recognition on.
+
+| Field | Meaning |
+| --- | --- |
+| `enabled` | True while Face Recognition is on. Everything else is empty or null while it is off |
+| `name` | The person at the kiosk, as named in Ground Control. Empty when nobody known is in view. The same name the kiosk's **Face** sensor shows |
+| `person` | Their Home Assistant person, such as `person.ana`, set on Ground Control's People page. Empty when none is set |
+| `color` | Their color in Ground Control as `#RRGGBB`, or null |
+| `people` | Everyone recognized in view as `{name, person, color}`, the person at the kiosk first. The same people the **People in view** sensor lists |
+| `present` | True while someone is in front of the kiosk, looking at it or not. Null while **Presence sensors** is off |
+| `looking` | True while a face looks at the screen. Null while **Presence sensors** is off |
+
+Only faces looking at the kiosk are recognized, so a `name` also means that person is looking at the screen. The name clears 3 seconds after their face leaves. When two people stand at the kiosk, the person at the kiosk changes only after the other one scores higher two checks in a row or the first one leaves. Use `person` to act on someone, because names can change in Ground Control.
+
+`face.recognition` fires when any field changes. `face.arrival` fires once when someone recognized arrives at the kiosk and once when they leave, on the same rule as the kiosk's `esphome.kiosk_satellite_face` event in Home Assistant. An arrival fires again for the same person only after they have been out of view for a minute, which is also when `left` fires. Arrivals are never merged. Each one reaches the plugin.
+
+Subscribing never turns on the camera or sends more frames to Ground Control. No frames, face pictures, scores or Ground Control ids are exposed. A photo of an enrolled person can be recognized as them, so never use these fields to unlock doors or disarm an alarm. See [Face Recognition Is Not Security](https://github.com/jxlarrea/kiosk-satellite/blob/main/docs/vision-match.md#face-recognition-is-not-security).
+
+To start a voice turn when someone is looking at the kiosk, call `openKioskLink` with `ks://voice` from a plugin that also declares `host.control`. Older Kiosk Satellite releases refuse a manifest that declares `face.recognition`, so set `minAppVersion` to the first release that has it.
 
 ## Lifetime, errors and limits
 

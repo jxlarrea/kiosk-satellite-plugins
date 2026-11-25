@@ -47,7 +47,7 @@ ALLOWED_HOSTS = {
 CAPABILITIES = {
     'overlay', 'native', 'entities', 'host.read', 'host.control', 'shizuku',
     'screensaver', 'screensaver.mode', 'noise', 'ha', 'voice.skin', 'voice.text', 'camera',
-    'barcode', 'ma', 'player',
+    'barcode', 'ma', 'player', 'face.recognition',
 }
 SETTING_TYPES = {
     'string', 'secret', 'entity', 'icon', 'dashboard', 'cameraView', 'boolean',
@@ -181,8 +181,8 @@ def validate_manifest(manifest):
     caps = set(capabilities)
     if not caps <= CAPABILITIES:
         raise ValueError(f'Unsupported plugin capability: {", ".join(sorted(caps - CAPABILITIES))}')
-    if ('noise' in caps or 'voice.text' in caps) and 'host.read' not in caps:
-        raise ValueError('noise and voice.text need the host.read capability')
+    if caps & {'noise', 'voice.text', 'face.recognition'} and 'host.read' not in caps:
+        raise ValueError('noise, voice.text and face.recognition need the host.read capability')
     if 'voice.skin' in caps and not {'overlay', 'host.read'} <= caps:
         raise ValueError('voice.skin needs the overlay and host.read capabilities')
     for key, limit in (('description', 1000), ('author', 120), ('license', 120)):
