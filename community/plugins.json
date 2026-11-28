@@ -310,6 +310,11 @@
     "added": "2026-10-22"
   },
   {
+    "repository": "tibohlami/kiosk-satellite-plugin-btaudio",
+    "id": "kiosk-satellite-bt-audio",
+    "added": "2026-11-28"
+  },
+  {
     "repository": "tibohlami/kiosk-satellite-plugin-frigate",
     "id": "kiosk-satellite-frigate",
     "added": "2026-11-13"
