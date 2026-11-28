@@ -285,11 +285,6 @@
     "added": "2026-11-08"
   },
   {
-    "repository": "starman2k01/kiosk-satellite-eufy-doorbell",
-    "id": "eufy-doorbell",
-    "added": "2026-11-28"
-  },
-  {
     "repository": "stuartp44/kiosk-satellite-plugin-smt101",
     "id": "smt101-sensors",
     "added": "2026-10-23"
